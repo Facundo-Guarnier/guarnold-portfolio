@@ -11,27 +11,33 @@ interface EducationEditorProps {
   onUpdate: (id: string, edu: Partial<Educacion>) => void;
   onRemove: (id: string) => void;
   onMove: (index: number, direction: 'up' | 'down') => void;
+  accentColor?: string;
 }
 
-export const EducationEditor: React.FC<EducationEditorProps> = ({ educations, onAdd, onUpdate, onRemove, onMove }) => {
+export const EducationEditor: React.FC<EducationEditorProps> = ({ educations, onAdd, onUpdate, onRemove, onMove, accentColor }) => {
   return (
-    <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm space-y-4">
+    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-neutral-200 dark:border-gray-800 shadow-sm space-y-4">
       <div className="flex items-center justify-between">
-        <SectionTitle icon={<GraduationCap className="w-5 h-5 text-neutral-500" />}>Educación</SectionTitle>
-        <Button variant="outline" size="sm" onClick={() => onAdd({ institucion: 'Institución', titulo: 'Título', periodo: 'Año' })} className="gap-1">
+        <SectionTitle icon={<GraduationCap className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />}>Educación</SectionTitle>
+        <Button 
+          variant="primary" 
+          size="sm" 
+          onClick={() => onAdd({ institucion: 'Institución', titulo: 'Título', periodo: 'Año' })} 
+          className={`gap-1 ${accentColor || ''}`}
+        >
           <Plus className="w-3 h-3" /> Agregar
         </Button>
       </div>
 
       <div className="space-y-4">
         {educations.map((edu, index) => (
-          <div key={edu.id} className="relative p-4 border border-neutral-200 rounded-lg bg-neutral-50 group">
+          <div key={edu.id} className="relative p-4 border border-neutral-200 dark:border-gray-700 rounded-lg bg-neutral-50 dark:bg-gray-800 group">
              
              <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button 
                   onClick={() => onMove(index, 'up')}
                   disabled={index === 0}
-                  className="p-1.5 bg-white border border-neutral-200 text-neutral-400 hover:text-neutral-900 rounded-md disabled:opacity-30"
+                  className="p-1.5 bg-white dark:bg-gray-700 border border-neutral-200 dark:border-gray-600 text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-md disabled:opacity-30"
                   title="Mover arriba"
                 >
                   <ArrowUp className="w-3 h-3" />
@@ -39,15 +45,15 @@ export const EducationEditor: React.FC<EducationEditorProps> = ({ educations, on
                 <button 
                   onClick={() => onMove(index, 'down')}
                   disabled={index === educations.length - 1}
-                  className="p-1.5 bg-white border border-neutral-200 text-neutral-400 hover:text-neutral-900 rounded-md disabled:opacity-30"
+                  className="p-1.5 bg-white dark:bg-gray-700 border border-neutral-200 dark:border-gray-600 text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-md disabled:opacity-30"
                   title="Mover abajo"
                 >
                   <ArrowDown className="w-3 h-3" />
                 </button>
-                <div className="w-px h-3 bg-neutral-300 mx-1"></div>
+                <div className="w-px h-3 bg-neutral-300 dark:bg-gray-600 mx-1"></div>
                 <button 
                   onClick={() => onRemove(edu.id)}
-                  className="p-1.5 bg-white border border-neutral-200 text-neutral-400 hover:text-red-600 hover:border-red-200 rounded-md"
+                  className="p-1.5 bg-white dark:bg-gray-700 border border-neutral-200 dark:border-gray-600 text-neutral-400 hover:text-red-600 hover:border-red-200 rounded-md"
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>

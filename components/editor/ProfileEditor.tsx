@@ -8,6 +8,7 @@ import { Button } from '../ui/Button';
 interface ProfileEditorProps {
   data: Personal;
   onChange: (data: Partial<Personal>) => void;
+  accentColor?: string;
 }
 
 const SOCIAL_PLATFORMS = [
@@ -28,7 +29,7 @@ const SOCIAL_PLATFORMS = [
   { id: 'other', label: 'Otro', icon: LinkIcon }
 ];
 
-export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) => {
+export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange, accentColor }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -80,8 +81,8 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm space-y-4">
-      <SectionTitle icon={<User className="w-5 h-5 text-neutral-500" />}>Información Personal</SectionTitle>
+    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-neutral-200 dark:border-gray-800 shadow-sm space-y-4">
+      <SectionTitle icon={<User className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />}>Información Personal</SectionTitle>
       
       {/* Profile Image Uploader */}
       <div className="mb-6">
@@ -92,18 +93,18 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
                <img 
                 src={data.foto} 
                 alt="Profile Preview" 
-                className="w-16 h-16 rounded-full object-cover border border-neutral-200"
+                className="w-16 h-16 rounded-full object-cover border border-neutral-200 dark:border-gray-700"
                />
                <button 
                 onClick={removeImage}
-                className="absolute -top-1 -right-1 bg-white border border-neutral-200 rounded-full p-1 text-neutral-500 hover:text-red-500 shadow-sm"
+                className="absolute -top-1 -right-1 bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 rounded-full p-1 text-neutral-500 hover:text-red-500 shadow-sm"
                 title="Eliminar foto"
                >
                  <X className="w-3 h-3" />
                </button>
             </div>
           ) : (
-            <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center border border-neutral-200 border-dashed">
+            <div className="w-16 h-16 rounded-full bg-neutral-100 dark:bg-gray-800 flex items-center justify-center border border-neutral-200 dark:border-gray-700 border-dashed">
               <User className="w-6 h-6 text-neutral-400" />
             </div>
           )}
@@ -118,7 +119,7 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
               id="photo-upload"
             />
             <label htmlFor="photo-upload">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-neutral-300 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 cursor-pointer transition-colors shadow-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-neutral-300 dark:border-gray-700 rounded-lg text-sm font-medium text-neutral-700 dark:text-gray-300 hover:bg-neutral-50 dark:hover:bg-gray-700 cursor-pointer transition-colors shadow-sm">
                 <Upload className="w-4 h-4" />
                 {data.foto ? 'Cambiar Foto' : 'Subir Foto'}
               </div>
@@ -161,7 +162,7 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
         </div>
 
         {/* Dynamic Links Section */}
-        <div className="pt-2 border-t border-neutral-100">
+        <div className="pt-2 border-t border-neutral-100 dark:border-gray-800">
            <div className="flex items-center justify-between mb-2">
              <Label>Enlaces y Redes Sociales</Label>
              <Button variant="ghost" size="sm" onClick={addLink} className="h-6 px-2 text-neutral-500">
@@ -171,11 +172,11 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
            
            <div className="space-y-3">
              {(data.links || []).map((link) => (
-               <div key={link.id} className="flex gap-2 items-start bg-neutral-50 p-2 rounded-lg border border-neutral-200">
+               <div key={link.id} className="flex gap-2 items-start bg-neutral-50 dark:bg-gray-800 p-2 rounded-lg border border-neutral-200 dark:border-gray-700">
                  <div className="flex-1 grid grid-cols-3 gap-2">
                    <div className="col-span-1">
                       <select 
-                        className="w-full px-3 py-2 bg-white border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent transition-all cursor-pointer"
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-neutral-200 dark:border-gray-600 rounded-lg text-sm text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white focus:border-transparent transition-all cursor-pointer"
                         value={link.platform || 'other'}
                         onChange={(e) => {
                           const selected = SOCIAL_PLATFORMS.find(p => p.id === e.target.value);
@@ -197,20 +198,20 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
                         placeholder="URL (ej. linkedin.com/in/usuario)" 
                         value={link.url} 
                         onChange={(e) => updateLink(link.id, { url: e.target.value })}
-                        className="bg-white"
+                        className="bg-white dark:bg-gray-700"
                       />
                    </div>
                  </div>
                  <button 
                   onClick={() => removeLink(link.id)}
-                  className="p-2 text-neutral-400 hover:text-red-500 rounded hover:bg-white transition-colors"
+                  className="p-2 text-neutral-400 hover:text-red-500 rounded hover:bg-white dark:hover:bg-gray-700 transition-colors"
                  >
                    <Trash2 className="w-4 h-4" />
                  </button>
                </div>
              ))}
              {(data.links || []).length === 0 && (
-                <div className="text-center p-3 border border-dashed border-neutral-200 rounded-lg text-xs text-neutral-400">
+                <div className="text-center p-3 border border-dashed border-neutral-200 dark:border-gray-700 rounded-lg text-xs text-neutral-400">
                    No hay enlaces añadidos
                 </div>
              )}

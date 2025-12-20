@@ -7,6 +7,7 @@ import { SectionTitle, Label } from '../ui/Form';
 interface SettingsEditorProps {
   settings: CVSettings;
   onUpdate: (settings: Partial<CVSettings>) => void;
+  accentColor?: string;
 }
 
 const COLORS: { id: CVSettings['themeColor']; label: string; class: string }[] = [
@@ -18,26 +19,26 @@ const COLORS: { id: CVSettings['themeColor']; label: string; class: string }[] =
   { id: 'amber', label: 'Amber', class: 'bg-amber-500' },
 ];
 
-export const SettingsEditor: React.FC<SettingsEditorProps> = ({ settings, onUpdate }) => {
+export const SettingsEditor: React.FC<SettingsEditorProps> = ({ settings, onUpdate, accentColor }) => {
   return (
-    <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm space-y-6">
-      <SectionTitle icon={<Palette className="w-5 h-5 text-neutral-500" />}>Apariencia</SectionTitle>
+    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-neutral-200 dark:border-gray-800 shadow-sm space-y-6">
+      <SectionTitle icon={<Palette className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />}>Apariencia</SectionTitle>
 
       {/* Dark Mode Toggle */}
-      <div className="flex items-center justify-between p-3 bg-neutral-50 rounded-lg border border-neutral-100">
+      <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-gray-800 rounded-lg border border-neutral-100 dark:border-gray-700">
         <div className="flex items-center gap-3">
           <div className={`p-2 rounded-full ${settings.darkMode ? 'bg-neutral-800 text-yellow-400' : 'bg-white text-neutral-400 shadow-sm border border-neutral-200'}`}>
             {settings.darkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-neutral-900">Modo Oscuro</span>
-            <span className="text-xs text-neutral-500">Estilo por defecto del CV</span>
+            <span className="text-sm font-semibold text-neutral-900 dark:text-white">Modo Oscuro</span>
+            <span className="text-xs text-neutral-500 dark:text-gray-400">Estilo por defecto del CV</span>
           </div>
         </div>
         <button
           onClick={() => onUpdate({ darkMode: !settings.darkMode })}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 ${
-            settings.darkMode ? 'bg-neutral-900' : 'bg-neutral-200'
+            settings.darkMode ? (accentColor?.split(' ')[0] || 'bg-neutral-900') : 'bg-neutral-200'
           }`}
         >
           <span
@@ -58,7 +59,7 @@ export const SettingsEditor: React.FC<SettingsEditorProps> = ({ settings, onUpda
               onClick={() => onUpdate({ themeColor: color.id })}
               className={`group relative w-full aspect-square rounded-lg flex items-center justify-center transition-all ${
                 settings.themeColor === color.id 
-                  ? 'ring-2 ring-offset-2 ring-neutral-900 scale-100' 
+                  ? 'ring-2 ring-offset-2 ring-neutral-900 dark:ring-white scale-100' 
                   : 'hover:scale-105 hover:shadow-md'
               }`}
               title={color.label}
@@ -72,7 +73,7 @@ export const SettingsEditor: React.FC<SettingsEditorProps> = ({ settings, onUpda
             </button>
           ))}
         </div>
-        <p className="text-xs text-neutral-400 mt-2">
+        <p className="text-xs text-neutral-400 dark:text-gray-500 mt-2">
           Este color define los títulos, bordes y detalles visuales.
         </p>
       </div>
