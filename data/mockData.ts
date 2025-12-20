@@ -2,6 +2,10 @@
 import { CVData } from '../types/cv';
 
 export const initialCVData: CVData = {
+  settings: {
+    themeColor: 'neutral',
+    darkMode: false
+  },
   personal: {
     nombre: "Facundo Guarnier",
     titulo: "Ingeniero en Informática | Desarrollador de Software",

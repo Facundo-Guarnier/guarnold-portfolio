@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Save, Eye, Lock, RefreshCw, Download } from 'lucide-react';
+import { ArrowLeft, Eye, Lock, RefreshCw, Download, KeyRound } from 'lucide-react';
 import { useCVData } from '../hooks/useCVData';
 import { CVPreview } from '../components/cv/CVPreview';
 import { ProfileEditor } from '../components/editor/ProfileEditor';
@@ -8,16 +9,16 @@ import { ExperienceEditor } from '../components/editor/ExperienceEditor';
 import { EducationEditor } from '../components/editor/EducationEditor';
 import { SkillsEditor } from '../components/editor/SkillsEditor';
 import { ProjectsEditor } from '../components/editor/ProjectsEditor';
+import { SettingsEditor } from '../components/editor/SettingsEditor';
 import { Button } from '../components/ui/Button';
 
 // Security: Read from Environment Variable (Vite prefix required)
-// Use optional chaining to prevent crash if import.meta.env is undefined
-// Cast import.meta to any to avoid TypeScript errors when vite/client types are missing
 const SECRET_KEY = (import.meta as any).env?.VITE_ADMIN_PASSWORD || "guarnold"; 
 
 const Admin: React.FC = () => {
   const { 
-    data, 
+    data,
+    setTheme, 
     updatePersonal, 
     moveItem,
     addExperiencia, 
@@ -54,33 +55,90 @@ const Admin: React.FC = () => {
       setIsAuthenticated(true);
       setError("");
     } else {
-      setError("Incorrect access key");
+      setError("Clave incorrecta. Intenta nuevamente.");
     }
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-100 p-4">
-        <form onSubmit={handleLogin} className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center">
-          <div className="w-12 h-12 bg-neutral-900 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-5 h-5 text-white" />
+      <div className="min-h-screen bg-neutral-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
+        
+        {/* Logo / Header Area */}
+        <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-6">
+          <div className="mx-auto h-16 w-16 bg-neutral-900 rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3 mb-6 transition-transform hover:rotate-0">
+            <Lock className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-xl font-bold text-neutral-900 mb-2">Restricted Access</h2>
-          <p className="text-sm text-neutral-500 mb-6">Enter the access key to edit this CV.</p>
-          <div className="space-y-4">
-            <input 
-              type="password" 
-              value={passwordInput}
-              onChange={(e) => setPasswordInput(e.target.value)}
-              className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 outline-none transition-all placeholder:text-neutral-300"
-              placeholder="Access Key"
-              autoFocus
-            />
-            {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
-            <Button type="submit" className="w-full">Unlock Editor</Button>
-            <p className="text-xs text-neutral-400 mt-4">Hint: check your env vars</p>
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-900">
+            Acceso al Editor
+          </h2>
+          <p className="mt-2 text-sm text-neutral-500">
+            Ingresa tu clave de acceso para modificar el contenido.
+          </p>
+        </div>
+
+        {/* Card */}
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-10 px-6 shadow-2xl shadow-neutral-100 border border-neutral-100 rounded-3xl sm:px-10 relative overflow-hidden">
+            
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-neutral-50 blur-3xl opacity-50 pointer-events-none"></div>
+
+            <form className="space-y-6 relative z-10" onSubmit={handleLogin}>
+              <div>
+                <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2">
+                  Access Key
+                </label>
+                <div className="relative rounded-xl shadow-sm">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                    <KeyRound className="h-5 w-5 text-neutral-400" aria-hidden="true" />
+                  </div>
+                  <input
+                    type="password"
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
+                    className="block w-full rounded-xl border-0 py-3.5 pl-11 text-neutral-900 ring-1 ring-inset ring-neutral-200 placeholder:text-neutral-300 focus:ring-2 focus:ring-inset focus:ring-neutral-900 sm:text-sm sm:leading-6 transition-all bg-neutral-50/50 focus:bg-white"
+                    placeholder="••••••••"
+                    autoFocus
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="rounded-lg bg-red-50 p-4 border border-red-100 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex">
+                    <div className="text-sm text-red-600 font-medium text-center w-full">
+                      {error}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <Button 
+                  type="submit" 
+                  className="w-full justify-center py-3.5 text-base font-semibold shadow-lg shadow-neutral-200 hover:shadow-xl hover:translate-y-[-1px] transition-all"
+                >
+                  Desbloquear
+                </Button>
+              </div>
+            </form>
+
+            <div className="mt-8 pt-6 border-t border-neutral-100 relative z-10">
+              <Link 
+                to="/" 
+                className="group flex items-center justify-center gap-2 text-sm font-medium text-neutral-500 hover:text-neutral-900 transition-colors w-full p-2 rounded-lg hover:bg-neutral-50"
+              >
+                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                Volver a la vista del CV
+              </Link>
+            </div>
+
           </div>
-        </form>
+          
+          <p className="text-center text-xs text-neutral-400 mt-8">
+            Sistema seguro de gestión de portafolio personal.
+          </p>
+        </div>
       </div>
     );
   }
@@ -125,6 +183,13 @@ const Admin: React.FC = () => {
         {/* LEFT PANEL: Scrollable Forms (40%) */}
         <div className="w-full lg:w-5/12 overflow-y-auto border-r border-neutral-200 bg-white print:hidden">
           <div className="p-6 lg:p-8 space-y-8 pb-24">
+            
+            {/* Theme Settings */}
+            <SettingsEditor 
+              settings={data.settings} 
+              onUpdate={(newSettings) => setTheme(newSettings, false)} 
+            />
+
             <ProfileEditor data={data.personal} onChange={updatePersonal} />
             <ExperienceEditor 
               experiences={data.experiencia} 

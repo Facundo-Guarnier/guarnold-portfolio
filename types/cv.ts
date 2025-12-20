@@ -47,7 +47,13 @@ export interface Proyecto {
   url?: string;
 }
 
+export interface CVSettings {
+  themeColor: 'neutral' | 'blue' | 'emerald' | 'purple' | 'rose' | 'amber';
+  darkMode: boolean;
+}
+
 export interface CVData {
+  settings: CVSettings;
   personal: Personal;
   experiencia: Experiencia[];
   educacion: Educacion[];

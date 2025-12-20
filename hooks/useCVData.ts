@@ -1,17 +1,23 @@
 
 import { useState, useEffect } from 'react';
-import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto } from '../types/cv';
+import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings } from '../types/cv';
 import { initialCVData } from '../data/mockData';
 
 const STORAGE_KEY = 'guarnold_cv_data_v4';
+const SESSION_THEME_KEY = 'guarnold_cv_session_theme';
 
 export const useCVData = () => {
+  // 1. Persistent State (Database/LocalStorage representation)
   const [data, setData] = useState<CVData>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Basic check to see if it's the new schema (check for 'links' array in personal)
+        // Ensure settings exist in legacy data
+        if (!parsed.settings) {
+            parsed.settings = initialCVData.settings;
+        }
+        // Basic check to see if it's the new schema
         if (parsed.personal && Array.isArray(parsed.personal.links)) {
             return parsed;
         }
@@ -22,9 +28,42 @@ export const useCVData = () => {
     return initialCVData;
   });
 
+  // 2. Session State (Temporary overrides for public viewers)
+  const [sessionSettings, setSessionSettings] = useState<CVSettings | null>(() => {
+    const sessionSaved = sessionStorage.getItem(SESSION_THEME_KEY);
+    return sessionSaved ? JSON.parse(sessionSaved) : null;
+  });
+
+  // 3. Computed Data (Merges persistent data with session overrides)
+  // This is what the UI consumes.
+  const displayData: CVData = {
+    ...data,
+    settings: sessionSettings || data.settings
+  };
+
+  // Sync Persistent Data to LocalStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
+
+  // --- Actions ---
+
+  // Theme Management
+  const setTheme = (newSettings: Partial<CVSettings>, isPublicView: boolean) => {
+    const currentSettings = displayData.settings;
+    const updatedSettings = { ...currentSettings, ...newSettings };
+
+    if (isPublicView) {
+      // Public View: Only update session state
+      setSessionSettings(updatedSettings);
+      sessionStorage.setItem(SESSION_THEME_KEY, JSON.stringify(updatedSettings));
+    } else {
+      // Admin View: Commit to persistent storage and clear session
+      setData(prev => ({ ...prev, settings: updatedSettings }));
+      setSessionSettings(null); // Clear override so admin sees the "real" source of truth
+      sessionStorage.removeItem(SESSION_THEME_KEY);
+    }
+  };
 
   // Generic Move Function
   const moveItem = (section: 'experiencia' | 'educacion' | 'proyectos' | 'skills', index: number, direction: 'up' | 'down') => {
@@ -141,10 +180,13 @@ export const useCVData = () => {
 
   const resetData = () => {
     setData(initialCVData);
+    setSessionSettings(null);
+    sessionStorage.removeItem(SESSION_THEME_KEY);
   };
 
   return {
-    data,
+    data: displayData, // Expose the computed data
+    setTheme,
     updatePersonal,
     moveItem,
     addExperiencia,
