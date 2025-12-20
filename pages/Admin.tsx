@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Save, Eye, Lock, RefreshCw, Download } from 'lucide-react';
@@ -11,8 +10,10 @@ import { SkillsEditor } from '../components/editor/SkillsEditor';
 import { ProjectsEditor } from '../components/editor/ProjectsEditor';
 import { Button } from '../components/ui/Button';
 
-// Simple client-side security (Not secure for production backend, fine for local tool)
-const SECRET_KEY = "guarnold"; 
+// Security: Read from Environment Variable (Vite prefix required)
+// Use optional chaining to prevent crash if import.meta.env is undefined
+// Cast import.meta to any to avoid TypeScript errors when vite/client types are missing
+const SECRET_KEY = (import.meta as any).env?.VITE_ADMIN_PASSWORD || "guarnold"; 
 
 const Admin: React.FC = () => {
   const { 
@@ -71,13 +72,13 @@ const Admin: React.FC = () => {
               type="password" 
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
-              className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-neutral-900 focus:outline-none"
+              className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 outline-none transition-all placeholder:text-neutral-300"
               placeholder="Access Key"
               autoFocus
             />
             {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
             <Button type="submit" className="w-full">Unlock Editor</Button>
-            <p className="text-xs text-neutral-400 mt-4">Hint: guarnold</p>
+            <p className="text-xs text-neutral-400 mt-4">Hint: check your env vars</p>
           </div>
         </form>
       </div>
@@ -151,6 +152,7 @@ const Admin: React.FC = () => {
               onAdd={addSkill}
               onUpdate={updateSkill}
               onRemove={removeSkill}
+              onMove={(idx, dir) => moveItem('skills', idx, dir)}
             />
           </div>
         </div>

@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react';
-import { User, Upload, X, Plus, Trash2, Globe } from 'lucide-react';
+import { User, Upload, X, Plus, Trash2, Globe, Linkedin, Github, Twitter, Mail, Phone, Link as LinkIcon, Gitlab, Youtube, Instagram, MessageCircle, Send, Code2, BookOpen, Palette } from 'lucide-react';
 import { Personal, LinkObj } from '../../types/cv';
 import { Input, Label, TextArea, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
@@ -9,6 +9,24 @@ interface ProfileEditorProps {
   data: Personal;
   onChange: (data: Partial<Personal>) => void;
 }
+
+const SOCIAL_PLATFORMS = [
+  { id: 'linkedin', label: 'LinkedIn', icon: Linkedin },
+  { id: 'github', label: 'GitHub', icon: Github },
+  { id: 'gitlab', label: 'GitLab', icon: Gitlab },
+  { id: 'portfolio', label: 'Portafolio / Web', icon: Globe },
+  { id: 'stackoverflow', label: 'StackOverflow', icon: Code2 },
+  { id: 'twitter', label: 'Twitter / X', icon: Twitter },
+  { id: 'youtube', label: 'YouTube', icon: Youtube },
+  { id: 'medium', label: 'Medium / Blog', icon: BookOpen },
+  { id: 'instagram', label: 'Instagram', icon: Instagram },
+  { id: 'behance', label: 'Behance', icon: Palette },
+  { id: 'whatsapp', label: 'WhatsApp', icon: MessageCircle },
+  { id: 'telegram', label: 'Telegram', icon: Send },
+  { id: 'email', label: 'Email', icon: Mail },
+  { id: 'phone', label: 'Teléfono', icon: Phone },
+  { id: 'other', label: 'Otro', icon: LinkIcon }
+];
 
 export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -43,21 +61,22 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
   const addLink = () => {
     const newLink: LinkObj = {
       id: `lnk-${Date.now()}`,
-      label: 'Portfolio',
-      url: ''
+      label: 'LinkedIn',
+      url: '',
+      platform: 'linkedin'
     };
     onChange({ links: [...(data.links || []), newLink] });
   };
 
-  const updateLink = (id: string, field: keyof LinkObj, value: string) => {
-    const newLinks = data.links.map(link => 
-      link.id === id ? { ...link, [field]: value } : link
+  const updateLink = (id: string, updates: Partial<LinkObj>) => {
+    const newLinks = (data.links || []).map(link => 
+      link.id === id ? { ...link, ...updates } : link
     );
     onChange({ links: newLinks });
   };
 
   const removeLink = (id: string) => {
-    onChange({ links: data.links.filter(l => l.id !== id) });
+    onChange({ links: (data.links || []).filter(l => l.id !== id) });
   };
 
   return (
@@ -144,9 +163,9 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
         {/* Dynamic Links Section */}
         <div className="pt-2 border-t border-neutral-100">
            <div className="flex items-center justify-between mb-2">
-             <Label>Enlaces y Redes</Label>
+             <Label>Enlaces y Redes Sociales</Label>
              <Button variant="ghost" size="sm" onClick={addLink} className="h-6 px-2 text-neutral-500">
-               <Plus className="w-3 h-3 mr-1" /> Add
+               <Plus className="w-3 h-3 mr-1" /> Agregar
              </Button>
            </div>
            
@@ -155,18 +174,29 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
                <div key={link.id} className="flex gap-2 items-start bg-neutral-50 p-2 rounded-lg border border-neutral-200">
                  <div className="flex-1 grid grid-cols-3 gap-2">
                    <div className="col-span-1">
-                      <Input 
-                        placeholder="Label (e.g. LinkedIn)" 
-                        value={link.label} 
-                        onChange={(e) => updateLink(link.id, 'label', e.target.value)}
-                        className="bg-white"
-                      />
+                      <select 
+                        className="w-full px-3 py-2 bg-white border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent transition-all cursor-pointer"
+                        value={link.platform || 'other'}
+                        onChange={(e) => {
+                          const selected = SOCIAL_PLATFORMS.find(p => p.id === e.target.value);
+                          if (selected) {
+                            updateLink(link.id, { 
+                              platform: selected.id,
+                              label: selected.label
+                            });
+                          }
+                        }}
+                      >
+                        {SOCIAL_PLATFORMS.map(p => (
+                          <option key={p.id} value={p.id}>{p.label}</option>
+                        ))}
+                      </select>
                    </div>
                    <div className="col-span-2">
                       <Input 
-                        placeholder="URL" 
+                        placeholder="URL (ej. linkedin.com/in/usuario)" 
                         value={link.url} 
-                        onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                        onChange={(e) => updateLink(link.id, { url: e.target.value })}
                         className="bg-white"
                       />
                    </div>

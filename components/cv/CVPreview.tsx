@@ -1,18 +1,46 @@
 
 import React from 'react';
 import { CVData } from '../../types/cv';
-import { MapPin, Mail, Phone, Github, Linkedin, ExternalLink, Globe } from 'lucide-react';
+import { MapPin, Mail, Phone, Github, Linkedin, ExternalLink, Globe, User, Twitter, Link as LinkIcon, Gitlab, Youtube, Instagram, MessageCircle, Send, Code2, BookOpen, Palette } from 'lucide-react';
 
 interface CVPreviewProps {
   data: CVData;
   className?: string;
 }
 
-const LinkIcon: React.FC<{ label: string }> = ({ label }) => {
-  const l = label.toLowerCase();
-  if (l.includes('github') || l.includes('git')) return <Github className="w-3.5 h-3.5 text-neutral-400 shrink-0" />;
-  if (l.includes('linkedin')) return <Linkedin className="w-3.5 h-3.5 text-neutral-400 shrink-0" />;
-  return <Globe className="w-3.5 h-3.5 text-neutral-400 shrink-0" />;
+const ICON_MAP: Record<string, React.ReactNode> = {
+  linkedin: <Linkedin className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  github: <Github className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  gitlab: <Gitlab className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  stackoverflow: <Code2 className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  twitter: <Twitter className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  youtube: <Youtube className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  medium: <BookOpen className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  instagram: <Instagram className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  behance: <Palette className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  whatsapp: <MessageCircle className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  telegram: <Send className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  email: <Mail className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  phone: <Phone className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  portfolio: <Globe className="w-3.5 h-3.5 text-neutral-400 shrink-0" />,
+  other: <LinkIcon className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+};
+
+const SocialIcon: React.FC<{ platform?: string; label: string }> = ({ platform, label }) => {
+  // Use platform if available, otherwise try to guess from label (for legacy data)
+  let key = platform;
+  
+  if (!key) {
+    const l = label.toLowerCase();
+    if (l.includes('linkedin')) key = 'linkedin';
+    else if (l.includes('github') || l.includes('git')) key = 'github';
+    else if (l.includes('twitter') || l.includes('x')) key = 'twitter';
+    else if (l.includes('mail')) key = 'email';
+    else if (l.includes('gitlab')) key = 'gitlab';
+    else key = 'portfolio'; // Default fallback for legacy text
+  }
+
+  return <>{ICON_MAP[key || 'other'] || ICON_MAP['other']}</>;
 };
 
 const CircuitWatermark = () => (
@@ -106,7 +134,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                 {personal.links && personal.links.map(link => (
                    <div key={link.id} className="flex items-center gap-2 group">
                       <div className="p-1.5 bg-neutral-100 rounded-md group-hover:bg-neutral-200 transition-colors">
-                         <LinkIcon label={link.label} />
+                         <SocialIcon platform={link.platform} label={link.label} />
                       </div>
                      <a 
                       href={link.url.startsWith('http') ? link.url : `https://${link.url}`} 
@@ -126,11 +154,15 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
               <div className="order-1 md:order-2 flex justify-center md:justify-end mb-4 md:mb-0">
                 <div className="relative">
                   <div className="absolute inset-0 bg-neutral-900 rounded-full translate-x-1 translate-y-1"></div>
-                  <img 
-                    src={personal.foto} 
-                    alt={personal.nombre}
-                    className="relative w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white z-10 print:w-32 print:h-32" 
-                  />
+                  <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-white z-10 print:w-32 print:h-32 bg-neutral-100 flex items-center justify-center">
+                    <User className="w-16 h-16 text-neutral-300 absolute" />
+                    <img 
+                      src={personal.foto} 
+                      alt={personal.nombre}
+                      className="w-full h-full object-cover relative z-10"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -168,7 +200,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                         <h4 className="text-lg font-bold text-neutral-900 tracking-tight">
                           {exp.puesto}
                         </h4>
-                        <span className="text-xs text-neutral-500 font-semibold bg-neutral-50 px-2 py-1 rounded border border-neutral-100 whitespace-nowrap">
+                        <span className="text-sm text-neutral-500 font-medium whitespace-nowrap">
                           {exp.periodo}
                         </span>
                       </div>
@@ -184,28 +216,28 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
               </section>
             )}
 
-            {/* Projects Section */}
+            {/* Projects Section - Refined look without cards */}
             {proyectos && proyectos.length > 0 && (
                <section>
                 <h3 className="text-sm font-bold uppercase tracking-widest text-neutral-900 mb-6 flex items-center gap-2">
                    <div className="w-8 h-px bg-neutral-900"></div>
                   Proyectos Destacados
                 </h3>
-                <div className="space-y-6">
+                <div className="space-y-0">
                   {proyectos.map((proj) => (
-                    <div key={proj.id} className="group bg-neutral-50 p-5 rounded-lg border border-neutral-100 hover:border-neutral-200 transition-all">
-                      <div className="flex items-center justify-between mb-2">
+                    <div key={proj.id} className="group mb-8 last:mb-0">
+                      <div className="flex items-center justify-between mb-1">
                           <h4 className="text-base font-bold text-neutral-900">
                           {proj.nombre}
                           </h4>
                           {proj.url && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-xs text-neutral-500 hover:text-neutral-900 flex items-center gap-1 transition-colors"><ExternalLink className="w-3 h-3"/> <span className="print:hidden">Ver Proyecto</span></a>}
                       </div>
-                      <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line mb-3 text-justify">
+                      <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line mb-2 text-justify">
                         {proj.descripcion}
                       </p>
                       <div className="flex items-center gap-2">
                           <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Stack</span>
-                          <div className="h-px flex-1 bg-neutral-200"></div>
+                          <div className="h-px w-8 bg-neutral-200"></div>
                           <span className="text-xs font-medium text-neutral-600 font-mono">
                             {proj.tecnologias}
                           </span>
@@ -220,7 +252,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
           {/* Sidebar Column (Right) */}
           <aside className="md:col-span-4 space-y-10">
             
-             {/* Skills */}
+             {/* Skills - Thinner, refined bars */}
              {skills.length > 0 && (
               <section>
                 <h3 className="text-sm font-bold uppercase tracking-widest text-neutral-900 mb-5">
@@ -234,9 +266,9 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                           {skill.nombre}
                         </span>
                       </div>
-                      <div className="h-1.5 w-full bg-neutral-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 w-full bg-neutral-200 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-neutral-800 rounded-full transition-all duration-500 ease-out" 
+                          className="h-full bg-neutral-600 rounded-full transition-all duration-500 ease-out" 
                           style={{ width: `${(skill.nivel / 5) * 100}%` }}
                         ></div>
                       </div>
@@ -267,7 +299,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                               {edu.periodo}
                           </span>
                           {edu.descripcion && (
-                              <p className="text-xs text-neutral-500 leading-relaxed">
+                              <p className="text-xs text-neutral-600 leading-relaxed">
                                   {edu.descripcion}
                               </p>
                           )}

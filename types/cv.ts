@@ -3,6 +3,7 @@ export interface LinkObj {
   id: string;
   label: string;
   url: string;
+  platform?: string; // 'linkedin' | 'github' | 'twitter' | etc.
 }
 
 export interface Personal {

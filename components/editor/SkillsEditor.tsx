@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Zap, Plus, X } from 'lucide-react';
+import { Zap, Plus, X, ArrowUp, ArrowDown } from 'lucide-react';
 import { Skill } from '../../types/cv';
 import { Input, Label, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
@@ -10,9 +10,10 @@ interface SkillsEditorProps {
   onAdd: (skill: Omit<Skill, 'id'>) => void;
   onUpdate: (id: string, skill: Partial<Skill>) => void;
   onRemove: (id: string) => void;
+  onMove: (index: number, direction: 'up' | 'down') => void;
 }
 
-export const SkillsEditor: React.FC<SkillsEditorProps> = ({ skills, onAdd, onUpdate, onRemove }) => {
+export const SkillsEditor: React.FC<SkillsEditorProps> = ({ skills, onAdd, onUpdate, onRemove, onMove }) => {
   return (
     <div className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm space-y-4">
       <div className="flex items-center justify-between">
@@ -23,7 +24,7 @@ export const SkillsEditor: React.FC<SkillsEditorProps> = ({ skills, onAdd, onUpd
       </div>
 
       <div className="grid grid-cols-1 gap-3">
-        {skills.map((skill) => (
+        {skills.map((skill, index) => (
           <div key={skill.id} className="flex items-center gap-3 p-2 border border-neutral-200 rounded-lg bg-neutral-50">
             <div className="flex-1">
               <Input 
@@ -45,12 +46,34 @@ export const SkillsEditor: React.FC<SkillsEditorProps> = ({ skills, onAdd, onUpd
                 <span className="text-xs font-mono w-8 text-right text-neutral-500">{skill.nivel}/5</span>
               </div>
             </div>
-            <button 
-              onClick={() => onRemove(skill.id)}
-              className="p-2 text-neutral-400 hover:text-red-500 hover:bg-white rounded-md transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            
+            <div className="flex flex-col gap-1 items-center justify-center border-l border-neutral-200 pl-2">
+              <div className="flex gap-1">
+                <button 
+                  onClick={() => onMove(index, 'up')}
+                  disabled={index === 0}
+                  className="p-1 text-neutral-400 hover:text-neutral-900 rounded disabled:opacity-30 disabled:hover:text-neutral-400 transition-colors"
+                  title="Mover arriba"
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => onMove(index, 'down')}
+                  disabled={index === skills.length - 1}
+                  className="p-1 text-neutral-400 hover:text-neutral-900 rounded disabled:opacity-30 disabled:hover:text-neutral-400 transition-colors"
+                  title="Mover abajo"
+                >
+                  <ArrowDown className="w-4 h-4" />
+                </button>
+              </div>
+               <button 
+                onClick={() => onRemove(skill.id)}
+                className="p-1 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors w-full flex justify-center"
+                title="Eliminar"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         ))}
       </div>
