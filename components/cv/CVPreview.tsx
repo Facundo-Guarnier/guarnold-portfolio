@@ -9,91 +9,85 @@ interface CVPreviewProps {
 }
 
 // THEME CONFIGURATION
-// Mapping strict Tailwind classes to theme keys.
+// Structure: [Light Class] [Dark Class (Bright/Pastel)] [Print Class (Always Black/Grey)]
 const THEME_COLORS: Record<string, any> = {
   neutral: {
-    primary: 'text-neutral-900',
-    secondary: 'text-neutral-600',
-    accent: 'text-neutral-500',
-    border: 'border-neutral-200',
-    borderLeft: 'border-neutral-100',
-    hoverBorder: 'hover:border-neutral-300',
-    iconBg: 'bg-neutral-100',
-    iconColor: 'text-neutral-600',
-    barBg: 'bg-neutral-200',
-    barFill: 'bg-neutral-600',
-    linkHover: 'hover:text-neutral-900',
-    skillBar: 'bg-neutral-600'
+    primary: 'text-neutral-900 dark:text-white print:text-black',
+    secondary: 'text-neutral-600 dark:text-neutral-400 print:text-neutral-600',
+    accent: 'text-neutral-500 dark:text-neutral-500 print:text-neutral-500',
+    border: 'border-neutral-200 dark:border-neutral-800 print:border-neutral-200',
+    borderLeft: 'border-neutral-100 dark:border-neutral-800 print:border-neutral-200',
+    hoverBorder: 'hover:border-neutral-300 dark:hover:border-neutral-600',
+    iconBg: 'bg-neutral-100 dark:bg-neutral-800 print:bg-neutral-100',
+    iconColor: 'text-neutral-600 dark:text-neutral-300 print:text-neutral-600',
+    barBg: 'bg-neutral-200 dark:bg-neutral-800 print:bg-neutral-200',
+    barFill: 'bg-neutral-600 dark:bg-neutral-200 print:bg-neutral-600',
+    linkHover: 'hover:text-neutral-900 dark:hover:text-white',
   },
   blue: {
-    primary: 'text-blue-900',
-    secondary: 'text-blue-700',
-    accent: 'text-blue-500',
-    border: 'border-blue-200',
-    borderLeft: 'border-blue-100',
-    hoverBorder: 'hover:border-blue-300',
-    iconBg: 'bg-blue-50',
-    iconColor: 'text-blue-700',
-    barBg: 'bg-blue-100',
-    barFill: 'bg-blue-600',
-    linkHover: 'hover:text-blue-800',
-    skillBar: 'bg-blue-600'
+    primary: 'text-blue-900 dark:text-blue-300 print:text-black',
+    secondary: 'text-blue-700 dark:text-blue-400 print:text-neutral-600',
+    accent: 'text-blue-500 dark:text-blue-300 print:text-neutral-500',
+    border: 'border-blue-200 dark:border-blue-900/50 print:border-neutral-200',
+    borderLeft: 'border-blue-100 dark:border-blue-900/50 print:border-neutral-200',
+    hoverBorder: 'hover:border-blue-300 dark:hover:border-blue-700',
+    iconBg: 'bg-blue-50 dark:bg-blue-900/30 print:bg-neutral-100',
+    iconColor: 'text-blue-700 dark:text-blue-300 print:text-neutral-600',
+    barBg: 'bg-blue-100 dark:bg-blue-900/40 print:bg-neutral-200',
+    barFill: 'bg-blue-600 dark:bg-blue-400 print:bg-neutral-600',
+    linkHover: 'hover:text-blue-800 dark:hover:text-blue-200',
   },
   emerald: {
-    primary: 'text-emerald-900',
-    secondary: 'text-emerald-700',
-    accent: 'text-emerald-500',
-    border: 'border-emerald-200',
-    borderLeft: 'border-emerald-100',
-    hoverBorder: 'hover:border-emerald-300',
-    iconBg: 'bg-emerald-50',
-    iconColor: 'text-emerald-700',
-    barBg: 'bg-emerald-100',
-    barFill: 'bg-emerald-600',
-    linkHover: 'hover:text-emerald-800',
-    skillBar: 'bg-emerald-600'
+    primary: 'text-emerald-900 dark:text-emerald-300 print:text-black',
+    secondary: 'text-emerald-700 dark:text-emerald-400 print:text-neutral-600',
+    accent: 'text-emerald-500 dark:text-emerald-300 print:text-neutral-500',
+    border: 'border-emerald-200 dark:border-emerald-900/50 print:border-neutral-200',
+    borderLeft: 'border-emerald-100 dark:border-emerald-900/50 print:border-neutral-200',
+    hoverBorder: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+    iconBg: 'bg-emerald-50 dark:bg-emerald-900/30 print:bg-neutral-100',
+    iconColor: 'text-emerald-700 dark:text-emerald-300 print:text-neutral-600',
+    barBg: 'bg-emerald-100 dark:bg-emerald-900/40 print:bg-neutral-200',
+    barFill: 'bg-emerald-600 dark:bg-emerald-400 print:bg-neutral-600',
+    linkHover: 'hover:text-emerald-800 dark:hover:text-emerald-200',
   },
   purple: {
-    primary: 'text-purple-900',
-    secondary: 'text-purple-700',
-    accent: 'text-purple-500',
-    border: 'border-purple-200',
-    borderLeft: 'border-purple-100',
-    hoverBorder: 'hover:border-purple-300',
-    iconBg: 'bg-purple-50',
-    iconColor: 'text-purple-700',
-    barBg: 'bg-purple-100',
-    barFill: 'bg-purple-600',
-    linkHover: 'hover:text-purple-800',
-    skillBar: 'bg-purple-600'
+    primary: 'text-purple-900 dark:text-purple-300 print:text-black',
+    secondary: 'text-purple-700 dark:text-purple-400 print:text-neutral-600',
+    accent: 'text-purple-500 dark:text-purple-300 print:text-neutral-500',
+    border: 'border-purple-200 dark:border-purple-900/50 print:border-neutral-200',
+    borderLeft: 'border-purple-100 dark:border-purple-900/50 print:border-neutral-200',
+    hoverBorder: 'hover:border-purple-300 dark:hover:border-purple-700',
+    iconBg: 'bg-purple-50 dark:bg-purple-900/30 print:bg-neutral-100',
+    iconColor: 'text-purple-700 dark:text-purple-300 print:text-neutral-600',
+    barBg: 'bg-purple-100 dark:bg-purple-900/40 print:bg-neutral-200',
+    barFill: 'bg-purple-600 dark:bg-purple-400 print:bg-neutral-600',
+    linkHover: 'hover:text-purple-800 dark:hover:text-purple-200',
   },
   rose: {
-    primary: 'text-rose-900',
-    secondary: 'text-rose-700',
-    accent: 'text-rose-500',
-    border: 'border-rose-200',
-    borderLeft: 'border-rose-100',
-    hoverBorder: 'hover:border-rose-300',
-    iconBg: 'bg-rose-50',
-    iconColor: 'text-rose-700',
-    barBg: 'bg-rose-100',
-    barFill: 'bg-rose-600',
-    linkHover: 'hover:text-rose-800',
-    skillBar: 'bg-rose-600'
+    primary: 'text-rose-900 dark:text-rose-300 print:text-black',
+    secondary: 'text-rose-700 dark:text-rose-400 print:text-neutral-600',
+    accent: 'text-rose-500 dark:text-rose-300 print:text-neutral-500',
+    border: 'border-rose-200 dark:border-rose-900/50 print:border-neutral-200',
+    borderLeft: 'border-rose-100 dark:border-rose-900/50 print:border-neutral-200',
+    hoverBorder: 'hover:border-rose-300 dark:hover:border-rose-700',
+    iconBg: 'bg-rose-50 dark:bg-rose-900/30 print:bg-neutral-100',
+    iconColor: 'text-rose-700 dark:text-rose-300 print:text-neutral-600',
+    barBg: 'bg-rose-100 dark:bg-rose-900/40 print:bg-neutral-200',
+    barFill: 'bg-rose-600 dark:bg-rose-400 print:bg-neutral-600',
+    linkHover: 'hover:text-rose-800 dark:hover:text-rose-200',
   },
   amber: {
-    primary: 'text-amber-900',
-    secondary: 'text-amber-700',
-    accent: 'text-amber-600',
-    border: 'border-amber-200',
-    borderLeft: 'border-amber-100',
-    hoverBorder: 'hover:border-amber-300',
-    iconBg: 'bg-amber-50',
-    iconColor: 'text-amber-700',
-    barBg: 'bg-amber-100',
-    barFill: 'bg-amber-600',
-    linkHover: 'hover:text-amber-800',
-    skillBar: 'bg-amber-600'
+    primary: 'text-amber-900 dark:text-amber-300 print:text-black',
+    secondary: 'text-amber-700 dark:text-amber-400 print:text-neutral-600',
+    accent: 'text-amber-600 dark:text-amber-300 print:text-neutral-500',
+    border: 'border-amber-200 dark:border-amber-900/50 print:border-neutral-200',
+    borderLeft: 'border-amber-100 dark:border-amber-900/50 print:border-neutral-200',
+    hoverBorder: 'hover:border-amber-300 dark:hover:border-amber-700',
+    iconBg: 'bg-amber-50 dark:bg-amber-900/30 print:bg-neutral-100',
+    iconColor: 'text-amber-700 dark:text-amber-300 print:text-neutral-600',
+    barBg: 'bg-amber-100 dark:bg-amber-900/40 print:bg-neutral-200',
+    barFill: 'bg-amber-600 dark:bg-amber-400 print:bg-neutral-600',
+    linkHover: 'hover:text-amber-800 dark:hover:text-amber-200',
   }
 };
 
@@ -129,8 +123,8 @@ const SocialIcon: React.FC<{ platform?: string; label: string }> = ({ platform, 
   return <>{ICON_MAP[key || 'other'] || ICON_MAP['other']}</>;
 };
 
-const CircuitWatermark = ({ colorClass }: { colorClass: string }) => (
-  <div className={`absolute bottom-0 right-0 w-[500px] h-[500px] pointer-events-none z-0 overflow-hidden opacity-[0.06] print:opacity-[0.08] ${colorClass} print:text-neutral-900`}>
+const CircuitWatermark = ({ isDark }: { isDark: boolean }) => (
+  <div className={`absolute bottom-0 right-0 w-[500px] h-[500px] pointer-events-none z-0 overflow-hidden opacity-[0.06] print:opacity-[0.08] ${isDark ? 'text-neutral-500' : 'text-neutral-900'} print:text-neutral-900`}>
     <svg viewBox="0 0 500 500" className="w-full h-full fill-none stroke-current" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M500 500 L 450 500 L 450 450" />
       <circle cx="450" cy="450" r="3" fill="currentColor" />
@@ -161,254 +155,255 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
   const theme = THEME_COLORS[settings?.themeColor || 'neutral'] || THEME_COLORS['neutral'];
   const isDark = settings?.darkMode || false;
 
-  // Root container styles based on Dark Mode
-  // Print strategy: FORCE white bg and black text regardless of theme
-  const containerBg = isDark ? 'bg-neutral-900' : 'bg-white';
-  const containerText = isDark ? 'text-white' : 'text-neutral-900';
-  const bodyText = isDark ? 'text-neutral-300' : 'text-neutral-700';
-  const smallText = isDark ? 'text-neutral-400' : 'text-neutral-500';
-  
-  // Explicit Print Overrides applied to children
-  const printTextMain = 'print:text-neutral-900';
-  const printTextSec = 'print:text-neutral-600';
-  const printTextLight = 'print:text-neutral-500';
-  const printBorder = 'print:border-neutral-200';
-  const printBgNone = 'print:bg-transparent';
-  const printBgLight = 'print:bg-neutral-100';
+  // Root container styles:
+  // - On Screen (Light): bg-white text-neutral-900
+  // - On Screen (Dark): bg-slate-950 text-white
+  // - On Print: FORCE bg-white text-neutral-900
+  const containerClasses = `
+    relative w-full max-w-[210mm] min-h-[297mm] mx-auto p-10 md:p-14 shadow-2xl overflow-hidden box-border
+    bg-white text-neutral-900 
+    dark:bg-slate-950 dark:text-white
+    print:bg-white print:text-neutral-900 print:shadow-none print:w-full print:p-10 print:dark:bg-white print:dark:text-neutral-900
+    ${className}
+  `;
+
+  const bodyText = "text-neutral-700 dark:text-neutral-300 print:text-neutral-700";
+  const smallText = "text-neutral-500 dark:text-neutral-400 print:text-neutral-500";
 
   return (
-    <div 
-      className={`relative w-full max-w-[210mm] min-h-[297mm] mx-auto p-10 md:p-14 shadow-2xl overflow-hidden box-border ${containerBg} ${containerText} print:bg-white print:text-neutral-900 print:shadow-none print:w-full print:p-10 ${className}`}
-      id="cv-preview"
-    >
-      {/* Watermark - Forces standardized color on print */}
-      <CircuitWatermark colorClass={isDark ? 'text-neutral-700' : 'text-neutral-900'} />
-
-      {/* Content Wrapper */}
-      <div className="relative z-10">
+    // IMPORTANT: 'dark' class applied here triggers dark mode for all children if isDark is true.
+    <div className={`${isDark ? 'dark' : ''} h-full`}>
+      <div className={containerClasses} id="cv-preview">
         
-        {/* Header Section */}
-        <header className={`border-b pb-8 mb-10 ${isDark ? 'border-neutral-800' : theme.border} ${printBorder}`}>
-          <div className="flex flex-col md:flex-row gap-8 md:items-end justify-between">
-            
-            {/* Text Content */}
-            <div className="flex-1 order-2 md:order-1 text-center md:text-left">
-              <h1 className={`text-5xl md:text-6xl font-bold uppercase tracking-tighter mb-3 leading-none ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                {personal.nombre}
-              </h1>
-              <p className={`text-sm md:text-base font-medium tracking-[0.2em] uppercase ${smallText} ${printTextLight}`}>
-                {personal.titulo}
-              </p>
+        {/* Watermark */}
+        <CircuitWatermark isDark={isDark} />
+
+        {/* Content Wrapper */}
+        <div className="relative z-10">
+          
+          {/* Header Section */}
+          <header className={`border-b pb-8 mb-10 ${theme.border}`}>
+            <div className="flex flex-col md:flex-row gap-8 md:items-end justify-between">
               
-              {/* Contact Bar */}
-              <div className={`mt-6 flex flex-wrap justify-center md:justify-start gap-y-3 gap-x-6 text-sm font-medium ${isDark ? 'text-neutral-400' : 'text-neutral-600'} ${printTextSec}`}>
-                {personal.email && (
-                  <div className="flex items-center gap-2 group">
-                    <div className={`p-1.5 rounded-md transition-colors ${isDark ? 'bg-neutral-800 text-neutral-300' : `${theme.iconBg} ${theme.iconColor}`} ${printBgLight} ${printTextSec}`}>
-                      <Mail className="w-3.5 h-3.5" />
-                    </div>
-                    <span>{personal.email}</span>
-                  </div>
-                )}
-                {personal.telefono && (
-                  <div className="flex items-center gap-2 group">
-                     <div className={`p-1.5 rounded-md transition-colors ${isDark ? 'bg-neutral-800 text-neutral-300' : `${theme.iconBg} ${theme.iconColor}`} ${printBgLight} ${printTextSec}`}>
-                      <Phone className="w-3.5 h-3.5" />
-                    </div>
-                    <span>{personal.telefono}</span>
-                  </div>
-                )}
-                {personal.ubicacion && (
-                  <div className="flex items-center gap-2 group">
-                     <div className={`p-1.5 rounded-md transition-colors ${isDark ? 'bg-neutral-800 text-neutral-300' : `${theme.iconBg} ${theme.iconColor}`} ${printBgLight} ${printTextSec}`}>
-                      <MapPin className="w-3.5 h-3.5" />
-                    </div>
-                    <span>{personal.ubicacion}</span>
-                  </div>
-                )}
-                {/* Dynamic Links */}
-                {personal.links && personal.links.map(link => (
-                   <div key={link.id} className="flex items-center gap-2 group">
-                      <div className={`p-1.5 rounded-md transition-colors ${isDark ? 'bg-neutral-800 text-neutral-300' : `${theme.iconBg} ${theme.iconColor}`} ${printBgLight} ${printTextSec}`}>
-                         <SocialIcon platform={link.platform} label={link.label} />
-                      </div>
-                     <a 
-                      href={link.url.startsWith('http') ? link.url : `https://${link.url}`} 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className={`transition-colors border-b border-transparent pb-0.5 print:no-underline print:border-none ${isDark ? 'hover:text-white hover:border-white' : `${theme.linkHover} hover:border-current`} ${printTextSec}`}
-                     >
-                       {link.url.replace(/^https?:\/\//, '').replace(/^www\./, '')}
-                     </a>
-                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Profile Picture */}
-            {personal.foto && (
-              <div className="order-1 md:order-2 flex justify-center md:justify-end mb-4 md:mb-0">
-                <div className="relative">
-                  <div className={`absolute inset-0 rounded-full translate-x-1 translate-y-1 ${isDark ? 'bg-neutral-700' : 'bg-neutral-900'} print:hidden`}></div>
-                  <div className={`relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 z-10 print:w-32 print:h-32 flex items-center justify-center ${isDark ? 'bg-neutral-800 border-neutral-700' : 'bg-neutral-100 border-white'} print:border-neutral-200 print:bg-white`}>
-                    <User className="w-16 h-16 text-neutral-300 absolute" />
-                    <img 
-                      src={personal.foto} 
-                      alt={personal.nombre}
-                      className="w-full h-full object-cover relative z-10"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </header>
-
-        {/* Row 1: Two Columns (Main & Sidebar) */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
-          {/* Main Column (Left) */}
-          <div className="md:col-span-8 space-y-10">
-            
-            {/* Profile Summary */}
-            {personal.resumen && (
-              <section>
-                <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                  <div className={`w-8 h-px ${isDark ? 'bg-white' : 'bg-current'} ${printTextMain}`}></div>
-                  Perfil Profesional
-                </h3>
-                <p className={`text-sm leading-7 whitespace-pre-line text-justify font-normal ${bodyText} ${printTextMain}`}>
-                  {personal.resumen}
+              {/* Text Content */}
+              <div className="flex-1 order-2 md:order-1 text-center md:text-left">
+                <h1 className={`text-5xl md:text-6xl font-bold uppercase tracking-tighter mb-3 leading-none ${theme.primary}`}>
+                  {personal.nombre}
+                </h1>
+                <p className={`text-sm md:text-base font-medium tracking-[0.2em] uppercase ${smallText}`}>
+                  {personal.titulo}
                 </p>
-              </section>
-            )}
-
-            {/* Experience */}
-            {experiencia.length > 0 && (
-              <section>
-                <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                   <div className={`w-8 h-px ${isDark ? 'bg-white' : 'bg-current'} ${printTextMain}`}></div>
-                  Experiencia Laboral
-                </h3>
-                <div className="space-y-8">
-                  {experiencia.map((exp) => (
-                    <div key={exp.id} className={`break-inside-avoid group relative pl-4 border-l-2 transition-colors ${isDark ? 'border-neutral-800 hover:border-neutral-600' : `${theme.borderLeft} ${theme.hoverBorder}`} ${printBorder}`}>
-                      <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-1.5">
-                        <h4 className={`text-lg font-bold tracking-tight ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                          {exp.puesto}
-                        </h4>
-                        <span className={`text-sm font-medium whitespace-nowrap ${smallText} ${printTextLight}`}>
-                          {exp.periodo}
-                        </span>
+                
+                {/* Contact Bar */}
+                <div className={`mt-6 flex flex-wrap justify-center md:justify-start gap-y-3 gap-x-6 text-sm font-medium ${theme.secondary}`}>
+                  {personal.email && (
+                    <div className="flex items-center gap-2 group">
+                      <div className={`p-1.5 rounded-md transition-colors ${theme.iconBg} ${theme.iconColor}`}>
+                        <Mail className="w-3.5 h-3.5" />
                       </div>
-                      <div className={`text-sm font-semibold mb-3 ${isDark ? 'text-neutral-400' : theme.secondary} ${printTextSec}`}>
-                        {exp.empresa}
-                      </div>
-                      <p className={`text-sm leading-relaxed whitespace-pre-line text-justify ${bodyText} ${printTextMain}`}>
-                        {exp.descripcion}
-                      </p>
+                      <span>{personal.email}</span>
                     </div>
+                  )}
+                  {personal.telefono && (
+                    <div className="flex items-center gap-2 group">
+                       <div className={`p-1.5 rounded-md transition-colors ${theme.iconBg} ${theme.iconColor}`}>
+                        <Phone className="w-3.5 h-3.5" />
+                      </div>
+                      <span>{personal.telefono}</span>
+                    </div>
+                  )}
+                  {personal.ubicacion && (
+                    <div className="flex items-center gap-2 group">
+                       <div className={`p-1.5 rounded-md transition-colors ${theme.iconBg} ${theme.iconColor}`}>
+                        <MapPin className="w-3.5 h-3.5" />
+                      </div>
+                      <span>{personal.ubicacion}</span>
+                    </div>
+                  )}
+                  {/* Dynamic Links */}
+                  {personal.links && personal.links.map(link => (
+                     <div key={link.id} className="flex items-center gap-2 group">
+                        <div className={`p-1.5 rounded-md transition-colors ${theme.iconBg} ${theme.iconColor}`}>
+                           <SocialIcon platform={link.platform} label={link.label} />
+                        </div>
+                       <a 
+                        href={link.url.startsWith('http') ? link.url : `https://${link.url}`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className={`transition-colors border-b border-transparent pb-0.5 print:no-underline print:border-none hover:border-current ${theme.linkHover}`}
+                       >
+                         {link.url.replace(/^https?:\/\//, '').replace(/^www\./, '')}
+                       </a>
+                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              </div>
+
+              {/* Profile Picture */}
+              {personal.foto && (
+                <div className="order-1 md:order-2 flex justify-center md:justify-end mb-4 md:mb-0">
+                  <div className="relative">
+                    <div className={`absolute inset-0 rounded-full translate-x-1 translate-y-1 bg-neutral-900 dark:bg-neutral-700 print:hidden`}></div>
+                    <div className={`relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 z-10 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border-white dark:border-neutral-700 print:bg-white print:border-neutral-200 print:w-32 print:h-32`}>
+                      <User className="w-16 h-16 text-neutral-300 absolute" />
+                      <img 
+                        src={personal.foto} 
+                        alt={personal.nombre}
+                        className="w-full h-full object-cover relative z-10"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </header>
+
+          {/* Row 1: Two Columns (Main & Sidebar) */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+            {/* Main Column (Left) */}
+            <div className="md:col-span-8 space-y-10">
+              
+              {/* Profile Summary */}
+              {personal.resumen && (
+                <section>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.primary}`}>
+                    <div className={`w-8 h-px bg-current`}></div>
+                    Perfil Profesional
+                  </h3>
+                  <p className={`text-sm leading-7 whitespace-pre-line text-justify font-normal ${bodyText}`}>
+                    {personal.resumen}
+                  </p>
+                </section>
+              )}
+
+              {/* Experience */}
+              {experiencia.length > 0 && (
+                <section>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.primary}`}>
+                     <div className={`w-8 h-px bg-current`}></div>
+                    Experiencia Laboral
+                  </h3>
+                  <div className="space-y-8">
+                    {experiencia.map((exp) => (
+                      <div key={exp.id} className={`break-inside-avoid group relative pl-4 border-l-2 transition-colors ${theme.borderLeft} ${theme.hoverBorder}`}>
+                        <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-1.5">
+                          <h4 className={`text-lg font-bold tracking-tight ${theme.primary}`}>
+                            {exp.puesto}
+                          </h4>
+                          <span className={`text-sm font-medium whitespace-nowrap ${smallText}`}>
+                            {exp.periodo}
+                          </span>
+                        </div>
+                        <div className={`text-sm font-semibold mb-3 ${theme.secondary}`}>
+                          {exp.empresa}
+                        </div>
+                        <p className={`text-sm leading-relaxed whitespace-pre-line text-justify ${bodyText}`}>
+                          {exp.descripcion}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
+
+            {/* Sidebar Column (Right) */}
+            <aside className="md:col-span-4 space-y-10">
+              
+               {/* Skills */}
+               {skills.length > 0 && (
+                <section>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${theme.primary}`}>
+                    Habilidades
+                  </h3>
+                  <div className="space-y-4">
+                    {skills.map((skill) => (
+                      <div key={skill.id} className="break-inside-avoid">
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className={`text-sm font-semibold text-neutral-700 dark:text-neutral-300 print:text-neutral-700`}>
+                            {skill.nombre}
+                          </span>
+                        </div>
+                        <div className={`h-1.5 w-full rounded-full overflow-hidden ${theme.barBg}`}>
+                          <div 
+                            className={`h-full rounded-full transition-all duration-500 ease-out ${theme.barFill}`} 
+                            style={{ width: `${(skill.nivel / 5) * 100}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Education */}
+              {educacion.length > 0 && (
+                <section>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${theme.primary}`}>
+                    Educación
+                  </h3>
+                  <div className="space-y-6">
+                    {educacion.map((edu) => (
+                      <div key={edu.id} className="break-inside-avoid relative">
+                        <div className={`absolute -left-[19px] top-1.5 w-2 h-2 rounded-full border-2 bg-white dark:bg-slate-950 print:bg-white ${theme.border}`}></div>
+                        <div className={`border-l pl-5 pb-1 ${theme.border}`}>
+                            <h4 className={`text-sm font-bold leading-tight mb-1 ${theme.primary}`}>
+                                {edu.titulo}
+                            </h4>
+                            <div className={`text-xs font-semibold mb-1 ${theme.secondary}`}>
+                                {edu.institucion}
+                            </div>
+                            <span className={`text-xs font-medium block mb-2 font-mono ${smallText}`}>
+                                {edu.periodo}
+                            </span>
+                            {edu.descripcion && (
+                                <p className={`text-xs leading-relaxed text-neutral-600 dark:text-neutral-400 print:text-neutral-600`}>
+                                    {edu.descripcion}
+                                </p>
+                            )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </aside>
           </div>
 
-          {/* Sidebar Column (Right) */}
-          <aside className="md:col-span-4 space-y-10">
-            
-             {/* Skills */}
-             {skills.length > 0 && (
-              <section>
-                <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                  Habilidades
-                </h3>
-                <div className="space-y-4">
-                  {skills.map((skill) => (
-                    <div key={skill.id} className="break-inside-avoid">
-                      <div className="flex justify-between items-center mb-1.5">
-                        <span className={`text-sm font-semibold ${isDark ? 'text-neutral-300' : 'text-neutral-700'} ${printTextMain}`}>
-                          {skill.nombre}
-                        </span>
-                      </div>
-                      <div className={`h-1.5 w-full rounded-full overflow-hidden ${isDark ? 'bg-neutral-800' : theme.barBg} ${printBgLight}`}>
-                        <div 
-                          className={`h-full rounded-full transition-all duration-500 ease-out ${isDark ? 'bg-white' : theme.barFill} print:bg-neutral-600`} 
-                          style={{ width: `${(skill.nivel / 5) * 100}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* Education */}
-            {educacion.length > 0 && (
-              <section>
-                <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                  Educación
-                </h3>
-                <div className="space-y-6">
-                  {educacion.map((edu) => (
-                    <div key={edu.id} className="break-inside-avoid relative">
-                      <div className={`absolute -left-[19px] top-1.5 w-2 h-2 rounded-full border-2 ${isDark ? 'border-neutral-700 bg-neutral-900' : `${theme.border} bg-white`} ${printBorder} print:bg-white`}></div>
-                      <div className={`border-l pl-5 pb-1 ${isDark ? 'border-neutral-800' : theme.border} ${printBorder}`}>
-                          <h4 className={`text-sm font-bold leading-tight mb-1 ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                              {edu.titulo}
+          {/* Row 2: Full Width Projects Section */}
+          {proyectos && proyectos.length > 0 && (
+              <section className={`mt-10 pt-10 border-t ${theme.borderLeft}`}>
+              <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.primary}`}>
+                  <div className={`w-8 h-px bg-current`}></div>
+                  Proyectos Destacados
+              </h3>
+              <div className="space-y-0">
+                  {proyectos.map((proj) => (
+                  <div key={proj.id} className="break-inside-avoid group mb-8 last:mb-0">
+                      <div className="flex items-center justify-between mb-1">
+                          <h4 className={`text-base font-bold ${theme.primary}`}>
+                          {proj.nombre}
                           </h4>
-                          <div className={`text-xs font-semibold mb-1 ${isDark ? 'text-neutral-400' : theme.secondary} ${printTextSec}`}>
-                              {edu.institucion}
-                          </div>
-                          <span className={`text-xs font-medium block mb-2 font-mono ${smallText} ${printTextLight}`}>
-                              {edu.periodo}
-                          </span>
-                          {edu.descripcion && (
-                              <p className={`text-xs leading-relaxed ${isDark ? 'text-neutral-500' : 'text-neutral-600'} ${printTextSec}`}>
-                                  {edu.descripcion}
-                              </p>
-                          )}
+                          {proj.url && <a href={proj.url} target="_blank" rel="noopener noreferrer" className={`text-xs flex items-center gap-1 transition-colors ${smallText} hover:text-current`}><ExternalLink className="w-3 h-3"/> <span className="print:hidden">Ver Proyecto</span></a>}
                       </div>
-                    </div>
+                      <p className={`text-sm leading-relaxed whitespace-pre-line mb-2 text-justify ${bodyText}`}>
+                      {proj.descripcion}
+                      </p>
+                      <div className="flex items-center gap-2">
+                          <span className={`text-xs font-bold uppercase tracking-wider ${smallText}`}>Stack</span>
+                          <div className={`h-px w-8 bg-neutral-200 dark:bg-neutral-800 print:bg-neutral-200`}></div>
+                          <span className={`text-xs font-medium font-mono ${theme.secondary}`}>
+                          {proj.tecnologias}
+                          </span>
+                      </div>
+                  </div>
                   ))}
-                </div>
+              </div>
               </section>
-            )}
-          </aside>
+          )}
+
         </div>
-
-        {/* Row 2: Full Width Projects Section */}
-        {proyectos && proyectos.length > 0 && (
-            <section className={`mt-10 pt-10 border-t ${isDark ? 'border-neutral-800' : theme.borderLeft} ${printBorder}`}>
-            <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                <div className={`w-8 h-px ${isDark ? 'bg-white' : 'bg-current'} ${printTextMain}`}></div>
-                Proyectos Destacados
-            </h3>
-            <div className="space-y-0">
-                {proyectos.map((proj) => (
-                <div key={proj.id} className="break-inside-avoid group mb-8 last:mb-0">
-                    <div className="flex items-center justify-between mb-1">
-                        <h4 className={`text-base font-bold ${isDark ? 'text-white' : theme.primary} ${printTextMain}`}>
-                        {proj.nombre}
-                        </h4>
-                        {proj.url && <a href={proj.url} target="_blank" rel="noopener noreferrer" className={`text-xs flex items-center gap-1 transition-colors ${smallText} hover:text-current ${printTextLight}`}><ExternalLink className="w-3 h-3"/> <span className="print:hidden">Ver Proyecto</span></a>}
-                    </div>
-                    <p className={`text-sm leading-relaxed whitespace-pre-line mb-2 text-justify ${bodyText} ${printTextMain}`}>
-                    {proj.descripcion}
-                    </p>
-                    <div className="flex items-center gap-2">
-                        <span className={`text-xs font-bold uppercase tracking-wider ${smallText} ${printTextLight}`}>Stack</span>
-                        <div className={`h-px w-8 ${isDark ? 'bg-neutral-800' : 'bg-neutral-200'} ${printBgLight}`}></div>
-                        <span className={`text-xs font-medium font-mono ${isDark ? 'text-neutral-400' : theme.secondary} ${printTextSec}`}>
-                        {proj.tecnologias}
-                        </span>
-                    </div>
-                </div>
-                ))}
-            </div>
-            </section>
-        )}
-
       </div>
     </div>
   );

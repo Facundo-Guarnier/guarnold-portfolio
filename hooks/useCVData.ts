@@ -46,6 +46,24 @@ export const useCVData = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
 
+  // --- THEME SYNC EFFECT (CRITICAL FIX) ---
+  // This effect forces the 'dark' class onto the HTML element
+  useEffect(() => {
+    const root = window.document.documentElement;
+    const isDark = displayData.settings.darkMode;
+
+    // Clean up existing classes to prevent conflicts
+    root.classList.remove('light', 'dark');
+
+    if (isDark) {
+      root.classList.add('dark');
+    } else {
+      root.classList.add('light');
+    }
+    
+    console.log(`Theme toggled to: ${isDark ? 'Dark' : 'Light'}`);
+  }, [displayData.settings.darkMode]);
+
   // --- Actions ---
 
   // Theme Management

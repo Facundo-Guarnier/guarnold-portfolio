@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Edit3, Download, Palette, X, Moon, Sun } from 'lucide-react';
 import { useCVData } from '../hooks/useCVData';
@@ -9,6 +9,7 @@ import { CVSettings } from '../types/cv';
 const Home: React.FC = () => {
   const { data, setTheme } = useCVData();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {
     const originalTitle = document.title;
@@ -18,6 +19,23 @@ const Home: React.FC = () => {
       document.title = originalTitle;
     }, 1000);
   };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowThemeMenu(false);
+      }
+    };
+
+    if (showThemeMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showThemeMenu]);
 
   const COLORS: { id: CVSettings['themeColor']; class: string }[] = [
     { id: 'neutral', class: 'bg-neutral-500' },
@@ -29,7 +47,7 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-100 md:py-10 print:bg-white print:py-0">
+    <div className={`min-h-screen md:py-10 print:bg-white print:py-0 transition-colors duration-300 ${data.settings.darkMode ? 'bg-neutral-900' : 'bg-neutral-100'}`}>
       
       {/* Navigation Controls - Hidden when printing */}
       <div className="fixed top-5 right-5 z-50 flex gap-3 print:hidden">
@@ -51,7 +69,10 @@ const Home: React.FC = () => {
       </div>
 
       {/* Floating Theme Toggle (Bottom Right) - Public View Only */}
-      <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4 print:hidden">
+      <div 
+        ref={menuRef}
+        className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4 print:hidden"
+      >
         {showThemeMenu && (
           <div className="bg-white p-4 rounded-2xl shadow-xl border border-neutral-200 animate-in slide-in-from-bottom-5 fade-in duration-200 mb-2">
             <div className="flex items-center justify-between mb-3 gap-8">
@@ -116,7 +137,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <footer className="mt-12 text-center text-neutral-400 text-xs print:hidden pb-10">
+      <footer className={`mt-12 text-center text-xs print:hidden pb-10 transition-colors ${data.settings.darkMode ? 'text-neutral-600' : 'text-neutral-400'}`}>
         <p>Guarnold CV System • Local Data Only</p>
       </footer>
     </div>
