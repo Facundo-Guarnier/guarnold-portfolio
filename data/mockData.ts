@@ -8,8 +8,10 @@ export const initialCVData: CVData = {
     email: "facundoguarnier@gmail.com",
     telefono: "+54 9 261 511-7024",
     ubicacion: "Guaymallén, Mendoza, Argentina",
-    linkedin: "linkedin.com/in/facundo-guarnier",
-    github: "github.com/Facundo-Guarnier",
+    links: [
+      { id: 'lnk-1', label: 'LinkedIn', url: 'linkedin.com/in/facundo-guarnier' },
+      { id: 'lnk-2', label: 'GitHub', url: 'github.com/Facundo-Guarnier' }
+    ],
     resumen: "Ingeniero en Informática con experiencia profesional en el desarrollo de soluciones tecnológicas full-stack. Especializado en el ciclo de vida completo del desarrollo, desde la concepción hasta el despliegue, utilizando tecnologías modernas como Flutter, React, FastAPI, Python y K8s. Me motiva el desafío de crear tecnología con propósito y busco colaborar en equipos innovadores para aportar valor real.",
     foto: "assets/profile.jpg"
   },

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto } from '../types/cv';
 import { initialCVData } from '../data/mockData';
 
-const STORAGE_KEY = 'guarnold_cv_data_v3';
+const STORAGE_KEY = 'guarnold_cv_data_v4';
 
 export const useCVData = () => {
   const [data, setData] = useState<CVData>(() => {
@@ -11,8 +11,8 @@ export const useCVData = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Basic check to see if it's the new schema (check for 'personal' prop)
-        if (parsed.personal) {
+        // Basic check to see if it's the new schema (check for 'links' array in personal)
+        if (parsed.personal && Array.isArray(parsed.personal.links)) {
             return parsed;
         }
       } catch (e) {
@@ -25,6 +25,19 @@ export const useCVData = () => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data]);
+
+  // Generic Move Function
+  const moveItem = (section: 'experiencia' | 'educacion' | 'proyectos' | 'skills', index: number, direction: 'up' | 'down') => {
+    setData(prev => {
+      const list = [...prev[section]];
+      if (direction === 'up' && index > 0) {
+        [list[index], list[index - 1]] = [list[index - 1], list[index]];
+      } else if (direction === 'down' && index < list.length - 1) {
+        [list[index], list[index + 1]] = [list[index + 1], list[index]];
+      }
+      return { ...prev, [section]: list };
+    });
+  };
 
   // Personal
   const updatePersonal = (personalUpdate: Partial<Personal>) => {
@@ -133,6 +146,7 @@ export const useCVData = () => {
   return {
     data,
     updatePersonal,
+    moveItem,
     addExperiencia,
     updateExperiencia,
     removeExperiencia,

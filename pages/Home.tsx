@@ -12,7 +12,10 @@ const Home: React.FC = () => {
     const originalTitle = document.title;
     document.title = `${data.personal.nombre.replace(/\s+/g, '_')}_CV`;
     window.print();
-    // Note: We leave the title changed as reverting immediately can sometimes race with the print dialog
+    // setTimeout to reset title after print dialog triggers
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1000);
   };
 
   return (

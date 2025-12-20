@@ -18,6 +18,7 @@ const Admin: React.FC = () => {
   const { 
     data, 
     updatePersonal, 
+    moveItem,
     addExperiencia, 
     updateExperiencia, 
     removeExperiencia,
@@ -39,13 +40,11 @@ const Admin: React.FC = () => {
   
   const handlePrint = () => {
     const originalTitle = document.title;
-    const cleanName = data.personal.nombre.replace(/\s+/g, '_');
-    document.title = `${cleanName}_CV`;
+    document.title = `${data.personal.nombre.replace(/\s+/g, '_')}_CV`;
+    window.print();
     setTimeout(() => {
-        window.print();
-        // Reset title after print dialog closes (or reasonably after)
-        // document.title = originalTitle; 
-    }, 100);
+        document.title = originalTitle;
+    }, 1000);
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -131,18 +130,21 @@ const Admin: React.FC = () => {
               onAdd={addExperiencia} 
               onUpdate={updateExperiencia} 
               onRemove={removeExperiencia}
+              onMove={(idx, dir) => moveItem('experiencia', idx, dir)}
             />
             <ProjectsEditor
               proyectos={data.proyectos}
               onAdd={addProyecto}
               onUpdate={updateProyecto}
               onRemove={removeProyecto}
+              onMove={(idx, dir) => moveItem('proyectos', idx, dir)}
             />
             <EducationEditor 
               educations={data.educacion}
               onAdd={addEducacion}
               onUpdate={updateEducacion}
               onRemove={removeEducacion}
+              onMove={(idx, dir) => moveItem('educacion', idx, dir)}
             />
             <SkillsEditor 
               skills={data.skills}

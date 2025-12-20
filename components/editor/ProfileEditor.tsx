@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
-import { User, Upload, X } from 'lucide-react';
-import { Personal } from '../../types/cv';
+import { User, Upload, X, Plus, Trash2, Globe } from 'lucide-react';
+import { Personal, LinkObj } from '../../types/cv';
 import { Input, Label, TextArea, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
 
@@ -21,7 +21,6 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Limit file size to avoid localStorage issues (max ~2MB recommended)
       if (file.size > 2 * 1024 * 1024) {
         alert("La imagen es muy pesada. Por favor usa una imagen menor a 2MB.");
         return;
@@ -38,6 +37,27 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
   const removeImage = () => {
     onChange({ foto: '' });
     if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // Link Management
+  const addLink = () => {
+    const newLink: LinkObj = {
+      id: `lnk-${Date.now()}`,
+      label: 'Portfolio',
+      url: ''
+    };
+    onChange({ links: [...(data.links || []), newLink] });
+  };
+
+  const updateLink = (id: string, field: keyof LinkObj, value: string) => {
+    const newLinks = data.links.map(link => 
+      link.id === id ? { ...link, [field]: value } : link
+    );
+    onChange({ links: newLinks });
+  };
+
+  const removeLink = (id: string) => {
+    onChange({ links: data.links.filter(l => l.id !== id) });
   };
 
   return (
@@ -121,15 +141,50 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange }) 
            <Input name="ubicacion" value={data.ubicacion} onChange={handleChange} placeholder="Mendoza, Argentina" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="linkedin">LinkedIn (URL o usuario)</Label>
-            <Input name="linkedin" value={data.linkedin} onChange={handleChange} placeholder="linkedin.com/in/..." />
-          </div>
-          <div>
-            <Label htmlFor="github">GitHub (URL o usuario)</Label>
-            <Input name="github" value={data.github} onChange={handleChange} placeholder="github.com/..." />
-          </div>
+        {/* Dynamic Links Section */}
+        <div className="pt-2 border-t border-neutral-100">
+           <div className="flex items-center justify-between mb-2">
+             <Label>Enlaces y Redes</Label>
+             <Button variant="ghost" size="sm" onClick={addLink} className="h-6 px-2 text-neutral-500">
+               <Plus className="w-3 h-3 mr-1" /> Add
+             </Button>
+           </div>
+           
+           <div className="space-y-3">
+             {(data.links || []).map((link) => (
+               <div key={link.id} className="flex gap-2 items-start bg-neutral-50 p-2 rounded-lg border border-neutral-200">
+                 <div className="flex-1 grid grid-cols-3 gap-2">
+                   <div className="col-span-1">
+                      <Input 
+                        placeholder="Label (e.g. LinkedIn)" 
+                        value={link.label} 
+                        onChange={(e) => updateLink(link.id, 'label', e.target.value)}
+                        className="bg-white"
+                      />
+                   </div>
+                   <div className="col-span-2">
+                      <Input 
+                        placeholder="URL" 
+                        value={link.url} 
+                        onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                        className="bg-white"
+                      />
+                   </div>
+                 </div>
+                 <button 
+                  onClick={() => removeLink(link.id)}
+                  className="p-2 text-neutral-400 hover:text-red-500 rounded hover:bg-white transition-colors"
+                 >
+                   <Trash2 className="w-4 h-4" />
+                 </button>
+               </div>
+             ))}
+             {(data.links || []).length === 0 && (
+                <div className="text-center p-3 border border-dashed border-neutral-200 rounded-lg text-xs text-neutral-400">
+                   No hay enlaces añadidos
+                </div>
+             )}
+           </div>
         </div>
       </div>
     </div>

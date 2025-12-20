@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Briefcase, Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Briefcase, Plus, Trash2, ChevronDown, ChevronUp, ArrowUp, ArrowDown } from 'lucide-react';
 import { Experiencia } from '../../types/cv';
 import { Input, Label, TextArea, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
@@ -10,9 +10,10 @@ interface ExperienceEditorProps {
   onAdd: (exp: Omit<Experiencia, 'id'>) => void;
   onUpdate: (id: string, exp: Partial<Experiencia>) => void;
   onRemove: (id: string) => void;
+  onMove: (index: number, direction: 'up' | 'down') => void;
 }
 
-export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({ experiences, onAdd, onUpdate, onRemove }) => {
+export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({ experiences, onAdd, onUpdate, onRemove, onMove }) => {
   const [expandedId, setExpandedId] = React.useState<string | null>(experiences[0]?.id || null);
 
   const handleAdd = () => {
@@ -34,23 +35,40 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({ experiences,
       </div>
 
       <div className="space-y-3">
-        {experiences.map((exp) => (
+        {experiences.map((exp, index) => (
           <div key={exp.id} className="border border-neutral-200 rounded-lg overflow-hidden">
             <div 
               className="bg-neutral-50 px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition-colors"
               onClick={() => setExpandedId(expandedId === exp.id ? null : exp.id)}
             >
-              <div className="font-medium text-sm text-neutral-800 truncate pr-4">
+              <div className="font-medium text-sm text-neutral-800 truncate pr-4 flex-1">
                 {exp.puesto} <span className="text-neutral-400 font-normal">en {exp.empresa}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onMove(index, 'up'); }}
+                  disabled={index === 0}
+                  className="p-1 text-neutral-400 hover:text-neutral-900 rounded disabled:opacity-30 disabled:hover:text-neutral-400"
+                  title="Mover arriba"
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); onMove(index, 'down'); }}
+                  disabled={index === experiences.length - 1}
+                  className="p-1 text-neutral-400 hover:text-neutral-900 rounded disabled:opacity-30 disabled:hover:text-neutral-400"
+                  title="Mover abajo"
+                >
+                  <ArrowDown className="w-4 h-4" />
+                </button>
+                <div className="w-px h-4 bg-neutral-300 mx-1"></div>
                  <button 
                   onClick={(e) => { e.stopPropagation(); onRemove(exp.id); }}
                   className="p-1 hover:bg-red-100 text-neutral-400 hover:text-red-600 rounded"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
-                {expandedId === exp.id ? <ChevronUp className="w-4 h-4 text-neutral-500" /> : <ChevronDown className="w-4 h-4 text-neutral-500" />}
+                {expandedId === exp.id ? <ChevronUp className="w-4 h-4 text-neutral-500 ml-1" /> : <ChevronDown className="w-4 h-4 text-neutral-500 ml-1" />}
               </div>
             </div>
 

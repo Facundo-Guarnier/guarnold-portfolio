@@ -1,12 +1,17 @@
 
+export interface LinkObj {
+  id: string;
+  label: string;
+  url: string;
+}
+
 export interface Personal {
   nombre: string;
   titulo: string;
   email: string;
   telefono: string;
   ubicacion: string;
-  linkedin: string;
-  github: string;
+  links: LinkObj[];
   resumen: string;
   foto?: string;
 }
