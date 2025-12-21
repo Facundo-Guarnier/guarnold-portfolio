@@ -158,12 +158,12 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
   // Root container styles:
   // - On Screen (Light): bg-white text-neutral-900
   // - On Screen (Dark): bg-slate-950 text-white
-  // - On Print: FORCE bg-white text-neutral-900 + A4 dimensions
+  // - On Print: FORCE bg-white text-neutral-900 + A4 dimensions + overflow visible
   const containerClasses = `
     relative w-full max-w-[210mm] min-h-[297mm] mx-auto p-10 md:p-14 shadow-2xl overflow-hidden box-border
     bg-white text-neutral-900 
     dark:bg-slate-950 dark:text-white
-    print:bg-white print:text-neutral-900 print:shadow-none print:w-[210mm] print:min-w-[210mm] print:max-w-none print:p-10 print:dark:bg-white print:dark:text-neutral-900
+    print:bg-white print:text-neutral-900 print:shadow-none print:w-[210mm] print:min-w-[210mm] print:max-w-none print:p-10 print:dark:bg-white print:dark:text-neutral-900 print:overflow-visible print:h-auto
     ${className}
   `;
 
@@ -267,7 +267,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
               {/* Profile Summary */}
               {personal.resumen && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 print:break-after-avoid ${theme.primary}`}>
                     <div className={`w-8 h-px bg-current`}></div>
                     Perfil Profesional
                   </h3>
@@ -280,13 +280,13 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
               {/* Experience */}
               {experiencia.length > 0 && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 print:break-after-avoid ${theme.primary}`}>
                      <div className={`w-8 h-px bg-current`}></div>
                     Experiencia Laboral
                   </h3>
                   <div className="space-y-8">
                     {experiencia.map((exp) => (
-                      <div key={exp.id} className={`break-inside-avoid group relative pl-4 border-l-2 transition-colors ${theme.borderLeft} ${theme.hoverBorder}`}>
+                      <div key={exp.id} className={`print-break-inside-avoid break-inside-avoid print:mb-6 group relative pl-4 border-l-2 transition-colors ${theme.borderLeft} ${theme.hoverBorder}`}>
                         <div className="flex flex-col md:flex-row print:flex-row md:items-baseline print:items-baseline md:justify-between print:justify-between mb-1.5">
                           <h4 className={`text-lg font-bold tracking-tight ${theme.primary}`}>
                             {exp.puesto}
@@ -314,12 +314,12 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                {/* Skills */}
                {skills.length > 0 && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 print:break-after-avoid ${theme.primary}`}>
                     Habilidades
                   </h3>
                   <div className="space-y-4">
                     {skills.map((skill) => (
-                      <div key={skill.id} className="break-inside-avoid">
+                      <div key={skill.id} className="print-break-inside-avoid break-inside-avoid">
                         <div className="flex justify-between items-center mb-1.5">
                           <span className={`text-sm font-semibold text-neutral-700 dark:text-neutral-300 print:text-neutral-700`}>
                             {skill.nombre}
@@ -340,12 +340,12 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
               {/* Education */}
               {educacion.length > 0 && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 print:break-after-avoid ${theme.primary}`}>
                     Educación
                   </h3>
                   <div className="space-y-6">
                     {educacion.map((edu) => (
-                      <div key={edu.id} className="break-inside-avoid relative">
+                      <div key={edu.id} className="print-break-inside-avoid break-inside-avoid print:mb-6 relative">
                         <div className={`absolute -left-[19px] top-1.5 w-2 h-2 rounded-full border-2 bg-white dark:bg-slate-950 print:bg-white ${theme.border}`}></div>
                         <div className={`border-l pl-5 pb-1 ${theme.border}`}>
                             <h4 className={`text-sm font-bold leading-tight mb-1 ${theme.primary}`}>
@@ -374,13 +374,13 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
           {/* Row 2: Full Width Projects Section */}
           {proyectos && proyectos.length > 0 && (
               <section className={`mt-10 pt-10 border-t ${theme.borderLeft}`}>
-              <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.primary}`}>
+              <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 print:break-after-avoid ${theme.primary}`}>
                   <div className={`w-8 h-px bg-current`}></div>
                   Proyectos Destacados
               </h3>
               <div className="space-y-0">
                   {proyectos.map((proj) => (
-                  <div key={proj.id} className="break-inside-avoid group mb-8 last:mb-0">
+                  <div key={proj.id} className="print-break-inside-avoid break-inside-avoid group mb-8 print:mb-6 last:mb-0">
                       <div className="flex items-center justify-between mb-1">
                           <h4 className={`text-base font-bold ${theme.primary}`}>
                           {proj.nombre}

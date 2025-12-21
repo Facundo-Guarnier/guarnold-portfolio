@@ -97,11 +97,56 @@
         .print\:mb-0 {
           margin-bottom: 0 !important;
         }
+        .print\:overflow-visible {
+          overflow: visible !important;
+        }
+        .print\:h-auto {
+          height: auto !important;
+        }
         .print\:items-baseline {
           align-items: baseline !important;
         }
         .print\:justify-between {
           justify-content: space-between !important;
+        }
+        /* Page break control */
+        .break-inside-avoid {
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+        }
+        .print\:break-after-avoid {
+          break-after: avoid !important;
+          page-break-after: avoid !important;
+        }
+        .print\:break-before-auto {
+          break-before: auto !important;
+        }
+        .print\:mb-6 {
+          margin-bottom: 1.5rem !important;
+        }
+        
+        /* Clase robusta para evitar cortes - CLAVE para ítems individuales */
+        .print-break-inside-avoid {
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
+          display: block !important; /* Flex/Grid a veces impide el salto correcto */
+        }
+        
+        /* Clase para forzar salto de página manual */
+        .print-break-before {
+          break-before: page !important;
+          page-break-before: always !important;
+          margin-top: 2rem !important;
+        }
+        
+        /* Ocultar elementos no imprimibles */
+        .no-print {
+          display: none !important;
+        }
+        
+        /* Asegurar que secciones no empiecen muy cerca del fondo */
+        section {
+          break-inside: avoid-column;
         }
       }
     </style>
