@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, LinkObj } from '../types/cv';
-import { supabase } from '../lib/supabase';
+import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, LinkObj } from '@/types/cv';
+import { supabase } from '@/lib/supabase';
 
 const SESSION_THEME_KEY = 'guarnold_cv_session_theme';
 
