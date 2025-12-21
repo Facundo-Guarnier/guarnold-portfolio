@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { ArrowLeft, Eye, RefreshCw, Download, Loader2, LogOut } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, LogOut } from 'lucide-react';
 import { useCVData } from '@/hooks/useCVData';
 import { useAuth } from '@/hooks/useAuth';
 import { CVPreview } from '@/components/cv/CVPreview';
@@ -41,8 +41,7 @@ const Admin: React.FC = () => {
     removeSkill,
     addProyecto,
     updateProyecto,
-    removeProyecto,
-    resetData
+    removeProyecto
   } = useCVData();
   
   const handlePrint = () => {
@@ -107,29 +106,19 @@ const Admin: React.FC = () => {
             variant="ghost" 
             size="sm" 
             onClick={handleSignOut}
-            className="text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-gray-800"
+            className="gap-2 text-neutral-600 dark:text-gray-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-gray-800"
            >
-             <LogOut className="w-4 h-4 mr-2" /> Cerrar Sesión
+             <LogOut className="w-4 h-4" /> Cerrar Sesión
            </Button>
            
            <Button 
-            variant="ghost" 
+            variant="primary" 
             size="sm" 
-            onClick={() => { if(confirm('¿Recargar datos desde la base de datos?')) resetData(); }}
-            className="text-orange-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20"
+            className={`gap-2 ${accentClass} border-none shadow-md`} 
+            onClick={handlePrint}
            >
-             <RefreshCw className="w-4 h-4 mr-2" /> Recargar
-           </Button>
-           
-           <Button variant="primary" size="sm" className={`gap-2 ${accentClass} border-none shadow-md`} onClick={handlePrint}>
              <Download className="w-4 h-4" /> Descargar PDF
            </Button>
-
-           <Link to="/">
-             <Button variant="secondary" size="sm" className="gap-2">
-               <Eye className="w-4 h-4" /> Vista Pública
-             </Button>
-           </Link>
         </div>
       </header>
 
