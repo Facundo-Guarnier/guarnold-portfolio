@@ -12,15 +12,6 @@ import { ProjectsEditor } from '@/components/editor/ProjectsEditor';
 import { SettingsEditor } from '@/components/editor/SettingsEditor';
 import { Button } from '@/components/ui/Button';
 
-const ACCENT_BUTTON_COLORS: Record<string, string> = {
-  neutral: 'bg-neutral-900 hover:bg-neutral-800 text-white',
-  blue: 'bg-blue-600 hover:bg-blue-700 text-white',
-  emerald: 'bg-emerald-600 hover:bg-emerald-700 text-white',
-  purple: 'bg-purple-600 hover:bg-purple-700 text-white',
-  rose: 'bg-rose-600 hover:bg-rose-700 text-white',
-  amber: 'bg-amber-500 hover:bg-amber-600 text-white',
-};
-
 const Admin: React.FC = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   
@@ -86,7 +77,16 @@ const Admin: React.FC = () => {
     );
   }
 
-  const accentClass = ACCENT_BUTTON_COLORS[data.settings.themeColor] || ACCENT_BUTTON_COLORS.neutral;
+  // Mapeo de color de tema a clases Tailwind para botones con acento
+  const accentColorMap: Record<string, string> = {
+    neutral: 'bg-neutral-900 hover:bg-neutral-800 text-white',
+    blue: 'bg-blue-600 hover:bg-blue-700 text-white',
+    emerald: 'bg-emerald-600 hover:bg-emerald-700 text-white',
+    purple: 'bg-purple-600 hover:bg-purple-700 text-white',
+    rose: 'bg-rose-600 hover:bg-rose-700 text-white',
+    amber: 'bg-amber-500 hover:bg-amber-600 text-white',
+  };
+  const accentClass = accentColorMap[data.settings.themeColor] || accentColorMap.neutral;
 
   return (
     <div className="h-screen flex flex-col bg-neutral-50 dark:bg-gray-950 overflow-hidden print:h-auto print:overflow-visible print:bg-white print:block transition-colors duration-300">
@@ -103,19 +103,19 @@ const Admin: React.FC = () => {
         </div>
         <div className="flex gap-2">
            <Button 
-            variant="ghost" 
+            variant="outline" 
             size="sm" 
             onClick={handleSignOut}
-            className="gap-2 text-neutral-600 dark:text-gray-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-gray-800"
+            className="gap-2"
            >
              <LogOut className="w-4 h-4" /> Cerrar Sesión
            </Button>
            
            <Button 
-            variant="primary" 
+            variant="outline" 
             size="sm" 
-            className={`gap-2 ${accentClass} border-none shadow-md`} 
             onClick={handlePrint}
+            className="gap-2"
            >
              <Download className="w-4 h-4" /> Descargar PDF
            </Button>
