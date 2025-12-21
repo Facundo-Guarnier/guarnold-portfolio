@@ -1,19 +1,16 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Eye, Lock, RefreshCw, Download, KeyRound } from 'lucide-react';
-import { useCVData } from '../hooks/useCVData';
-import { CVPreview } from '../components/cv/CVPreview';
-import { ProfileEditor } from '../components/editor/ProfileEditor';
-import { ExperienceEditor } from '../components/editor/ExperienceEditor';
-import { EducationEditor } from '../components/editor/EducationEditor';
-import { SkillsEditor } from '../components/editor/SkillsEditor';
-import { ProjectsEditor } from '../components/editor/ProjectsEditor';
-import { SettingsEditor } from '../components/editor/SettingsEditor';
-import { Button } from '../components/ui/Button';
-
-// Security: Read from Environment Variable (Vite prefix required)
-const SECRET_KEY = (import.meta as any).env?.VITE_ADMIN_PASSWORD || "guarnold"; 
+import React from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { ArrowLeft, Eye, RefreshCw, Download, Loader2, LogOut } from 'lucide-react';
+import { useCVData } from '@/hooks/useCVData';
+import { useAuth } from '@/hooks/useAuth';
+import { CVPreview } from '@/components/cv/CVPreview';
+import { ProfileEditor } from '@/components/editor/ProfileEditor';
+import { ExperienceEditor } from '@/components/editor/ExperienceEditor';
+import { EducationEditor } from '@/components/editor/EducationEditor';
+import { SkillsEditor } from '@/components/editor/SkillsEditor';
+import { ProjectsEditor } from '@/components/editor/ProjectsEditor';
+import { SettingsEditor } from '@/components/editor/SettingsEditor';
+import { Button } from '@/components/ui/Button';
 
 const ACCENT_BUTTON_COLORS: Record<string, string> = {
   neutral: 'bg-neutral-900 hover:bg-neutral-800 text-white',
@@ -25,8 +22,11 @@ const ACCENT_BUTTON_COLORS: Record<string, string> = {
 };
 
 const Admin: React.FC = () => {
+  const { user, loading: authLoading, signOut } = useAuth();
+  
   const { 
     data,
+    loading: dataLoading,
     setTheme, 
     updatePersonal, 
     moveItem,
@@ -44,10 +44,6 @@ const Admin: React.FC = () => {
     removeProyecto,
     resetData
   } = useCVData();
-
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [passwordInput, setPasswordInput] = useState<string>("");
-  const [error, setError] = useState<string>("");
   
   const handlePrint = () => {
     const originalTitle = document.title;
@@ -58,95 +54,34 @@ const Admin: React.FC = () => {
     }, 1000);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordInput === SECRET_KEY) {
-      setIsAuthenticated(true);
-      setError("");
-    } else {
-      setError("Clave incorrecta. Intenta nuevamente.");
-    }
+  const handleSignOut = async () => {
+    await signOut();
   };
 
-  if (!isAuthenticated) {
+  // Mostrar loading mientras se verifica la autenticación
+  if (authLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans transition-colors duration-300">
-        
-        {/* Logo / Header Area */}
-        <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-6">
-          <div className="mx-auto h-16 w-16 bg-neutral-900 dark:bg-white rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3 mb-6 transition-transform hover:rotate-0">
-            <Lock className="h-8 w-8 text-white dark:text-neutral-900" />
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Acceso al Editor
-          </h2>
-          <p className="mt-2 text-sm text-neutral-500 dark:text-gray-400">
-            Ingresa tu clave de acceso para modificar el contenido.
-          </p>
+      <div className="min-h-screen bg-neutral-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-neutral-500" />
+          <p className="text-neutral-500 dark:text-gray-400">Verificando sesión...</p>
         </div>
+      </div>
+    );
+  }
 
-        {/* Card */}
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white dark:bg-gray-800 py-10 px-6 shadow-2xl shadow-neutral-100 dark:shadow-none border border-neutral-100 dark:border-gray-700 rounded-3xl sm:px-10 relative overflow-hidden">
-            
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-neutral-50 dark:bg-gray-700 blur-3xl opacity-50 pointer-events-none"></div>
+  // Redirigir a login si no está autenticado
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
-            <form className="space-y-6 relative z-10" onSubmit={handleLogin}>
-              <div>
-                <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-gray-300 mb-2">
-                  Access Key
-                </label>
-                <div className="relative rounded-xl shadow-sm">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                    <KeyRound className="h-5 w-5 text-neutral-400" aria-hidden="true" />
-                  </div>
-                  <input
-                    type="password"
-                    value={passwordInput}
-                    onChange={(e) => setPasswordInput(e.target.value)}
-                    className="block w-full rounded-xl border-0 py-3.5 pl-11 text-neutral-900 dark:text-white ring-1 ring-inset ring-neutral-200 dark:ring-gray-600 placeholder:text-neutral-300 dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-neutral-900 dark:focus:ring-white sm:text-sm sm:leading-6 transition-all bg-neutral-50/50 dark:bg-gray-700 focus:bg-white dark:focus:bg-gray-800"
-                    placeholder="••••••••"
-                    autoFocus
-                  />
-                </div>
-              </div>
-
-              {error && (
-                <div className="rounded-lg bg-red-50 dark:bg-red-900/30 p-4 border border-red-100 dark:border-red-900/50 animate-in fade-in slide-in-from-top-2">
-                  <div className="flex">
-                    <div className="text-sm text-red-600 dark:text-red-400 font-medium text-center w-full">
-                      {error}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <Button 
-                  type="submit" 
-                  className="w-full justify-center py-3.5 text-base font-semibold shadow-lg shadow-neutral-200 dark:shadow-none hover:shadow-xl hover:translate-y-[-1px] transition-all bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-gray-200"
-                >
-                  Desbloquear
-                </Button>
-              </div>
-            </form>
-
-            <div className="mt-8 pt-6 border-t border-neutral-100 dark:border-gray-700 relative z-10">
-              <Link 
-                to="/" 
-                className="group flex items-center justify-center gap-2 text-sm font-medium text-neutral-500 dark:text-gray-400 hover:text-neutral-900 dark:hover:text-white transition-colors w-full p-2 rounded-lg hover:bg-neutral-50 dark:hover:bg-gray-700"
-              >
-                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                Volver a la vista del CV
-              </Link>
-            </div>
-
-          </div>
-          
-          <p className="text-center text-xs text-neutral-400 dark:text-gray-500 mt-8">
-            Sistema seguro de gestión de portafolio personal.
-          </p>
+  // Mostrar loading mientras se cargan los datos
+  if (dataLoading) {
+    return (
+      <div className="min-h-screen bg-neutral-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-neutral-500" />
+          <p className="text-neutral-500 dark:text-gray-400">Cargando datos...</p>
         </div>
       </div>
     );
@@ -164,26 +99,35 @@ const Admin: React.FC = () => {
           </Link>
           <div className="flex flex-col">
             <h1 className="text-lg font-bold text-neutral-900 dark:text-white leading-none">VitaeFlow Editor</h1>
-            <span className="text-xs text-neutral-500 dark:text-gray-400 mt-0.5">Auto-saving to local storage</span>
+            <span className="text-xs text-neutral-500 dark:text-gray-400 mt-0.5">Guardando en Supabase • {user.email}</span>
           </div>
         </div>
         <div className="flex gap-2">
            <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => { if(confirm('Reset all data to default?')) resetData(); }}
-            className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+            onClick={handleSignOut}
+            className="text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-gray-800"
            >
-             <RefreshCw className="w-4 h-4 mr-2" /> Reset
+             <LogOut className="w-4 h-4 mr-2" /> Cerrar Sesión
+           </Button>
+           
+           <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => { if(confirm('¿Recargar datos desde la base de datos?')) resetData(); }}
+            className="text-orange-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20"
+           >
+             <RefreshCw className="w-4 h-4 mr-2" /> Recargar
            </Button>
            
            <Button variant="primary" size="sm" className={`gap-2 ${accentClass} border-none shadow-md`} onClick={handlePrint}>
-             <Download className="w-4 h-4" /> Download PDF
+             <Download className="w-4 h-4" /> Descargar PDF
            </Button>
 
            <Link to="/">
              <Button variant="secondary" size="sm" className="gap-2">
-               <Eye className="w-4 h-4" /> Public View
+               <Eye className="w-4 h-4" /> Vista Pública
              </Button>
            </Link>
         </div>
