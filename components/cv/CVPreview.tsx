@@ -158,12 +158,12 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
   // Root container styles:
   // - On Screen (Light): bg-white text-neutral-900
   // - On Screen (Dark): bg-slate-950 text-white
-  // - On Print: FORCE bg-white text-neutral-900
+  // - On Print: FORCE bg-white text-neutral-900 + A4 dimensions
   const containerClasses = `
     relative w-full max-w-[210mm] min-h-[297mm] mx-auto p-10 md:p-14 shadow-2xl overflow-hidden box-border
     bg-white text-neutral-900 
     dark:bg-slate-950 dark:text-white
-    print:bg-white print:text-neutral-900 print:shadow-none print:w-full print:p-10 print:dark:bg-white print:dark:text-neutral-900
+    print:bg-white print:text-neutral-900 print:shadow-none print:w-[210mm] print:min-w-[210mm] print:max-w-none print:p-10 print:dark:bg-white print:dark:text-neutral-900
     ${className}
   `;
 
@@ -183,11 +183,11 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
           
           {/* Header Section */}
           <header className={`border-b pb-8 mb-10 ${theme.border}`}>
-            <div className="flex flex-col md:flex-row gap-8 md:items-end justify-between">
+            <div className="flex flex-col md:flex-row print:flex-row gap-8 md:items-end print:items-end justify-between">
               
               {/* Text Content */}
-              <div className="flex-1 order-2 md:order-1 text-center md:text-left">
-                <h1 className={`text-5xl md:text-6xl font-bold uppercase tracking-tighter mb-3 leading-none ${theme.primary}`}>
+              <div className="flex-1 order-2 md:order-1 print:order-1 text-center md:text-left print:text-left">
+                <h1 className={`text-5xl md:text-6xl print:text-6xl font-bold uppercase tracking-tighter mb-3 leading-none ${theme.primary}`}>
                   {personal.nombre}
                 </h1>
                 <p className={`text-sm md:text-base font-medium tracking-[0.2em] uppercase ${smallText}`}>
@@ -195,7 +195,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                 </p>
                 
                 {/* Contact Bar */}
-                <div className={`mt-6 flex flex-wrap justify-center md:justify-start gap-y-3 gap-x-6 text-sm font-medium ${theme.secondary}`}>
+                <div className={`mt-6 flex flex-wrap justify-center md:justify-start print:justify-start gap-y-3 gap-x-6 text-sm font-medium ${theme.secondary}`}>
                   {personal.email && (
                     <div className="flex items-center gap-2 group">
                       <div className={`p-1.5 rounded-md transition-colors ${theme.iconBg} ${theme.iconColor}`}>
@@ -241,10 +241,10 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
 
               {/* Profile Picture */}
               {personal.foto && (
-                <div className="order-1 md:order-2 flex justify-center md:justify-end mb-4 md:mb-0">
+                <div className="order-1 md:order-2 print:order-2 flex justify-center md:justify-end print:justify-end mb-4 md:mb-0 print:mb-0">
                   <div className="relative">
                     <div className={`absolute inset-0 rounded-full translate-x-1 translate-y-1 bg-neutral-900 dark:bg-neutral-700 print:hidden`}></div>
-                    <div className={`relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 z-10 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border-white dark:border-neutral-700 print:bg-white print:border-neutral-200 print:w-32 print:h-32`}>
+                    <div className={`relative w-32 h-32 md:w-40 md:h-40 print:w-40 print:h-40 rounded-full overflow-hidden border-4 z-10 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border-white dark:border-neutral-700 print:bg-white print:border-neutral-200`}>
                       <User className="w-16 h-16 text-neutral-300 absolute" />
                       <img 
                         src={personal.foto} 
@@ -260,9 +260,9 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
           </header>
 
           {/* Row 1: Two Columns (Main & Sidebar) */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-12 print:grid-cols-12 gap-10 md:gap-12 print:gap-12">
             {/* Main Column (Left) */}
-            <div className="md:col-span-8 space-y-10">
+            <div className="md:col-span-8 print:col-span-8 space-y-10">
               
               {/* Profile Summary */}
               {personal.resumen && (
@@ -287,7 +287,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                   <div className="space-y-8">
                     {experiencia.map((exp) => (
                       <div key={exp.id} className={`break-inside-avoid group relative pl-4 border-l-2 transition-colors ${theme.borderLeft} ${theme.hoverBorder}`}>
-                        <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-1.5">
+                        <div className="flex flex-col md:flex-row print:flex-row md:items-baseline print:items-baseline md:justify-between print:justify-between mb-1.5">
                           <h4 className={`text-lg font-bold tracking-tight ${theme.primary}`}>
                             {exp.puesto}
                           </h4>
@@ -309,7 +309,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
             </div>
 
             {/* Sidebar Column (Right) */}
-            <aside className="md:col-span-4 space-y-10">
+            <aside className="md:col-span-4 print:col-span-4 space-y-10">
               
                {/* Skills */}
                {skills.length > 0 && (

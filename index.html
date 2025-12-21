@@ -30,14 +30,16 @@
       
       @media print {
         @page {
+          size: A4;
           margin: 0;
-          size: auto;
         }
         html, body, #root {
           height: auto !important;
           min-height: auto !important;
           overflow: visible !important;
           background-color: white !important;
+          min-width: 210mm !important;
+          width: 210mm !important;
         }
         body {
           -webkit-print-color-adjust: exact !important;
@@ -47,6 +49,59 @@
         * {
           box-shadow: none !important;
           text-shadow: none !important;
+        }
+        /* Force 12-column grid layout for print (same as md breakpoint) */
+        .print\:grid-cols-12 {
+          grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+        }
+        .print\:col-span-8 {
+          grid-column: span 8 / span 8 !important;
+        }
+        .print\:col-span-4 {
+          grid-column: span 4 / span 4 !important;
+        }
+        .print\:flex-row {
+          flex-direction: row !important;
+        }
+        .print\:items-end {
+          align-items: flex-end !important;
+        }
+        .print\:text-left {
+          text-align: left !important;
+        }
+        .print\:justify-start {
+          justify-content: flex-start !important;
+        }
+        .print\:justify-end {
+          justify-content: flex-end !important;
+        }
+        .print\:gap-12 {
+          gap: 3rem !important;
+        }
+        .print\:order-1 {
+          order: 1 !important;
+        }
+        .print\:order-2 {
+          order: 2 !important;
+        }
+        .print\:text-6xl {
+          font-size: 3.75rem !important;
+          line-height: 1 !important;
+        }
+        .print\:w-40 {
+          width: 10rem !important;
+        }
+        .print\:h-40 {
+          height: 10rem !important;
+        }
+        .print\:mb-0 {
+          margin-bottom: 0 !important;
+        }
+        .print\:items-baseline {
+          align-items: baseline !important;
+        }
+        .print\:justify-between {
+          justify-content: space-between !important;
         }
       }
     </style>
