@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Edit3, Download, Palette, X, Moon, Sun } from 'lucide-react';
-import { useCVData } from '../hooks/useCVData';
-import { CVPreview } from '../components/cv/CVPreview';
-import { CVSettings } from '../types/cv';
+import { Edit3, Download, Palette, X, Moon, Sun, RotateCcw } from 'lucide-react';
+import { useCVData } from '@/hooks/useCVData';
+import { CVPreview } from '@/components/cv/CVPreview';
+import { CVSettings } from '@/types/cv';
 
 const Home: React.FC = () => {
-  const { data, setTheme } = useCVData();
+  const { data, setTheme, resetVisitorTheme } = useCVData();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -91,13 +91,13 @@ const Home: React.FC = () => {
                 <span className="text-sm font-medium text-neutral-700">Mode</span>
                 <div className="flex bg-neutral-100 p-1 rounded-lg">
                   <button 
-                    onClick={() => setTheme({ darkMode: false }, true)}
+                    onClick={() => setTheme({ darkMode: false }, false)}
                     className={`p-1.5 rounded-md transition-all ${!data.settings.darkMode ? 'bg-white shadow-sm text-yellow-500' : 'text-neutral-400 hover:text-neutral-600'}`}
                   >
                     <Sun className="w-4 h-4" />
                   </button>
                   <button 
-                    onClick={() => setTheme({ darkMode: true }, true)}
+                    onClick={() => setTheme({ darkMode: true }, false)}
                     className={`p-1.5 rounded-md transition-all ${data.settings.darkMode ? 'bg-neutral-800 shadow-sm text-white' : 'text-neutral-400 hover:text-neutral-600'}`}
                   >
                     <Moon className="w-4 h-4" />
@@ -112,12 +112,24 @@ const Home: React.FC = () => {
                   {COLORS.map((c) => (
                     <button
                       key={c.id}
-                      onClick={() => setTheme({ themeColor: c.id }, true)}
+                      onClick={() => setTheme({ themeColor: c.id }, false)}
                       className={`w-6 h-6 rounded-full ${c.class} transition-transform hover:scale-110 ${data.settings.themeColor === c.id ? 'ring-2 ring-offset-2 ring-neutral-900' : ''}`}
                     />
                   ))}
                 </div>
               </div>
+
+              {/* Reset Button */}
+              <button
+                onClick={() => {
+                  resetVisitorTheme();
+                  setShowThemeMenu(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-medium text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 rounded-lg transition-colors"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Restablecer tema original
+              </button>
             </div>
           </div>
         )}

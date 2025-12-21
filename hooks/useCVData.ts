@@ -3,16 +3,95 @@ import { useState, useEffect, useCallback } from 'react';
 import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, LinkObj } from '@/types/cv';
 import { supabase } from '@/lib/supabase';
 
-const SESSION_THEME_KEY = 'guarnold_cv_session_theme';
+// Clave para preferencias de tema del visitante (persistente en localStorage)
+const VISITOR_THEME_KEY = 'guarnold_cv_visitor_theme';
+// Versión del schema de settings para detectar incompatibilidades
+const SETTINGS_SCHEMA_VERSION = 1;
+
+// Colores de tema válidos (fuente de verdad)
+const VALID_THEME_COLORS = ['neutral', 'blue', 'emerald', 'purple', 'rose', 'amber'] as const;
+type ValidThemeColor = typeof VALID_THEME_COLORS[number];
 
 // ID del perfil principal (singleton)
-// En producción, esto vendría de la autenticación o de una query inicial
 let PROFILE_ID: string | null = null;
 
 const defaultSettings: CVSettings = {
   themeColor: 'neutral',
   darkMode: false
 };
+
+// Interfaz para datos guardados en localStorage con versionado
+interface StoredVisitorSettings {
+  version: number;
+  settings: CVSettings;
+  timestamp: number;
+}
+
+/**
+ * Valida y sanitiza los settings del visitante desde localStorage.
+ * Si hay incompatibilidades o datos corruptos, retorna null.
+ */
+function validateAndLoadVisitorSettings(): CVSettings | null {
+  try {
+    const stored = localStorage.getItem(VISITOR_THEME_KEY);
+    if (!stored) return null;
+
+    const parsed: StoredVisitorSettings = JSON.parse(stored);
+
+    // Verificar versión del schema
+    if (typeof parsed.version !== 'number' || parsed.version < SETTINGS_SCHEMA_VERSION) {
+      console.warn('[CVData] Visitor settings outdated, clearing...');
+      localStorage.removeItem(VISITOR_THEME_KEY);
+      return null;
+    }
+
+    // Verificar estructura básica
+    if (!parsed.settings || typeof parsed.settings !== 'object') {
+      console.warn('[CVData] Invalid visitor settings structure, clearing...');
+      localStorage.removeItem(VISITOR_THEME_KEY);
+      return null;
+    }
+
+    const { themeColor, darkMode } = parsed.settings;
+
+    // Validar themeColor contra lista de colores válidos
+    if (!VALID_THEME_COLORS.includes(themeColor as ValidThemeColor)) {
+      console.warn(`[CVData] Invalid themeColor "${themeColor}", using default`);
+      parsed.settings.themeColor = defaultSettings.themeColor;
+    }
+
+    // Validar darkMode es boolean
+    if (typeof darkMode !== 'boolean') {
+      console.warn('[CVData] Invalid darkMode value, using default');
+      parsed.settings.darkMode = defaultSettings.darkMode;
+    }
+
+    return parsed.settings;
+  } catch (error) {
+    console.error('[CVData] Error parsing visitor settings:', error);
+    localStorage.removeItem(VISITOR_THEME_KEY);
+    return null;
+  }
+}
+
+/**
+ * Guarda las preferencias del visitante en localStorage con versionado.
+ */
+function saveVisitorSettings(settings: CVSettings): void {
+  const toStore: StoredVisitorSettings = {
+    version: SETTINGS_SCHEMA_VERSION,
+    settings,
+    timestamp: Date.now()
+  };
+  localStorage.setItem(VISITOR_THEME_KEY, JSON.stringify(toStore));
+}
+
+/**
+ * Limpia las preferencias del visitante del localStorage.
+ */
+function clearVisitorSettings(): void {
+  localStorage.removeItem(VISITOR_THEME_KEY);
+}
 
 const emptyData: CVData = {
   settings: defaultSettings,
@@ -38,16 +117,15 @@ export const useCVData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Session State (Temporary overrides for public viewers)
-  const [sessionSettings, setSessionSettings] = useState<CVSettings | null>(() => {
-    const sessionSaved = sessionStorage.getItem(SESSION_THEME_KEY);
-    return sessionSaved ? JSON.parse(sessionSaved) : null;
+  // Visitor Settings (preferencias locales para usuarios no autenticados)
+  const [visitorSettings, setVisitorSettings] = useState<CVSettings | null>(() => {
+    return validateAndLoadVisitorSettings();
   });
 
-  // Computed Data (Merges persistent data with session overrides)
+  // Computed Data: Prioridad = visitorSettings > data.settings (de Supabase)
   const displayData: CVData = {
     ...data,
-    settings: sessionSettings || data.settings
+    settings: visitorSettings || data.settings
   };
 
   // --- FETCH DATA FROM SUPABASE ---
@@ -166,27 +244,48 @@ export const useCVData = () => {
   // --- ACTIONS ---
 
   // Theme Management
-  const setTheme = async (newSettings: Partial<CVSettings>, isPublicView: boolean) => {
+  // isAdmin: true = usuario autenticado (guarda en Supabase), false = visitante (guarda en localStorage)
+  const setTheme = async (newSettings: Partial<CVSettings>, isAdmin: boolean) => {
     const currentSettings = displayData.settings;
     const updatedSettings = { ...currentSettings, ...newSettings };
 
-    if (isPublicView) {
-      // Public View: Only update session state
-      setSessionSettings(updatedSettings);
-      sessionStorage.setItem(SESSION_THEME_KEY, JSON.stringify(updatedSettings));
-    } else {
-      // Admin View: Commit to Supabase
+    // Validar que el color sea válido antes de guardar
+    if (updatedSettings.themeColor && !VALID_THEME_COLORS.includes(updatedSettings.themeColor as ValidThemeColor)) {
+      console.warn(`[CVData] Attempted to set invalid themeColor: ${updatedSettings.themeColor}`);
+      updatedSettings.themeColor = defaultSettings.themeColor;
+    }
+
+    if (isAdmin) {
+      // Admin: Guardar en Supabase (fuente de verdad para configuración predeterminada)
       setData(prev => ({ ...prev, settings: updatedSettings }));
-      setSessionSettings(null);
-      sessionStorage.removeItem(SESSION_THEME_KEY);
+      // Limpiar preferencias del visitante ya que el admin está estableciendo el default
+      setVisitorSettings(null);
+      clearVisitorSettings();
 
       if (PROFILE_ID) {
-        await supabase
+        const { error } = await supabase
           .from('profiles')
           .update({ settings: updatedSettings })
           .eq('id', PROFILE_ID);
+        
+        if (error) {
+          console.error('[CVData] Error saving theme to Supabase:', error);
+        }
       }
+    } else {
+      // Visitante: Guardar solo en localStorage (no afecta la BD)
+      setVisitorSettings(updatedSettings);
+      saveVisitorSettings(updatedSettings);
     }
+  };
+
+  /**
+   * Resetea las preferencias del visitante al tema predeterminado (el del admin).
+   * Útil para un botón "Restablecer tema original" en la UI pública.
+   */
+  const resetVisitorTheme = () => {
+    setVisitorSettings(null);
+    clearVisitorSettings();
   };
 
   // Generic Move Function
@@ -527,8 +626,8 @@ export const useCVData = () => {
   };
 
   const resetData = async () => {
-    setSessionSettings(null);
-    sessionStorage.removeItem(SESSION_THEME_KEY);
+    setVisitorSettings(null);
+    clearVisitorSettings();
     await fetchData();
   };
 
@@ -538,6 +637,7 @@ export const useCVData = () => {
     error,
     refetch: fetchData,
     setTheme,
+    resetVisitorTheme,
     updatePersonal,
     moveItem,
     addExperiencia,

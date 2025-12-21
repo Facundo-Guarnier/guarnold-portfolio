@@ -142,7 +142,7 @@ const Admin: React.FC = () => {
             {/* Theme Settings */}
             <SettingsEditor 
               settings={data.settings} 
-              onUpdate={(newSettings) => setTheme(newSettings, false)}
+              onUpdate={(newSettings) => setTheme(newSettings, true)}
               accentColor={accentClass}
             />
 
