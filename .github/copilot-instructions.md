@@ -1,4 +1,4 @@
-# Instrucciones para GitHub Copilot - Guarnold CV System
+# Instrucciones para GitHub Copilot - Trilex Store
 
 ## Contexto del Proyecto
 
@@ -18,181 +18,275 @@ Estás trabajando en **Guarnold CV System**, una aplicación web profesional par
 
 ### 0. Comunicación con el Usuario
 
-**NUNCA** uses comandos de terminal para mostrar mensajes al usuario (como `console.log` innecesarios en producción).
+**NUNCA** uses comandos de terminal para mostrar mensajes al usuario (como `Write-Host`, `echo`, etc.).
 
-**SIEMPRE** comunica la información directamente en el chat o mediante comentarios en el código.
+**SIEMPRE** comunica la información directamente en el chat.
 
-**EXCEPCIÓN:** Al finalizar CADA respuesta compleja, puedes sugerir el comando de verificación pertinente.
+**Razón:** Los mensajes en terminal generan ruido innecesario. La terminal es solo para ejecutar comandos que modifiquen el sistema.
 
----
+**EXCEPCIÓN:** Al finalizar CADA respuesta, ejecutá el siguiente comando para llevar registro:
 
-### 1. Interacción con Supabase (Backend & Tipos)
-
-**REGLA CRÍTICA:** Supabase es la fuente de verdad. No usaremos más `localStorage` como fuente principal.
-
-#### **PROHIBIDO (Tipado Débil)**
-
-```typescript
-// ❌ INCORRECTO - Usar 'any' o tipos manuales no sincronizados
-const { data } = await supabase.from('experience').select('*');
-// data es 'any'
+```powershell
+echo "✅ Fin de la respuesta"
 ```
 
-#### **OBLIGATORIO (Tipado Fuerte)**
+esto es con el objetivo de llevar un registro de cuándo finaliza cada respuesta generada.
 
-```typescript
-// ✅ CORRECTO - Usar los tipos generados automáticamente
-import { Database } from '@/types/supabase';
-const { data } = await supabase
-  .from('experience')
-  .select('*')
-  .returns<Database['public']['Tables']['experience']['Row'][]>();
+---
+
+### 1. Uso de MCP (Model Context Protocol) para Supabase
+
+**REGLA CRÍTICA:** Para TODAS las operaciones con Supabase (migraciones, edge functions, logs, etc.), **SIEMPRE usar las herramientas MCP de Supabase**, NUNCA comandos de terminal.
+
+#### **PROHIBIDO**
+
+```powershell
+# ❌ INCORRECTO - NO usar comandos de terminal para Supabase
+npx supabase functions deploy get-shopify-discounts
+supabase db push
+supabase migration new
 ```
 
-**Reglas de Seguridad (RLS):**
-- **Lectura (SELECT):** Permitida para `anon` (público) en tablas de perfil/cv.
-- **Escritura (INSERT/UPDATE/DELETE):** Estrictamente restringida a usuarios autenticados (Admin).
+#### **OBLIGATORIO**
+
+```typescript
+// ✅ CORRECTO - Usar herramientas MCP de Supabase
+mcp_supabase-tril_deploy_edge_function
+mcp_supabase-tril_apply_migration
+mcp_supabase-tril_get_logs
+mcp_supabase-tril_execute_sql
+```
+
+**Razón:** Las herramientas MCP garantizan:
+- Manejo correcto de credenciales
+- Sincronización con el proyecto activo
+- Logging y debugging apropiados
+- Consistencia en el flujo de trabajo
+
+**Herramientas MCP disponibles para Supabase:**
+- `mcp_supabase-tril_apply_migration` - Aplicar migraciones SQL
+- `mcp_supabase-tril_deploy_edge_function` - Desplegar edge functions
+- `mcp_supabase-tril_execute_sql` - Ejecutar SQL directo
+- `mcp_supabase-tril_get_logs` - Obtener logs (api, postgres, edge-function, etc.)
+- `mcp_supabase-tril_list_migrations` - Listar migraciones
+- `mcp_supabase-tril_list_tables` - Listar tablas
+- `mcp_supabase-tril_get_advisors` - Obtener avisos de seguridad/performance
 
 ---
 
-### 2. Arquitectura de Datos - Supabase define el Contenido
+### 2. Arquitectura de Datos
 
-**REGLA FUNDAMENTAL:** El esquema de la base de datos define la estructura. El frontend es un renderizador.
+#### **PROHIBIDO (Hardcoding)**
 
-#### **Estructura de Tablas Esperada:**
-- `profile`: Datos únicos (nombre, título, bio, foto).
-- `contact_info`: Redes sociales y métodos de contacto (array o tabla relacionada).
-- `experiences`: Historial laboral (ordenables).
-- `education`: Historial académico.
-- `skills`: Habilidades con nivel (0-5).
-- `projects`: Proyectos destacados (full width support).
+```jsx
+// ❌ INCORRECTO - NO hardcodear productos, precios o descripciones
+const products = [
+  { id: 1, name: "Reloj Suizo", price: "$5,000", image: "..." },
+  { id: 2, name: "Reloj Deportivo", price: "$3,000", image: "..." }
+];
 
-#### **Manejo de "Mock Data" vs "Real Data":**
-Si el cliente de Supabase falla o no hay conexión, la app debe fallar o mostrar error, **NO** hacer fallback silencioso a datos de ejemplo falsos en producción.
+<Product name="Reloj Suizo" price="$5,000" />
+```
 
----
 
-### 3. Migraciones SQL y Cambios en DB
+### 2. Convención de Nombres para Migraciones SQL (Cuando se integre Supabase)
 
 **Formato:** `<timestamp>_<name>.sql`
 
 - **timestamp:** 14 dígitos UTC (`YYYYMMDDHHMMSS`)
-- **name:** En `snake_case`, descriptivo.
+- **name:** En `snake_case`, descriptivo y corto
+- **Encabezado:** `-- migration: <timestamp>_<name>.sql`
 
 **Ejemplo:**
 
 ```sql
--- migration: 20251221143000_create_projects_table.sql
+-- migration: 20251112143000_create_customers_table.sql
 
-create table public.projects (
-  id uuid not null default gen_random_uuid(),
-  title text not null,
-  description text,
-  tech_stack text[],
-  display_order integer default 0,
-  created_at timestamp with time zone default now(),
-  constraint projects_pkey primary key (id)
+CREATE TABLE customers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT NOW()
 );
-
--- Habilitar RLS
-alter table public.projects enable row level security;
 ```
 
 ---
 
-### 4. Componentes React - Separación de Intereses
+### 3. Componentes React - Reutilización sobre Creación
 
-**FILOSOFÍA FUNDAMENTAL:** Separar claramente los componentes de **Edición** de los componentes de **Visualización (Papel)**.
+**FILOSOFÍA FUNDAMENTAL:**
 
-#### **Patrón de Visualización (Print-First)**
+Los componentes en Lovable/React son **reutilizables y genéricos**. Antes de crear un nuevo componente:
+
+**SIEMPRE** pregúntate:
+- ¿Existe un componente similar que pueda ser reutilizado cambiando solo los datos o props?
+- ¿Puedo extraer la lógica común a un componente padre?
+- ¿Estoy siguiendo la estructura Mobile-First?
+
+#### **Reutilización de Secciones**
 
 ```jsx
-// ✅ CORRECTO - Componente de Vista (A4)
-// Debe soportar clases 'print:' para asegurar salida en blanco y negro
-export const ExperienceItem = ({ data }) => (
-  <div className="break-inside-avoid mb-4 print:text-black dark:text-gray-200">
-    <h3 className="font-bold text-gray-900 dark:text-white print:text-black">
-      {data.role}
-    </h3>
-    {/* ... */}
+// ❌ INCORRECTO - Crear una sección específica para cada colección
+<RelojesdePorHombreSection />
+<PerfumesParaMujerSection />
+<LentesDeportivosSection />
+
+// ✅ CORRECTO - Usar una sección genérica reutilizable
+<ProductCollectionGrid 
+  collectionHandle="relojes-hombre"
+  title="Relojes para Hombre"
+/>
+
+<ProductCollectionGrid 
+  collectionHandle="perfumes-mujer"
+  title="Perfumes para Mujer"
+/>
+
+<ProductCollectionGrid 
+  collectionHandle="lentes-deportivos"
+  title="Lentes Deportivos"
+/>
+```
+
+#### **Nomenclatura de Componentes**
+
+- Componentes personalizados: PascalCase sin sufijo especial (ej. `ProductCard`, `HeaderNav`)
+- Componentes de utilidad: Preferir importar de Shadcn (ej. `Button`, `Dialog`)
+
+---
+
+### 4. Gestión de Estado
+
+#### **Estado del Servidor (Datos de Shopify)**
+
+**OBLIGATORIO:** Usar un cliente HTTP o SDK de Shopify para fetching de datos.
+
+```jsx
+// ✅ CORRECTO - Usar Fetch API o Shopify SDK
+const fetchProducts = async () => {
+  const response = await fetch('/api/shopify/products');
+  const data = await response.json();
+  return data;
+};
+
+// En componentes, usar estados locales o librerías como SWR / React Query
+const { data: products, isLoading } = useFetch(fetchProducts);
+```
+
+#### **Estado del Cliente (UI State)**
+
+Para estado local de UI que **NO persiste en el backend** (ej. modal abierto/cerrado, filtros aplicados, notificaciones):
+
+```jsx
+// ✅ CORRECTO - Usar useState para estado local
+const [isFilterOpen, setIsFilterOpen] = useState(false);
+const [selectedFilters, setSelectedFilters] = useState({});
+
+// Para estado global, considerar Context API o Zustand si es complejo
+```
+
+---
+
+### 5. Diseño Mobile-First y Responsive
+
+**OBLIGATORIO:** Todos los componentes deben funcionar perfectamente en dispositivos móviles y escalar a pantallas de escritorio.
+
+```jsx
+// ✅ CORRECTO - Diseño Mobile-First
+<div className="w-full px-4 sm:px-6 lg:px-8">
+  <div className="max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-6xl mx-auto">
+    {/* Contenido responsive */}
   </div>
-);
+</div>
+
+// Usar Tailwind CSS breakpoints: sm, md, lg, xl
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {products.map(product => <ProductCard key={product.id} {...product} />)}
+</div>
 ```
 
-#### **Patrón de Edición (Admin)**
+---
+
+### 6. Feedback al Usuario y Manejo de Errores
+
+**OBLIGATORIO:** Proporcionar feedback claro en acciones clave.
 
 ```jsx
-// ✅ CORRECTO - Componente de Edición
-// Debe usar react-hook-form y actualizar el estado global/Supabase
-export const ExperienceForm = ({ defaultValues, onSave }) => (
-  <form className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-    <Input label="Empresa" {...register('company')} />
-    {/* ... */}
-  </form>
-);
+// ✅ CORRECTO - Feedback al usuario
+const [message, setMessage] = useState(null);
+const [loading, setLoading] = useState(false);
+
+const addToCart = async (productId) => {
+  setLoading(true);
+  try {
+    await fetch('/api/cart/add', { method: 'POST', body: JSON.stringify({ productId }) });
+    setMessage('✅ Producto añadido al carrito');
+  } catch (error) {
+    setMessage(`❌ Error: ${error.message}`);
+  } finally {
+    setLoading(false);
+  }
+};
 ```
 
----
-
-### 5. Gestión de Estado y Tema
-
-#### **Persistencia Dual (Theme)**
-
-**OBLIGATORIO:**
-1.  **Vista Pública:** El tema (Dark/Light/Accent) se guarda en `sessionStorage`. No afecta al Admin.
-2.  **Vista Admin:** El tema se guarda en la Base de Datos (`profile.settings`) y es la configuración "oficial" del sitio.
-
-#### **Regla de Impresión (PDF)**
-
-Sin importar el tema seleccionado en pantalla (Dark Mode, Matrix Green, etc.), la impresión **SIEMPRE** debe forzar:
-- Fondo Blanco (`print:bg-white`)
-- Texto Negro (`print:text-black`)
-- Sin sombras ni fondos decorativos.
+**Páginas de Error:** Diseñar páginas de error consistentes con la marca (ej. 404, 500).
 
 ---
 
-### 6. Diseño Responsive & Mobile
+### 7. Paleta de Colores y Sistema de Diseño
 
-**OBLIGATORIO:**
-- **Admin:** Debe ser usable en móvil (Mobile-First) para ediciones rápidas.
-- **Vista CV:** En móvil se adapta al ancho (`w-full`), pero en escritorio e impresión respeta el formato A4 (`max-w-[210mm]`).
-
----
-
-### 7. Sistema de Autorización y Roles
-
-### Roles
-
-1.  **Owner (Admin):** Usuario autenticado vía Supabase Auth. Puede editar, reordenar y borrar.
-2.  **Viewer (Público):** Cualquier visitante. Solo lectura. Puede descargar PDF.
+**IMPORTANTE:** Seguir la paleta "Minimalista, Lujoso y Oscuro" definida en el proyecto.
 
 ```jsx
-// ✅ CORRECTO - Protección de rutas
-<Route element={<ProtectedRoute />}>
-  <Route path="/admin" element={<AdminDashboard />} />
-</Route>
+// ✅ CORRECTO - Usar nombres de color semánticos
+<button className="bg-primary text-primary-foreground hover:bg-primary-dark">
+  Comprar Ahora
+</button>
+
+// ❌ INCORRECTO - NO hardcodear colores
+<button className="bg-blue-500 text-white">Comprar Ahora</button>
 ```
 
+Consuta los archivos de configuración (Tailwind, CSS variables) para los colores exactos.
 
+---
+
+### 8. Sistema de Autorización y Roles
+
+### Roles en v1.0
+
+1. **Administrador de la Tienda**: Acceso total al panel de Shopify para gestionar productos, colecciones, pedidos, clientes y contenido.
+2. **Cliente**: Usuario final que navega y compra. **No requiere registro para comprar** (carrito de sesión).
+
+```jsx
+// ✅ CORRECTO - Renderizado condicional por roles (cuando sea necesario)
+{isAdmin && <AdminDashboard />}
+
+// No se requiere autenticación para compra básica
+```
 ---
 
 ## Checklist de Desarrollo
 
-Cuando implementes nuevas features:
+Cuando crees nuevas funcionalidades, asegúrate de:
 
-- [ ] **NO hay datos hardcodeados** (todo viene de Supabase).
-- [ ] **RLS** está configurado en cada nueva tabla creada.
-- [ ] El **Modo Oscuro** funciona en pantalla pero se anula al imprimir.
-- [ ] Los saltos de página en PDF usan `break-inside-avoid`.
-- [ ] Los formularios de edición tienen validación básica.
-- [ ] Se usa el cliente de Supabase tipado.
+- [ ] **NO hay contenido de productos hardcodeado** (todo viene de Shopify)
+- [ ] Los componentes son **reutilizables** (ej. ProductGrid se usa en múltiples páginas)
+- [ ] El diseño es **Mobile-First** y responsive
+- [ ] Hay **feedback claro al usuario** en acciones clave
+- [ ] Se sigue la **paleta de colores** de la marca
+- [ ] Las **migraciones SQL** (si aplica) siguen el formato `<timestamp>_name.sql`
+- [ ] El código está **bien documentado** con comentarios donde sea necesario
+- [ ] Se manejan **errores gracefully** con mensajes claros
 
 ---
 
 ## Notas Finales
 
-- **Supabase First:** Si no está en la DB, no existe.
-- **Print-Safe:** Siempre prueba que el CSS tenga su contraparte `print:`.
-- **Clean Code:** Mantén los componentes de UI (Shadcn/Tailwind) separados de la lógica de negocio.
+**Principios Clave del Proyecto:**
+- **Mobile-First:** Prioriza la experiencia en dispositivos móviles
+- **Reutilización:** Favorece componentes genéricos sobre específicos
+- **Escalabilidad:** Usa estructura genérica de Shopify para futuras categorías
+- **Consistencia:** Mantén la paleta de colores y diseño a través de toda la tienda
+- **Seguridad:** Shopify maneja pagos y seguridad de transacciones
 
-**Cuando tengas dudas sobre implementación de Backend, prioriza la documentación oficial de Supabase v2.**
+**Cuando tengas dudas, sigue estas instrucciones. Son la guía definitiva del proyecto.**

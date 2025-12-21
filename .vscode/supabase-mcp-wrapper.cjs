@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Wrapper para Supabase MCP Server - Trilex Store
+ * Wrapper para Supabase MCP Server - Guarnold CV System
  * Usa el CLI de Supabase para obtener credenciales de forma segura
  */
 
@@ -10,9 +10,9 @@ const fs = require("fs");
 const path = require("path");
 
 // Directorio del proyecto (ruta absoluta)
-const PROJECT_DIR = "d:\\Repositorios_GitHub\\trilex-store";
+const PROJECT_DIR = "c:\\repositorios_git\\cv-formatter";
 
-console.log(`[Supabase MCP - Trilex Store] ✓ Proyecto: ${PROJECT_DIR}`);
+console.log(`[Supabase MCP - Guarnold CV System] ✓ Proyecto: ${PROJECT_DIR}`);
 
 // Función simple para leer variables del .env
 function loadEnvVariable(varName) {
@@ -32,7 +32,7 @@ function loadEnvVariable(varName) {
 const PROJECT_REF = loadEnvVariable("VITE_SUPABASE_PROJECT_ID");
 if (!PROJECT_REF) {
   console.error(
-    `[Supabase MCP - Trilex Store] ❌ No se encontró VITE_SUPABASE_PROJECT_ID en .env`
+    `[Supabase MCP - Guarnold CV System] ❌ No se encontró VITE_SUPABASE_PROJECT_ID en .env`
   );
   process.exit(1);
 }
@@ -45,14 +45,14 @@ try {
   // OPCIÓN 1: Archivo .env del proyecto (recomendado)
   accessToken = loadEnvVariable("SUPABASE_ACCESS_TOKEN");
   if (accessToken) {
-    console.log(`[Supabase MCP - Trilex Store] ✓ Token obtenido desde .env del proyecto`);
+    console.log(`[Supabase MCP - Guarnold CV System] ✓ Token obtenido desde .env del proyecto`);
   }
 
   // OPCIÓN 2: Variable de entorno del sistema
   if (!accessToken && process.env.SUPABASE_ACCESS_TOKEN) {
     accessToken = process.env.SUPABASE_ACCESS_TOKEN;
     console.log(
-      `[Supabase MCP - Trilex Store] ✓ Token obtenido desde variable de entorno del sistema`
+      `[Supabase MCP - Guarnold CV System] ✓ Token obtenido desde variable de entorno del sistema`
     );
   }
 
@@ -62,7 +62,7 @@ try {
     if (fs.existsSync(localTokenPath)) {
       accessToken = fs.readFileSync(localTokenPath, "utf-8").trim();
       console.log(
-        `[Supabase MCP - Trilex Store] ✓ Token obtenido desde archivo .supabase-token`
+        `[Supabase MCP - Guarnold CV System] ✓ Token obtenido desde archivo .supabase-token`
       );
     }
   }
@@ -78,15 +78,15 @@ try {
     for (const tokenPath of tokenPaths) {
       if (fs.existsSync(tokenPath)) {
         accessToken = fs.readFileSync(tokenPath, "utf-8").trim();
-        console.log(`[Supabase MCP - Trilex Store] ✓ Token encontrado en: ${tokenPath}`);
+        console.log(`[Supabase MCP - Guarnold CV System] ✓ Token encontrado en: ${tokenPath}`);
         break;
       }
     }
   }
 
   if (!accessToken) {
-    console.error(`[Supabase MCP - Trilex Store] ❌ No se encontró el token de acceso`);
-    console.error(`\n[Supabase MCP - Trilex Store] Opciones para configurar el token:\n`);
+    console.error(`[Supabase MCP - Guarnold CV System] ❌ No se encontró el token de acceso`);
+    console.error(`\n[Supabase MCP - Guarnold CV System] Opciones para configurar el token:\n`);
     console.error(`  1. Archivo .env del proyecto (recomendado):`);
     console.error(`     Agrega: SUPABASE_ACCESS_TOKEN="sbp_tu_token_aqui"\n`);
     console.error(`  2. Variable de entorno del sistema:`);
@@ -94,16 +94,16 @@ try {
     console.error(`  3. Autenticar el CLI:`);
     console.error(`     supabase login --token sbp_tu_token_aqui\n`);
     console.error(
-      `[Supabase MCP - Trilex Store] Obtén tu token en: https://supabase.com/dashboard/account/tokens`
+      `[Supabase MCP - Guarnold CV System] Obtén tu token en: https://supabase.com/dashboard/account/tokens`
     );
     process.exit(1);
   }
 } catch (error) {
-  console.error(`[Supabase MCP - Trilex Store] Error al leer el token:`, error.message);
+  console.error(`[Supabase MCP - Guarnold CV System] Error al leer el token:`, error.message);
   process.exit(1);
 }
 
-console.log(`[Supabase MCP - Trilex Store] Iniciando servidor MCP...`);
+console.log(`[Supabase MCP - Guarnold CV System] Iniciando servidor MCP...`);
 
 // Ejecutar el servidor real de Supabase MCP
 // En Windows necesitamos shell: true para encontrar npx
