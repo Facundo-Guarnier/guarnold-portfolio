@@ -182,12 +182,30 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
         <div className="relative z-10">
           
           {/* Header Section */}
-          <header className={`border-b pb-8 mb-10 ${theme.border}`}>
-            <div className="flex flex-col md:flex-row print:flex-row gap-8 md:items-end print:items-end justify-between">
+          <header className={`border-b pb-8 mb-10 break-inside-avoid ${theme.border}`}>
+            <div className="flex flex-col md:flex-row print:flex-row gap-6 md:gap-10 print:gap-10 md:items-center print:items-center">
               
+              {/* Profile Picture - Ahora primero en el DOM pero ordenado visualmente */}
+              {personal.foto && (
+                <div className="order-1 md:order-2 print:order-2 flex justify-center md:justify-start print:justify-start flex-shrink-0">
+                  <div className="relative">
+                    <div className={`absolute inset-0 rounded-full translate-x-1 translate-y-1 bg-neutral-900 dark:bg-neutral-700 print:hidden`}></div>
+                    <div className={`relative w-28 h-28 md:w-32 md:h-32 print:w-32 print:h-32 rounded-full overflow-hidden border-4 z-10 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border-white dark:border-neutral-700 print:bg-white print:border-neutral-200`}>
+                      <User className="w-14 h-14 text-neutral-300 absolute" />
+                      <img 
+                        src={personal.foto} 
+                        alt={personal.nombre}
+                        className="w-full h-full object-cover relative z-10"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Text Content */}
               <div className="flex-1 order-2 md:order-1 print:order-1 text-center md:text-left print:text-left">
-                <h1 className={`text-5xl md:text-6xl print:text-6xl font-bold uppercase tracking-tighter mb-3 leading-none ${theme.primary}`}>
+                <h1 className={`text-4xl md:text-5xl print:text-5xl font-bold uppercase tracking-tighter mb-2 leading-none ${theme.primary}`}>
                   {personal.nombre}
                 </h1>
                 <p className={`text-sm md:text-base font-medium tracking-[0.2em] uppercase ${smallText}`}>
@@ -195,7 +213,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                 </p>
                 
                 {/* Contact Bar */}
-                <div className={`mt-6 flex flex-wrap justify-center md:justify-start print:justify-start gap-y-3 gap-x-6 text-sm font-medium ${theme.secondary}`}>
+                <div className={`mt-5 flex flex-wrap justify-center md:justify-start print:justify-start gap-y-2.5 gap-x-5 text-sm font-medium ${theme.secondary}`}>
                   {personal.email && (
                     <div className="flex items-center gap-2 group">
                       <div className={`p-1.5 rounded-md transition-colors ${theme.iconBg} ${theme.iconColor}`}>
@@ -238,24 +256,6 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                   ))}
                 </div>
               </div>
-
-              {/* Profile Picture */}
-              {personal.foto && (
-                <div className="order-1 md:order-2 print:order-2 flex justify-center md:justify-end print:justify-end mb-4 md:mb-0 print:mb-0">
-                  <div className="relative">
-                    <div className={`absolute inset-0 rounded-full translate-x-1 translate-y-1 bg-neutral-900 dark:bg-neutral-700 print:hidden`}></div>
-                    <div className={`relative w-32 h-32 md:w-40 md:h-40 print:w-40 print:h-40 rounded-full overflow-hidden border-4 z-10 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border-white dark:border-neutral-700 print:bg-white print:border-neutral-200`}>
-                      <User className="w-16 h-16 text-neutral-300 absolute" />
-                      <img 
-                        src={personal.foto} 
-                        alt={personal.nombre}
-                        className="w-full h-full object-cover relative z-10"
-                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </header>
 
