@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_VERSION: string
   readonly VITE_BRAND_NAME: string
   readonly VITE_BRAND_URL: string
+  readonly VITE_BRAND_SIGNATURE: string
   readonly VITE_REPO_URL: string
 }
 
