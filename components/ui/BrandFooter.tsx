@@ -56,7 +56,7 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
     <img 
       src={brandSignature} 
       alt={brandName}
-      className="h-6 sm:h-7 w-auto opacity-40 hover:opacity-70 transition-opacity dark:invert dark:opacity-30 dark:hover:opacity-60"
+      className="h-10 sm:h-12 w-auto -my-2 opacity-40 hover:opacity-70 transition-opacity dark:invert dark:opacity-30 dark:hover:opacity-60"
     />
   ) : null;
 
@@ -102,20 +102,23 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
             
             {/* Repo Link */}
             {repoUrl && (
-              <a 
-                href={repoUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="
-                  flex items-center gap-2 transition-colors
-                  text-neutral-600 hover:text-neutral-900
-                  dark:text-neutral-400 dark:hover:text-white
-                "
-                title="Ver código fuente en GitHub"
-              >
-                <Github className="w-4 h-4" />
-                <span>Código</span>
-              </a>
+              <>
+                <span className="text-neutral-300 dark:text-neutral-600 hidden sm:inline">|</span>
+                <a 
+                  href={repoUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="
+                    flex items-center gap-2 transition-colors
+                    text-neutral-600 hover:text-neutral-900
+                    dark:text-neutral-400 dark:hover:text-white
+                  "
+                  title="Ver código fuente en GitHub"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>Código</span>
+                </a>
+              </>
             )}
             
             {/* Signature - Subtle branding */}
@@ -165,20 +168,23 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
             </a>
             
             {repoUrl && (
-              <a 
-                href={repoUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="
-                  flex items-center gap-2 transition-colors
-                  text-neutral-600 hover:text-neutral-900
-                  dark:text-neutral-400 dark:hover:text-white
-                "
-                title="Ver código fuente en GitHub"
-              >
-                <Github className="w-4 h-4" />
-                <span>Repositorio</span>
-              </a>
+              <>
+                <span className="text-neutral-300 dark:text-neutral-600">|</span>
+                <a 
+                  href={repoUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="
+                    flex items-center gap-2 transition-colors
+                    text-neutral-600 hover:text-neutral-900
+                    dark:text-neutral-400 dark:hover:text-white
+                  "
+                  title="Ver código fuente en GitHub"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>Repositorio</span>
+                </a>
+              </>
             )}
             
             {/* Signature - Subtle branding */}
