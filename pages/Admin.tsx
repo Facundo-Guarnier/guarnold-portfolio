@@ -178,7 +178,7 @@ const Admin: React.FC = () => {
         {/* RIGHT PANEL: Fixed Preview (60%) */}
         <div className={`hidden lg:flex lg:w-7/12 items-start justify-center overflow-hidden relative print:block print:w-full print:bg-white print:static print:overflow-visible print:h-auto ${data.settings.darkMode ? 'bg-neutral-900' : 'bg-gray-100'} transition-colors duration-300`}>
           {/* Inner wrapper that centers the CV and handles scrolling in edit mode */}
-          <div className="absolute inset-0 flex items-center justify-center p-8 overflow-y-auto print:static print:block print:p-0 print:overflow-visible print:w-full print:h-auto">
+          <div className="absolute inset-0 flex items-center justify-center p-8 pt-12 overflow-y-auto print:static print:block print:p-0 print:overflow-visible print:w-full print:h-auto">
              {/* Scale wrapper for preview mode, reset for print */}
              <div className="origin-center transform scale-[0.6] xl:scale-[0.7] 2xl:scale-[0.8] transition-transform duration-300 shadow-2xl ring-1 ring-black/5 print:transform-none print:shadow-none print:ring-0 print:scale-100 print:w-full print:h-auto print:m-0">
                 <div>
