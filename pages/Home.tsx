@@ -148,10 +148,6 @@ const Home: React.FC = () => {
           <CVPreview data={data} />
         </div>
       </div>
-
-      <footer className={`mt-12 text-center text-xs print:hidden pb-10 transition-colors ${data.settings.darkMode ? 'text-neutral-600' : 'text-neutral-400'}`}>
-        <p>Guarnold CV System • Local Data Only</p>
-      </footer>
     </div>
   );
 };

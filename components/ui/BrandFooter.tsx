@@ -45,31 +45,35 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
 
   if (compact) {
     return (
-      <footer className={`py-2 px-4 print:hidden ${className}`}>
-        <div className="flex items-center justify-center gap-3 text-xs">
-          <span className={dark ? 'text-neutral-600' : 'text-neutral-400'}>
-            {appName} v{appVersion}
+      <footer className={`py-3 px-4 print:hidden ${className}`}>
+        <div className="flex items-center justify-center gap-4 text-sm">
+          <span className={`font-medium ${dark ? 'text-neutral-500' : 'text-neutral-500'}`}>
+            {appName}
           </span>
-          <span className={dividerClass}>•</span>
+          <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono ${dark ? 'bg-neutral-800 text-neutral-400' : 'bg-neutral-200 text-neutral-500'}`}>
+            v{appVersion}
+          </span>
+          <span className={dividerClass}>|</span>
           <a 
             href={brandUrl} 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`transition-colors ${baseTextClass}`}
+            className={`flex items-center gap-1.5 transition-colors ${baseTextClass}`}
           >
-            {brandName}
+            <Globe className="w-4 h-4" />
+            <span>{brandName}</span>
           </a>
           {repoUrl && (
             <>
-              <span className={dividerClass}>•</span>
               <a 
                 href={repoUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className={`transition-colors ${baseTextClass}`}
+                className={`flex items-center gap-1.5 transition-colors ${baseTextClass}`}
                 title="Ver código fuente"
               >
-                <Github className="w-3.5 h-3.5" />
+                <Github className="w-4 h-4" />
+                <span>Repo</span>
               </a>
             </>
           )}
