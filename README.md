@@ -1,20 +1,95 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+
+# 📄 CV Formatter
+
+**Editor de CV en línea - Crea, edita y comparte tu currículum profesional**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+
 </div>
 
-# Run and deploy your AI Studio app
+---
 
-This contains everything you need to run your app locally.
+## ✨ Características
 
-View your app in AI Studio: https://ai.studio/apps/drive/15jsFqDD4UqKfoBcq4bQuoSChpgXIZAtD
+- 📝 **Editor intuitivo** - Edita tu CV en tiempo real con vista previa
+- 🎨 **Temas claro/oscuro** - Interfaz adaptable a tus preferencias
+- 📱 **Diseño responsive** - Funciona perfectamente en móviles y escritorio
+- 📤 **Exportar a PDF** - Descarga tu CV listo para enviar
+- 🔗 **Compartir enlace** - Comparte tu CV mediante un link único
+- 💾 **Guardado automático** - Tus cambios se guardan automáticamente
 
-## Run Locally
+---
 
-**Prerequisites:**  Node.js
+## 🚀 Instalación
 
+**Requisitos:** Node.js 18+
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+# Clonar el repositorio
+git clone https://github.com/Facundo-Guarnier/cv-formatter.git
+cd cv-formatter
+
+# Instalar dependencias
+npm install
+
+# Iniciar en modo desarrollo
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173`
+
+---
+
+## 🛠️ Scripts disponibles
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm run dev` | Inicia el servidor de desarrollo |
+| `npm run build` | Genera la build de producción |
+| `npm run preview` | Previsualiza la build de producción |
+
+---
+
+## 🏗️ Tecnologías
+
+- **React 18** - Biblioteca de UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool ultra rápido
+- **Tailwind CSS** - Framework de estilos
+- **Supabase** - Backend y autenticación
+- **Lucide React** - Iconografía
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+cv-formatter/
+├── components/
+│   ├── cv/           # Componentes de vista previa del CV
+│   ├── editor/       # Editores de cada sección
+│   └── ui/           # Componentes reutilizables
+├── hooks/            # Custom hooks
+├── lib/              # Configuraciones (Supabase, etc.)
+├── pages/            # Páginas de la aplicación
+├── types/            # Tipos TypeScript
+└── data/             # Datos mock para desarrollo
+```
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia **MIT**. Ver el archivo [LICENSE](./LICENSE) para más detalles.
+
+---
+
+###  Agradecimientos
+
+- [Google AI Studio](https://ai.studio/) - Por las herramientas de IA que facilitaron el desarrollo inicial
+- [Lovable](https://lovable.dev/) - Por el plugin de devtools
+- [Shadcn/ui](https://ui.shadcn.com/) - Inspiración para componentes UI
+

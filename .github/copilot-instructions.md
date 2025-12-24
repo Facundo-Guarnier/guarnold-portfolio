@@ -1,4 +1,4 @@
-# Instrucciones para GitHub Copilot - Guarnold CV System
+# Instrucciones para GitHub Copilot - CV Formatter
 
 ## Contexto del Proyecto
 
