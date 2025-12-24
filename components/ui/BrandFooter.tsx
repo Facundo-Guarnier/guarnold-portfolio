@@ -15,7 +15,7 @@
  * Usage:
  * - <BrandFooter /> - Full version with auto dark mode detection
  * - <BrandFooter compact /> - Single line version
- * - <BrandFooter dark /> - Force dark mode (useful if parent doesn't have 'dark' class)
+ * - <BrandFooter forceDark /> - Force dark mode (useful if parent doesn't have 'dark' class)
  */
 
 import React from 'react';
@@ -56,7 +56,7 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
     <img 
       src={brandSignature} 
       alt={brandName}
-      className="h-10 sm:h-12 w-auto -my-2 opacity-40 hover:opacity-70 transition-opacity dark:invert dark:opacity-30 dark:hover:opacity-60"
+      className="h-8 sm:h-10 md:h-12 w-auto -my-1 sm:-my-2 opacity-40 hover:opacity-70 transition-opacity dark:invert dark:opacity-30 dark:hover:opacity-60"
     />
   ) : null;
 
@@ -64,23 +64,23 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
     return (
       <Wrapper>
         <footer className={`
-          py-4 px-6 border-t print:hidden transition-colors
+          py-3 px-4 border-t print:hidden transition-colors
           bg-neutral-100 border-neutral-200
           dark:bg-neutral-900 dark:border-neutral-800
           ${className}
         `}>
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 text-xs md:text-sm">
             {/* App Name with Badge */}
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-neutral-700 dark:text-neutral-300">
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <span className="font-semibold text-neutral-700 dark:text-neutral-300 text-[10px] md:text-sm hidden sm:inline">
                 {appName}
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-white text-neutral-500 border border-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700">
+              <span className="px-1.5 md:px-2 py-0.5 rounded-full text-[8px] md:text-[10px] font-mono font-medium bg-white text-neutral-500 border border-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700">
                 v{appVersion}
               </span>
             </div>
             
-            <span className="text-neutral-300 dark:text-neutral-600 hidden sm:inline">|</span>
+            <span className="text-neutral-300 dark:text-neutral-600 hidden md:inline">|</span>
             
             {/* Brand Link - Main Hub */}
             <a 
@@ -88,35 +88,36 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
               target="_blank" 
               rel="noopener noreferrer"
               className="
-                flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all font-medium
+                flex items-center gap-1 sm:gap-1.5 md:gap-2 px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 rounded-lg transition-all font-medium text-[10px] sm:text-xs md:text-sm
                 bg-white text-neutral-700 border border-neutral-200 
                 hover:bg-neutral-200 hover:text-neutral-900
                 dark:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700
                 dark:hover:bg-neutral-700 dark:hover:text-white
               "
             >
-              <Globe className="w-4 h-4" />
-              <span className="hidden sm:inline">Más proyectos en</span>
+              <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
+              <span className="hidden lg:inline">Más proyectos en</span>
+              <span className="lg:hidden">By</span>
               <strong>{brandName}</strong>
             </a>
             
             {/* Repo Link */}
             {repoUrl && (
               <>
-                <span className="text-neutral-300 dark:text-neutral-600 hidden sm:inline">|</span>
+                <span className="text-neutral-300 dark:text-neutral-600 hidden md:inline">|</span>
                 <a 
                   href={repoUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="
-                    flex items-center gap-2 transition-colors
+                    flex items-center gap-1.5 transition-colors p-1 sm:p-1.5 md:p-0
                     text-neutral-600 hover:text-neutral-900
                     dark:text-neutral-400 dark:hover:text-white
                   "
                   title="Ver código fuente en GitHub"
                 >
-                  <Github className="w-4 h-4" />
-                  <span>Código</span>
+                  <Github className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
+                  <span className="hidden md:inline">Código</span>
                 </a>
               </>
             )}

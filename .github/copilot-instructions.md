@@ -1,16 +1,12 @@
-# Instrucciones para GitHub Copilot - Trilex Store
+# Instrucciones para GitHub Copilot - Guarnold CV System
 
 ## Contexto del Proyecto
 
-Estás trabajando en **Guarnold CV System**, una aplicación web profesional para la gestión, edición y visualización de Curriculum Vitae (CV) y Portafolios.
+Es una aplicación para editar CV en línea y poder descargarlo en formato PDF o compartirlo mediante un enlace. 
 
-**Stack Tecnológico:** React, Vite, Tailwind CSS, TypeScript y **Supabase** (Base de Datos & Auth).
+**Filosofía de Diseño:** "Minimalista, Lujoso y Oscuro", materializada a través de una interfaz moderna que evoca profesionalismo y alta gama.
 
-**Filosofía de Diseño:**
-1.  **Vista Pública:** "Minimalista, Impreso-Perfecto (A4), Profesional".
-2.  **Vista Admin:** "Funcional, Rápida, Dark-Mode Friendly".
-
-**Importante:** El proyecto tiene una dualidad crítica: debe verse excelente en pantalla (Responsive/Dark Mode) pero **SIEMPRE** debe imprimirse en papel blanco A4 perfecto (Print-First).
+**Importante:** El diseño es **Mobile-First**, garantizando una experiencia impecable en dispositivos móviles que escala de forma fluida a pantallas de escritorio.
 
 ---
 
@@ -72,50 +68,14 @@ mcp_supabase-tril_execute_sql
 - `mcp_supabase-tril_list_tables` - Listar tablas
 - `mcp_supabase-tril_get_advisors` - Obtener avisos de seguridad/performance
 
----
-
-### 2. Arquitectura de Datos
-
-#### **PROHIBIDO (Hardcoding)**
-
-```jsx
-// ❌ INCORRECTO - NO hardcodear productos, precios o descripciones
-const products = [
-  { id: 1, name: "Reloj Suizo", price: "$5,000", image: "..." },
-  { id: 2, name: "Reloj Deportivo", price: "$3,000", image: "..." }
-];
-
-<Product name="Reloj Suizo" price="$5,000" />
-```
-
-
-### 2. Convención de Nombres para Migraciones SQL (Cuando se integre Supabase)
-
-**Formato:** `<timestamp>_<name>.sql`
-
-- **timestamp:** 14 dígitos UTC (`YYYYMMDDHHMMSS`)
-- **name:** En `snake_case`, descriptivo y corto
-- **Encabezado:** `-- migration: <timestamp>_<name>.sql`
-
-**Ejemplo:**
-
-```sql
--- migration: 20251112143000_create_customers_table.sql
-
-CREATE TABLE customers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  email TEXT NOT NULL UNIQUE,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-```
 
 ---
 
-### 3. Componentes React - Reutilización sobre Creación
+### 2. Componentes React - Reutilización sobre Creación
 
 **FILOSOFÍA FUNDAMENTAL:**
 
-Los componentes en Lovable/React son **reutilizables y genéricos**. Antes de crear un nuevo componente:
+Los componentes en React son **reutilizables y genéricos**. Antes de crear un nuevo componente:
 
 **SIEMPRE** pregúntate:
 - ¿Existe un componente similar que pueda ser reutilizado cambiando solo los datos o props?
@@ -154,39 +114,9 @@ Los componentes en Lovable/React son **reutilizables y genéricos**. Antes de cr
 
 ---
 
-### 4. Gestión de Estado
-
-#### **Estado del Servidor (Datos de Shopify)**
-
-**OBLIGATORIO:** Usar un cliente HTTP o SDK de Shopify para fetching de datos.
-
-```jsx
-// ✅ CORRECTO - Usar Fetch API o Shopify SDK
-const fetchProducts = async () => {
-  const response = await fetch('/api/shopify/products');
-  const data = await response.json();
-  return data;
-};
-
-// En componentes, usar estados locales o librerías como SWR / React Query
-const { data: products, isLoading } = useFetch(fetchProducts);
-```
-
-#### **Estado del Cliente (UI State)**
-
-Para estado local de UI que **NO persiste en el backend** (ej. modal abierto/cerrado, filtros aplicados, notificaciones):
-
-```jsx
-// ✅ CORRECTO - Usar useState para estado local
-const [isFilterOpen, setIsFilterOpen] = useState(false);
-const [selectedFilters, setSelectedFilters] = useState({});
-
-// Para estado global, considerar Context API o Zustand si es complejo
-```
-
 ---
 
-### 5. Diseño Mobile-First y Responsive
+### 3. Diseño Mobile-First y Responsive
 
 **OBLIGATORIO:** Todos los componentes deben funcionar perfectamente en dispositivos móviles y escalar a pantallas de escritorio.
 
@@ -206,7 +136,7 @@ const [selectedFilters, setSelectedFilters] = useState({});
 
 ---
 
-### 6. Feedback al Usuario y Manejo de Errores
+### 4. Feedback al Usuario y Manejo de Errores
 
 **OBLIGATORIO:** Proporcionar feedback claro en acciones clave.
 
@@ -230,39 +160,7 @@ const addToCart = async (productId) => {
 
 **Páginas de Error:** Diseñar páginas de error consistentes con la marca (ej. 404, 500).
 
----
 
-### 7. Paleta de Colores y Sistema de Diseño
-
-**IMPORTANTE:** Seguir la paleta "Minimalista, Lujoso y Oscuro" definida en el proyecto.
-
-```jsx
-// ✅ CORRECTO - Usar nombres de color semánticos
-<button className="bg-primary text-primary-foreground hover:bg-primary-dark">
-  Comprar Ahora
-</button>
-
-// ❌ INCORRECTO - NO hardcodear colores
-<button className="bg-blue-500 text-white">Comprar Ahora</button>
-```
-
-Consuta los archivos de configuración (Tailwind, CSS variables) para los colores exactos.
-
----
-
-### 8. Sistema de Autorización y Roles
-
-### Roles en v1.0
-
-1. **Administrador de la Tienda**: Acceso total al panel de Shopify para gestionar productos, colecciones, pedidos, clientes y contenido.
-2. **Cliente**: Usuario final que navega y compra. **No requiere registro para comprar** (carrito de sesión).
-
-```jsx
-// ✅ CORRECTO - Renderizado condicional por roles (cuando sea necesario)
-{isAdmin && <AdminDashboard />}
-
-// No se requiere autenticación para compra básica
-```
 ---
 
 ## Checklist de Desarrollo
@@ -278,15 +176,3 @@ Cuando crees nuevas funcionalidades, asegúrate de:
 - [ ] El código está **bien documentado** con comentarios donde sea necesario
 - [ ] Se manejan **errores gracefully** con mensajes claros
 
----
-
-## Notas Finales
-
-**Principios Clave del Proyecto:**
-- **Mobile-First:** Prioriza la experiencia en dispositivos móviles
-- **Reutilización:** Favorece componentes genéricos sobre específicos
-- **Escalabilidad:** Usa estructura genérica de Shopify para futuras categorías
-- **Consistencia:** Mantén la paleta de colores y diseño a través de toda la tienda
-- **Seguridad:** Shopify maneja pagos y seguridad de transacciones
-
-**Cuando tengas dudas, sigue estas instrucciones. Son la guía definitiva del proyecto.**
