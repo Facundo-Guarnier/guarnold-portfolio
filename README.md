@@ -91,5 +91,3 @@ Este proyecto está bajo la licencia **MIT**. Ver el archivo [LICENSE](./LICENSE
 
 - [Google AI Studio](https://ai.studio/) - Por las herramientas de IA que facilitaron el desarrollo inicial
 - [Lovable](https://lovable.dev/) - Por el plugin de devtools
-- [Shadcn/ui](https://ui.shadcn.com/) - Inspiración para componentes UI
-

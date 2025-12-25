@@ -110,7 +110,6 @@ Los componentes en React son **reutilizables y genéricos**. Antes de crear un n
 #### **Nomenclatura de Componentes**
 
 - Componentes personalizados: PascalCase sin sufijo especial (ej. `ProductCard`, `HeaderNav`)
-- Componentes de utilidad: Preferir importar de Shadcn (ej. `Button`, `Dialog`)
 
 ---
 
