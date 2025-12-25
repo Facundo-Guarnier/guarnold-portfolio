@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { ArrowLeft, Download, Loader2, LogOut } from 'lucide-react';
+import { ArrowLeft, Download, Loader2, LogOut, Save, RotateCcw } from 'lucide-react';
 import { useCVData } from '@/hooks/useCVData';
 import { useAuth } from '@/hooks/useAuth';
 import { CVPreview } from '@/components/cv/CVPreview';
@@ -18,6 +18,8 @@ const Admin: React.FC = () => {
   const { 
     data,
     loading: dataLoading,
+    saving,
+    isDirty,
     setTheme, 
     updatePersonal, 
     moveItem,
@@ -32,8 +34,42 @@ const Admin: React.FC = () => {
     removeSkill,
     addProyecto,
     updateProyecto,
-    removeProyecto
+    removeProyecto,
+    saveAllChanges,
+    discardChanges
   } = useCVData();
+
+  // Alerta al intentar salir/recargar con cambios sin guardar
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        // Mensaje estándar del navegador (el texto personalizado ya no se muestra en navegadores modernos)
+        e.returnValue = 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?';
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
+
+  const handleSave = async () => {
+    const result = await saveAllChanges();
+    if (result.success) {
+      // Opcional: mostrar toast de éxito
+      console.log('Cambios guardados exitosamente');
+    } else {
+      // Opcional: mostrar toast de error
+      console.error('Error al guardar:', result.error);
+    }
+  };
+
+  const handleDiscard = () => {
+    if (window.confirm('¿Estás seguro de que quieres descartar todos los cambios?')) {
+      discardChanges();
+    }
+  };
   
   const handlePrint = () => {
     const originalTitle = document.title;
@@ -45,6 +81,11 @@ const Admin: React.FC = () => {
   };
 
   const handleSignOut = async () => {
+    if (isDirty) {
+      if (!window.confirm('Tienes cambios sin guardar. ¿Estás seguro de que quieres cerrar sesión?')) {
+        return;
+      }
+    }
     await signOut();
   };
 
@@ -97,18 +138,55 @@ const Admin: React.FC = () => {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex flex-col">
-            <h1 className="text-lg font-bold text-neutral-900 dark:text-white leading-none">VitaeFlow Editor</h1>
-            <span className="text-xs text-neutral-500 dark:text-gray-400 mt-0.5">Guardando en Supabase • {user.email}</span>
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-neutral-900 dark:text-white leading-none">VitaeFlow Editor</h1>
+              {isDirty && (
+                <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded-full">
+                  Sin guardar
+                </span>
+              )}
+            </div>
+            <span className="text-xs text-neutral-500 dark:text-gray-400 mt-0.5">{user.email}</span>
           </div>
         </div>
         <div className="flex gap-2">
+           {/* Botón de Descartar cambios */}
+           {isDirty && (
+             <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleDiscard}
+              className="gap-2 text-neutral-500 hover:text-neutral-700"
+             >
+               <RotateCcw className="w-4 h-4" /> <span className="hidden sm:inline">Descartar</span>
+             </Button>
+           )}
+
+           {/* Botón de Guardar */}
+           <Button 
+            size="sm" 
+            onClick={handleSave}
+            disabled={!isDirty || saving}
+            className={`gap-2 ${isDirty ? accentClass : 'bg-neutral-300 text-neutral-500 cursor-not-allowed'}`}
+           >
+             {saving ? (
+               <>
+                 <Loader2 className="w-4 h-4 animate-spin" /> Guardando...
+               </>
+             ) : (
+               <>
+                 <Save className="w-4 h-4" /> <span className="hidden sm:inline">Guardar</span>
+               </>
+             )}
+           </Button>
+           
            <Button 
             variant="outline" 
             size="sm" 
             onClick={handleSignOut}
             className="gap-2"
            >
-             <LogOut className="w-4 h-4" /> Cerrar Sesión
+             <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Cerrar Sesión</span>
            </Button>
            
            <Button 
@@ -117,7 +195,7 @@ const Admin: React.FC = () => {
             onClick={handlePrint}
             className="gap-2"
            >
-             <Download className="w-4 h-4" /> Descargar PDF
+             <Download className="w-4 h-4" /> <span className="hidden sm:inline">Descargar PDF</span>
            </Button>
         </div>
       </header>
