@@ -3,6 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { ArrowLeft, Download, Loader2, LogOut, Save, RotateCcw } from 'lucide-react';
 import { useCVData } from '@/hooks/useCVData';
 import { useAuth } from '@/hooks/useAuth';
+import { useScreenScale } from '@/hooks/useScreenScale';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { ProfileEditor } from '@/components/editor/ProfileEditor';
 import { ExperienceEditor } from '@/components/editor/ExperienceEditor';
@@ -12,8 +13,13 @@ import { ProjectsEditor } from '@/components/editor/ProjectsEditor';
 import { SettingsEditor } from '@/components/editor/SettingsEditor';
 import { Button } from '@/components/ui/Button';
 
+// Dimensiones A4 en píxeles
+const CV_WIDTH = 794;
+const CV_HEIGHT = 1123;
+
 const Admin: React.FC = () => {
   const { user, loading: authLoading, signOut } = useAuth();
+  const scale = useScreenScale(30);
   
   const { 
     data,
@@ -255,11 +261,21 @@ const Admin: React.FC = () => {
 
         {/* RIGHT PANEL: Fixed Preview (60%) */}
         <div className={`hidden lg:flex lg:w-7/12 items-start justify-center overflow-hidden relative print:block print:w-full print:bg-white print:static print:overflow-visible print:h-auto ${data.settings.darkMode ? 'bg-neutral-900' : 'bg-gray-100'} transition-colors duration-300`}>
-          {/* Inner wrapper that centers the CV and handles scrolling in edit mode */}
-          <div className="absolute inset-0 overflow-y-auto p-4 print:static print:block print:p-0 print:overflow-visible print:w-full print:h-auto">
-             {/* CVPreview maneja su propio escalado inteligente */}
-             <div className="print:transform-none print:shadow-none print:w-full print:h-auto print:m-0">
-                <CVPreview data={data} />
+          {/* Inner wrapper con scroll que contiene el CV escalado */}
+          <div className="absolute inset-0 overflow-y-auto flex justify-center pt-8 pb-8 print:static print:block print:p-0 print:overflow-visible print:w-full print:h-auto">
+             {/* Wrapper de Escalado - idéntico al de Home para consistencia */}
+             <div
+               style={{
+                 transform: `scale(${scale})`,
+                 transformOrigin: 'top center',
+                 width: `${CV_WIDTH}px`,
+                 minHeight: `${CV_HEIGHT}px`,
+                 marginBottom: `-${(1 - scale) * CV_HEIGHT}px`,
+                 flexShrink: 0,
+               }}
+               className="print:!transform-none print:!w-[210mm] print:!min-h-0 print:!mb-0"
+             >
+                <CVPreview data={data} disableInternalScaling={true} />
              </div>
           </div>
         </div>

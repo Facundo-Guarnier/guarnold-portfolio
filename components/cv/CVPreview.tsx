@@ -191,13 +191,15 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '', disa
           minHeight: effectiveScaledHeight,
         }}
       >
-        {/* A4 Sheet - dimensiones fijas con escalado */}
+        {/* A4 Sheet - dimensiones fijas con escalado, blindado contra cambios de ancho */}
         <div 
           className={`cv-sheet ${cvSheetClasses}`}
           id="cv-preview"
           style={{
             width: `${A4_WIDTH}px`,
+            minWidth: `${A4_WIDTH}px`, // Crucial: evita que Flexbox lo aplaste
             minHeight: `${A4_MIN_HEIGHT}px`,
+            flexShrink: 0, // No permitir encogimiento
             transform: `scale(${effectiveScale})`,
             transformOrigin: 'top center',
           }}
