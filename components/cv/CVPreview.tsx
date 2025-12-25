@@ -1,11 +1,18 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { CVData } from '../../types/cv';
 import { MapPin, Mail, Phone, Github, Linkedin, ExternalLink, Globe, User, Twitter, Link as LinkIcon, Gitlab, Youtube, Instagram, MessageCircle, Send, Code2, BookOpen, Palette } from 'lucide-react';
+import { usePDFScale } from '../../hooks/usePDFScale';
+
+// Dimensiones A4 a 96 DPI
+const A4_WIDTH = 794; // 210mm
+const A4_MIN_HEIGHT = 1123; // 297mm
 
 interface CVPreviewProps {
   data: CVData;
   className?: string;
+  /** Si es true, no aplica el escalado interno (útil cuando el padre maneja el escalado) */
+  disableInternalScaling?: boolean;
 }
 
 // THEME CONFIGURATION
@@ -148,22 +155,25 @@ const CircuitWatermark = ({ isDark }: { isDark: boolean }) => (
   </div>
 );
 
-export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) => {
+export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '', disableInternalScaling = false }) => {
   const { personal, experiencia, educacion, skills, proyectos, settings } = data;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scale, scaledHeight } = usePDFScale(containerRef, { horizontalPadding: 32 });
+  
+  // Si el escalado interno está desactivado, usar escala 1
+  const effectiveScale = disableInternalScaling ? 1 : scale;
+  const effectiveScaledHeight = disableInternalScaling ? A4_MIN_HEIGHT : scaledHeight;
   
   // Default to neutral if theme not found
   const theme = THEME_COLORS[settings?.themeColor || 'neutral'] || THEME_COLORS['neutral'];
   const isDark = settings?.darkMode || false;
 
-  // Root container styles:
-  // - On Screen (Light): bg-white text-neutral-900
-  // - On Screen (Dark): bg-slate-950 text-white
-  // - On Print: FORCE bg-white text-neutral-900
-  const containerClasses = `
-    relative w-full max-w-[210mm] min-h-[297mm] mx-auto p-10 md:p-14 shadow-2xl overflow-hidden box-border
+  // Clases para el contenido interno del CV (dimensiones fijas A4)
+  const cvSheetClasses = `
+    relative p-10 shadow-2xl overflow-hidden box-border text-left
     bg-white text-neutral-900 
     dark:bg-slate-950 dark:text-white
-    print:bg-white print:text-neutral-900 print:shadow-none print:w-full print:p-10 print:dark:bg-white print:dark:text-neutral-900
+    print:bg-white print:text-neutral-900 print:shadow-none print:w-[210mm] print:min-w-[210mm] print:max-w-none print:p-10 print:dark:bg-white print:dark:text-neutral-900 print:overflow-visible print:h-auto print:transform-none
     ${className}
   `;
 
@@ -172,8 +182,28 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
 
   return (
     // IMPORTANT: 'dark' class applied here triggers dark mode for all children if isDark is true.
-    <div className={`${isDark ? 'dark' : ''} h-full`}>
-      <div className={containerClasses} id="cv-preview">
+    <div className={`${isDark ? 'dark' : ''}`}>
+      {/* Viewport Container - detecta el ancho disponible */}
+      <div 
+        ref={containerRef} 
+        className="w-full overflow-hidden flex justify-center print:overflow-visible print:block print:!min-h-0"
+        style={{ 
+          minHeight: effectiveScaledHeight,
+        }}
+      >
+        {/* A4 Sheet - dimensiones fijas con escalado, blindado contra cambios de ancho */}
+        <div 
+          className={`cv-sheet ${cvSheetClasses}`}
+          id="cv-preview"
+          style={{
+            width: `${A4_WIDTH}px`,
+            minWidth: `${A4_WIDTH}px`, // Crucial: evita que Flexbox lo aplaste
+            minHeight: `${A4_MIN_HEIGHT}px`,
+            flexShrink: 0, // No permitir encogimiento
+            transform: `scale(${effectiveScale})`,
+            transformOrigin: 'top center',
+          }}
+        >
         
         {/* Watermark */}
         <CircuitWatermark isDark={isDark} />
@@ -182,20 +212,38 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
         <div className="relative z-10">
           
           {/* Header Section */}
-          <header className={`border-b pb-8 mb-10 ${theme.border}`}>
-            <div className="flex flex-col md:flex-row gap-8 md:items-end justify-between">
+          <header className={`border-b pb-8 mb-10 break-inside-avoid ${theme.border}`}>
+            <div className="flex flex-row gap-10 items-center">
               
+              {/* Profile Picture */}
+              {personal.foto && (
+                <div className="order-2 flex justify-start flex-shrink-0">
+                  <div className="relative">
+                    <div className={`absolute inset-0 rounded-full translate-x-1 translate-y-1 bg-neutral-900 dark:bg-neutral-700 print:hidden`}></div>
+                    <div className={`relative w-32 h-32 rounded-full overflow-hidden border-4 z-10 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border-white dark:border-neutral-700 print:bg-white print:border-neutral-200`}>
+                      <User className="w-14 h-14 text-neutral-300 absolute" />
+                      <img 
+                        src={personal.foto} 
+                        alt={personal.nombre}
+                        className="w-full h-full object-cover relative z-10"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Text Content */}
-              <div className="flex-1 order-2 md:order-1 text-center md:text-left">
-                <h1 className={`text-5xl md:text-6xl font-bold uppercase tracking-tighter mb-3 leading-none ${theme.primary}`}>
+              <div className="flex-1 order-1 text-left">
+                <h1 className={`text-5xl font-bold uppercase tracking-tighter mb-2 leading-none ${theme.primary}`}>
                   {personal.nombre}
                 </h1>
-                <p className={`text-sm md:text-base font-medium tracking-[0.2em] uppercase ${smallText}`}>
+                <p className={`text-base font-medium tracking-[0.2em] uppercase ${smallText}`}>
                   {personal.titulo}
                 </p>
                 
                 {/* Contact Bar */}
-                <div className={`mt-6 flex flex-wrap justify-center md:justify-start gap-y-3 gap-x-6 text-sm font-medium ${theme.secondary}`}>
+                <div className={`mt-5 flex flex-wrap justify-start gap-y-2.5 gap-x-5 text-sm font-medium ${theme.secondary}`}>
                   {personal.email && (
                     <div className="flex items-center gap-2 group">
                       <div className={`p-1.5 rounded-md transition-colors ${theme.iconBg} ${theme.iconColor}`}>
@@ -238,36 +286,18 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
                   ))}
                 </div>
               </div>
-
-              {/* Profile Picture */}
-              {personal.foto && (
-                <div className="order-1 md:order-2 flex justify-center md:justify-end mb-4 md:mb-0">
-                  <div className="relative">
-                    <div className={`absolute inset-0 rounded-full translate-x-1 translate-y-1 bg-neutral-900 dark:bg-neutral-700 print:hidden`}></div>
-                    <div className={`relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 z-10 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800 border-white dark:border-neutral-700 print:bg-white print:border-neutral-200 print:w-32 print:h-32`}>
-                      <User className="w-16 h-16 text-neutral-300 absolute" />
-                      <img 
-                        src={personal.foto} 
-                        alt={personal.nombre}
-                        className="w-full h-full object-cover relative z-10"
-                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </header>
 
           {/* Row 1: Two Columns (Main & Sidebar) */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+          <div className="grid grid-cols-12 gap-12">
             {/* Main Column (Left) */}
-            <div className="md:col-span-8 space-y-10">
+            <div className="col-span-8 space-y-10">
               
               {/* Profile Summary */}
               {personal.resumen && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 print:break-after-avoid ${theme.primary}`}>
                     <div className={`w-8 h-px bg-current`}></div>
                     Perfil Profesional
                   </h3>
@@ -280,14 +310,14 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
               {/* Experience */}
               {experiencia.length > 0 && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 print:break-after-avoid ${theme.primary}`}>
                      <div className={`w-8 h-px bg-current`}></div>
                     Experiencia Laboral
                   </h3>
                   <div className="space-y-8">
                     {experiencia.map((exp) => (
-                      <div key={exp.id} className={`break-inside-avoid group relative pl-4 border-l-2 transition-colors ${theme.borderLeft} ${theme.hoverBorder}`}>
-                        <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-1.5">
+                      <div key={exp.id} className={`print-break-inside-avoid break-inside-avoid print:mb-6 group relative pl-4 border-l-2 transition-colors ${theme.borderLeft} ${theme.hoverBorder}`}>
+                        <div className="flex flex-row items-baseline justify-between mb-1.5">
                           <h4 className={`text-lg font-bold tracking-tight ${theme.primary}`}>
                             {exp.puesto}
                           </h4>
@@ -309,17 +339,17 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
             </div>
 
             {/* Sidebar Column (Right) */}
-            <aside className="md:col-span-4 space-y-10">
+            <aside className="col-span-4 space-y-10">
               
                {/* Skills */}
                {skills.length > 0 && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 print:break-after-avoid ${theme.primary}`}>
                     Habilidades
                   </h3>
                   <div className="space-y-4">
                     {skills.map((skill) => (
-                      <div key={skill.id} className="break-inside-avoid">
+                      <div key={skill.id} className="print-break-inside-avoid break-inside-avoid">
                         <div className="flex justify-between items-center mb-1.5">
                           <span className={`text-sm font-semibold text-neutral-700 dark:text-neutral-300 print:text-neutral-700`}>
                             {skill.nombre}
@@ -340,12 +370,12 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
               {/* Education */}
               {educacion.length > 0 && (
                 <section>
-                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 ${theme.primary}`}>
+                  <h3 className={`text-sm font-bold uppercase tracking-widest mb-5 print:break-after-avoid ${theme.primary}`}>
                     Educación
                   </h3>
                   <div className="space-y-6">
                     {educacion.map((edu) => (
-                      <div key={edu.id} className="break-inside-avoid relative">
+                      <div key={edu.id} className="print-break-inside-avoid break-inside-avoid print:mb-6 relative">
                         <div className={`absolute -left-[19px] top-1.5 w-2 h-2 rounded-full border-2 bg-white dark:bg-slate-950 print:bg-white ${theme.border}`}></div>
                         <div className={`border-l pl-5 pb-1 ${theme.border}`}>
                             <h4 className={`text-sm font-bold leading-tight mb-1 ${theme.primary}`}>
@@ -374,13 +404,13 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
           {/* Row 2: Full Width Projects Section */}
           {proyectos && proyectos.length > 0 && (
               <section className={`mt-10 pt-10 border-t ${theme.borderLeft}`}>
-              <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.primary}`}>
+              <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 print:break-after-avoid ${theme.primary}`}>
                   <div className={`w-8 h-px bg-current`}></div>
                   Proyectos Destacados
               </h3>
               <div className="space-y-0">
                   {proyectos.map((proj) => (
-                  <div key={proj.id} className="break-inside-avoid group mb-8 last:mb-0">
+                  <div key={proj.id} className="print-break-inside-avoid break-inside-avoid group mb-8 print:mb-6 last:mb-0">
                       <div className="flex items-center justify-between mb-1">
                           <h4 className={`text-base font-bold ${theme.primary}`}>
                           {proj.nombre}
@@ -404,6 +434,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
           )}
 
         </div>
+      </div>
       </div>
     </div>
   );

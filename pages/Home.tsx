@@ -1,15 +1,21 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Edit3, Download, Palette, X, Moon, Sun } from 'lucide-react';
-import { useCVData } from '../hooks/useCVData';
-import { CVPreview } from '../components/cv/CVPreview';
-import { CVSettings } from '../types/cv';
+import { Edit3, Download, Palette, X, Moon, Sun, RotateCcw, Loader2 } from 'lucide-react';
+import { useCVData } from '@/hooks/useCVData';
+import { CVPreview } from '@/components/cv/CVPreview';
+import { CVSettings } from '@/types/cv';
+import { useScreenScale } from '@/hooks/useScreenScale';
 
 const Home: React.FC = () => {
-  const { data, setTheme } = useCVData();
+  const { data, loading, setTheme, resetVisitorTheme } = useCVData();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const scale = useScreenScale(30); // 30px de margen de seguridad
+
+  // Dimensiones A4 en píxeles
+  const CV_WIDTH = 794;
+  const CV_HEIGHT = 1123;
 
   const handlePrint = () => {
     const originalTitle = document.title;
@@ -45,6 +51,24 @@ const Home: React.FC = () => {
     { id: 'rose', class: 'bg-rose-600' },
     { id: 'amber', class: 'bg-amber-500' },
   ];
+
+  // Mostrar loader mientras cargan los datos
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-neutral-100 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-neutral-200 rounded-full"></div>
+            <div className="w-16 h-16 border-4 border-neutral-900 border-t-transparent rounded-full animate-spin absolute inset-0"></div>
+          </div>
+          <div className="text-center">
+            <p className="text-neutral-900 font-medium">Cargando CV...</p>
+            <p className="text-neutral-500 text-sm mt-1">Un momento por favor</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen md:py-10 print:bg-white print:py-0 transition-colors duration-300 ${data.settings.darkMode ? 'bg-neutral-900' : 'bg-neutral-100'}`}>
@@ -91,13 +115,13 @@ const Home: React.FC = () => {
                 <span className="text-sm font-medium text-neutral-700">Mode</span>
                 <div className="flex bg-neutral-100 p-1 rounded-lg">
                   <button 
-                    onClick={() => setTheme({ darkMode: false }, true)}
+                    onClick={() => setTheme({ darkMode: false }, false)}
                     className={`p-1.5 rounded-md transition-all ${!data.settings.darkMode ? 'bg-white shadow-sm text-yellow-500' : 'text-neutral-400 hover:text-neutral-600'}`}
                   >
                     <Sun className="w-4 h-4" />
                   </button>
                   <button 
-                    onClick={() => setTheme({ darkMode: true }, true)}
+                    onClick={() => setTheme({ darkMode: true }, false)}
                     className={`p-1.5 rounded-md transition-all ${data.settings.darkMode ? 'bg-neutral-800 shadow-sm text-white' : 'text-neutral-400 hover:text-neutral-600'}`}
                   >
                     <Moon className="w-4 h-4" />
@@ -112,12 +136,24 @@ const Home: React.FC = () => {
                   {COLORS.map((c) => (
                     <button
                       key={c.id}
-                      onClick={() => setTheme({ themeColor: c.id }, true)}
+                      onClick={() => setTheme({ themeColor: c.id }, false)}
                       className={`w-6 h-6 rounded-full ${c.class} transition-transform hover:scale-110 ${data.settings.themeColor === c.id ? 'ring-2 ring-offset-2 ring-neutral-900' : ''}`}
                     />
                   ))}
                 </div>
               </div>
+
+              {/* Reset Button */}
+              <button
+                onClick={() => {
+                  resetVisitorTheme();
+                  setShowThemeMenu(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-medium text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 rounded-lg transition-colors"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Restablecer tema original
+              </button>
             </div>
           </div>
         )}
@@ -131,15 +167,24 @@ const Home: React.FC = () => {
       </div>
 
       {/* Main CV View */}
-      <div className="print:w-full flex justify-center">
-        <div className="w-full">
-          <CVPreview data={data} />
+      {/* Contenedor "Marco" - El espacio alrededor del CV */}
+      <div className="w-full min-h-screen flex justify-center overflow-hidden pt-8 pb-8 print:p-0 print:overflow-visible">
+        {/* Contenedor "Transformador" - Aplica el escalado */}
+        <div
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'top center',
+            width: `${CV_WIDTH}px`,
+            minHeight: `${CV_HEIGHT}px`,
+            // Al escalar, el div sigue ocupando espacio original.
+            // Ajustamos el margen negativo inferior para quitar el hueco vacío.
+            marginBottom: `-${(1 - scale) * CV_HEIGHT}px`,
+          }}
+          className="print:!transform-none print:!w-[210mm] print:!min-h-0 print:!mb-0"
+        >
+          <CVPreview data={data} disableInternalScaling={true} />
         </div>
       </div>
-
-      <footer className={`mt-12 text-center text-xs print:hidden pb-10 transition-colors ${data.settings.darkMode ? 'text-neutral-600' : 'text-neutral-400'}`}>
-        <p>Guarnold CV System • Local Data Only</p>
-      </footer>
     </div>
   );
 };
