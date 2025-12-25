@@ -11,6 +11,8 @@ const A4_MIN_HEIGHT = 1123; // 297mm
 interface CVPreviewProps {
   data: CVData;
   className?: string;
+  /** Si es true, no aplica el escalado interno (útil cuando el padre maneja el escalado) */
+  disableInternalScaling?: boolean;
 }
 
 // THEME CONFIGURATION
@@ -153,10 +155,14 @@ const CircuitWatermark = ({ isDark }: { isDark: boolean }) => (
   </div>
 );
 
-export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) => {
+export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '', disableInternalScaling = false }) => {
   const { personal, experiencia, educacion, skills, proyectos, settings } = data;
   const containerRef = useRef<HTMLDivElement>(null);
   const { scale, scaledHeight } = usePDFScale(containerRef, { horizontalPadding: 32 });
+  
+  // Si el escalado interno está desactivado, usar escala 1
+  const effectiveScale = disableInternalScaling ? 1 : scale;
+  const effectiveScaledHeight = disableInternalScaling ? A4_MIN_HEIGHT : scaledHeight;
   
   // Default to neutral if theme not found
   const theme = THEME_COLORS[settings?.themeColor || 'neutral'] || THEME_COLORS['neutral'];
@@ -182,7 +188,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
         ref={containerRef} 
         className="w-full overflow-hidden flex justify-center print:overflow-visible print:block print:!min-h-0"
         style={{ 
-          minHeight: scaledHeight,
+          minHeight: effectiveScaledHeight,
         }}
       >
         {/* A4 Sheet - dimensiones fijas con escalado */}
@@ -192,7 +198,7 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '' }) =>
           style={{
             width: `${A4_WIDTH}px`,
             minHeight: `${A4_MIN_HEIGHT}px`,
-            transform: `scale(${scale})`,
+            transform: `scale(${effectiveScale})`,
             transformOrigin: 'top center',
           }}
         >

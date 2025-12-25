@@ -5,11 +5,17 @@ import { Edit3, Download, Palette, X, Moon, Sun, RotateCcw } from 'lucide-react'
 import { useCVData } from '@/hooks/useCVData';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { CVSettings } from '@/types/cv';
+import { useScreenScale } from '@/hooks/useScreenScale';
 
 const Home: React.FC = () => {
   const { data, setTheme, resetVisitorTheme } = useCVData();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const scale = useScreenScale(30); // 30px de margen de seguridad
+
+  // Dimensiones A4 en píxeles
+  const CV_WIDTH = 794;
+  const CV_HEIGHT = 1123;
 
   const handlePrint = () => {
     const originalTitle = document.title;
@@ -143,9 +149,22 @@ const Home: React.FC = () => {
       </div>
 
       {/* Main CV View */}
-      <div className="print:w-full flex justify-center">
-        <div className="w-full">
-          <CVPreview data={data} />
+      {/* Contenedor "Marco" - El espacio alrededor del CV */}
+      <div className="w-full min-h-screen flex justify-center overflow-hidden pt-8 pb-8 print:p-0 print:overflow-visible">
+        {/* Contenedor "Transformador" - Aplica el escalado */}
+        <div
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'top center',
+            width: `${CV_WIDTH}px`,
+            minHeight: `${CV_HEIGHT}px`,
+            // Al escalar, el div sigue ocupando espacio original.
+            // Ajustamos el margen negativo inferior para quitar el hueco vacío.
+            marginBottom: `-${(1 - scale) * CV_HEIGHT}px`,
+          }}
+          className="print:!transform-none print:!w-[210mm] print:!min-h-0 print:!mb-0"
+        >
+          <CVPreview data={data} disableInternalScaling={true} />
         </div>
       </div>
     </div>
