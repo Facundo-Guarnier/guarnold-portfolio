@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Edit3, Download, Palette, X, Moon, Sun, RotateCcw } from 'lucide-react';
+import { Edit3, Download, Palette, X, Moon, Sun, RotateCcw, Loader2 } from 'lucide-react';
 import { useCVData } from '@/hooks/useCVData';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { CVSettings } from '@/types/cv';
 import { useScreenScale } from '@/hooks/useScreenScale';
 
 const Home: React.FC = () => {
-  const { data, setTheme, resetVisitorTheme } = useCVData();
+  const { data, loading, setTheme, resetVisitorTheme } = useCVData();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const scale = useScreenScale(30); // 30px de margen de seguridad
@@ -51,6 +51,24 @@ const Home: React.FC = () => {
     { id: 'rose', class: 'bg-rose-600' },
     { id: 'amber', class: 'bg-amber-500' },
   ];
+
+  // Mostrar loader mientras cargan los datos
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-neutral-100 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-neutral-200 rounded-full"></div>
+            <div className="w-16 h-16 border-4 border-neutral-900 border-t-transparent rounded-full animate-spin absolute inset-0"></div>
+          </div>
+          <div className="text-center">
+            <p className="text-neutral-900 font-medium">Cargando CV...</p>
+            <p className="text-neutral-500 text-sm mt-1">Un momento por favor</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen md:py-10 print:bg-white print:py-0 transition-colors duration-300 ${data.settings.darkMode ? 'bg-neutral-900' : 'bg-neutral-100'}`}>
