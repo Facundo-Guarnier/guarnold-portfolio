@@ -46,7 +46,16 @@ const Navbar: React.FC = () => {
           to="/"
           className="flex items-center gap-2 text-xl font-bold tracking-tight text-on-surface group shrink-0"
         >
-          <img src="/assets/g_icon.png" alt="Guarnold" className="w-7 h-7" />
+          <div
+            className={cn(
+              "p-1 bg-white rounded-md transition-transform group-hover:scale-105",
+              isDark
+                ? "shadow-[0_0_8px_2px_rgba(255,255,255,0.25)]"
+                : "shadow-[0_0_8px_2px_rgba(0,0,0,0.15)]"
+            )}
+          >
+            <img src="/assets/g_icon.png" alt="Guarnold" className="w-6 h-6" />
+          </div>
           <span className="hidden transition-colors group-hover:text-primary xs:inline">
             Guarnold.
           </span>
