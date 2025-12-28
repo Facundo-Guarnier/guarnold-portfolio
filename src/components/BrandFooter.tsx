@@ -100,11 +100,15 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
               href={brandUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="
+              className={`
                 flex items-center gap-1 sm:gap-1.5 md:gap-2 px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 rounded-lg transition-all font-medium text-[10px] sm:text-xs md:text-sm
-                bg-background text-on-surface-variant border border-outline/10
-                hover:bg-primary/10 hover:text-primary
-              "
+                border border-outline/20
+                ${
+                  isDark
+                    ? "bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+                    : "bg-white text-neutral-700 hover:bg-neutral-200 hover:text-neutral-900"
+                }
+              `}
             >
               <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
               <span className="hidden lg:inline">Más proyectos en</span>
@@ -165,11 +169,15 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
               href={brandUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="
+              className={`
                 flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all font-medium
-                bg-surface-variant/30 text-on-surface-variant border border-outline/10
-                hover:bg-primary/10 hover:text-primary
-              "
+                border border-outline/20
+                ${
+                  isDark
+                    ? "bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white"
+                    : "bg-white text-neutral-700 hover:bg-neutral-200 hover:text-neutral-900"
+                }
+              `}
             >
               <Globe className="w-4 h-4" />
               <span>
