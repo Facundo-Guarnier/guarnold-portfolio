@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   User,
   MapPin,
@@ -10,11 +10,11 @@ import {
   Terminal,
   Code2,
   Box,
-  Cpu
-} from 'lucide-react';
-import Hero from '../components/Hero';
-import { CardComponent } from '../components/CardComponent';
-import { cn } from '../utils';
+  Cpu,
+} from "lucide-react";
+import Hero from "../components/Hero";
+import { CardComponent } from "../components/CardComponent";
+import { cn } from "../utils";
 
 const Home: React.FC = () => {
   const [copied, setCopied] = useState(false);
@@ -27,15 +27,15 @@ const Home: React.FC = () => {
   };
 
   const skills = [
-    { name: 'Python', icon: <Terminal size={14} /> },
-    { name: 'FastAPI', icon: <Cpu size={14} /> },
-    { name: 'React', icon: <Code2 size={14} /> },
-    { name: 'TypeScript', icon: <Code2 size={14} /> },
-    { name: 'Flutter', icon: <Box size={14} /> },
-    { name: 'Dart', icon: <Box size={14} /> },
-    { name: 'Docker', icon: <Box size={14} /> },
-    { name: 'K8s', icon: <Box size={14} /> },
-    { name: 'SQL', icon: <Terminal size={14} /> },
+    { name: "Python", icon: <Terminal size={14} /> },
+    { name: "FastAPI", icon: <Cpu size={14} /> },
+    { name: "React", icon: <Code2 size={14} /> },
+    { name: "TypeScript", icon: <Code2 size={14} /> },
+    { name: "Flutter", icon: <Box size={14} /> },
+    { name: "Dart", icon: <Box size={14} /> },
+    { name: "Docker", icon: <Box size={14} /> },
+    { name: "K8s", icon: <Box size={14} /> },
+    { name: "SQL", icon: <Terminal size={14} /> },
   ];
 
   return (
@@ -44,7 +44,7 @@ const Home: React.FC = () => {
       <Hero />
 
       {/* Personal Bento Grid Section */}
-      <section className="max-w-7xl mx-auto px-4 py-16 scroll-mt-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 scroll-mt-20">
         <div className="flex items-center justify-between mb-10 border-b border-outline/10 pb-4">
           <h2 className="text-3xl font-bold text-on-surface flex items-center gap-3">
             <span className="w-2 h-8 bg-primary rounded-full"></span>
@@ -53,7 +53,6 @@ const Home: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto">
-
           {/* Profile Card (Large) */}
           <CardComponent className="md:col-span-2 md:row-span-2 p-8 flex flex-col justify-center">
             <div className="flex flex-col md:flex-row gap-8 items-center">
@@ -62,13 +61,18 @@ const Home: React.FC = () => {
               </div>
               <div className="space-y-4 text-center md:text-left">
                 <div>
-                  <h2 className="text-3xl font-bold text-on-surface">Facundo Guarnier</h2>
-                  <p className="text-primary font-medium">Software Engineer | Fullstack Developer</p>
+                  <h2 className="text-3xl font-bold text-on-surface">
+                    Facundo Guarnier
+                  </h2>
+                  <p className="text-primary font-medium">
+                    Software Engineer | Fullstack Developer
+                  </p>
                 </div>
                 <p className="text-on-surface-variant leading-relaxed">
-                  Ingeniero en Informática especializado en el ciclo de vida completo del desarrollo.
-                  Me motiva crear tecnología con propósito, optimizando procesos y construyendo
-                  soluciones escalables que generen un impacto real.
+                  Ingeniero en Informática especializado en el ciclo de vida
+                  completo del desarrollo. Me motiva crear tecnología con
+                  propósito, optimizando procesos y construyendo soluciones
+                  escalables que generen un impacto real.
                 </p>
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
                   <div className="flex items-center gap-2 text-sm text-on-surface-variant bg-surface-variant/50 px-3 py-1 rounded-full border border-outline/10">
@@ -107,7 +111,9 @@ const Home: React.FC = () => {
               </div>
               <div>
                 <h4 className="font-bold text-on-surface">Contacto Directo</h4>
-                <p className="text-xs text-on-surface-variant truncate">{email}</p>
+                <p className="text-xs text-on-surface-variant truncate">
+                  {email}
+                </p>
               </div>
             </div>
             <button
@@ -120,7 +126,7 @@ const Home: React.FC = () => {
               )}
             >
               {copied ? <Check size={16} /> : <Copy size={16} />}
-              {copied ? 'Copiado' : 'Copiar Email'}
+              {copied ? "Copiado" : "Copiar Email"}
             </button>
           </CardComponent>
 
@@ -128,14 +134,26 @@ const Home: React.FC = () => {
           <CardComponent className="p-6 flex flex-col justify-between">
             <div className="space-y-2">
               <h4 className="font-bold text-on-surface">Redes</h4>
-              <p className="text-xs text-on-surface-variant">Conectemos en línea.</p>
+              <p className="text-xs text-on-surface-variant">
+                Conectemos en línea.
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-3 mt-4">
-              <a href="https://linkedin.com/in/faguarnier" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 p-2 rounded-xl bg-[#0077B5]/10 text-[#0077B5] border border-[#0077B5]/20 hover:scale-105 transition-transform">
+              <a
+                href="https://linkedin.com/in/faguarnier"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 p-2 rounded-xl bg-[#0077B5]/10 text-[#0077B5] border border-[#0077B5]/20 hover:scale-105 transition-transform"
+              >
                 <Linkedin size={18} />
                 <span className="text-xs font-bold">LinkedIn</span>
               </a>
-              <a href="https://github.com/faguarnier" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 p-2 rounded-xl bg-on-surface/10 text-on-surface border border-outline/20 hover:scale-105 transition-transform">
+              <a
+                href="https://github.com/faguarnier"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-2 p-2 rounded-xl bg-on-surface/10 text-on-surface border border-outline/20 hover:scale-105 transition-transform"
+              >
                 <Github size={18} />
                 <span className="text-xs font-bold">GitHub</span>
               </a>
