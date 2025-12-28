@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import BrandFooter from "../components/BrandFooter";
+import FloatingThemeToggle from "../components/FloatingThemeToggle";
 
 const Layout: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
       <BrandFooter compact />
+      <FloatingThemeToggle />
     </div>
   );
 };
