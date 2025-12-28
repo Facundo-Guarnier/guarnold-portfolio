@@ -8,13 +8,7 @@ const PRESET_COLORS = [
   { id: "emerald", hex: "#10b981", name: "Emerald" },
   { id: "violet", hex: "#8b5cf6", name: "Violet" },
   { id: "amber", hex: "#f59e0b", name: "Amber" },
-  { id: "cyan", hex: "#06b6d4", name: "Cyan" },
   { id: "pink", hex: "#ec4899", name: "Pink" },
-  { id: "orange", hex: "#f97316", name: "Orange" },
-  { id: "lime", hex: "#84cc16", name: "Lime" },
-  { id: "indigo", hex: "#6366f1", name: "Indigo" },
-  { id: "rose", hex: "#f43f5e", name: "Rose" },
-  { id: "teal", hex: "#14b8a6", name: "Teal" },
 ];
 
 const DEFAULT_SEED = "#3b82f6";
