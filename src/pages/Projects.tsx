@@ -6,7 +6,7 @@ import { Sparkles, Code2 } from "lucide-react";
 const Projects: React.FC = () => {
   return (
     <div className="animate-in fade-in duration-700 w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-16">
         {/* Header */}
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-6">

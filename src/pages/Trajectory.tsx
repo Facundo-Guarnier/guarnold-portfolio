@@ -101,57 +101,61 @@ const TimelineItem: React.FC<{ item: TrajectoryItem; isLast: boolean }> = ({
 
 const Trajectory: React.FC = () => {
   return (
-    <div className="animate-in fade-in duration-700 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-      {/* Header */}
-      <div className="mb-12 text-center md:text-left">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-4">
-          Trayectoria
-        </h1>
-        <p className="text-lg text-on-surface-variant max-w-2xl">
-          Mi camino profesional y académico en detalle.
-        </p>
-      </div>
+    <div className="animate-in fade-in duration-700 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-16">
+        {/* Header */}
+        <div className="max-w-3xl">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-6">
+            Trayectoria
+          </h1>
+          <p className="text-lg text-on-surface-variant leading-relaxed">
+            Mi camino profesional y académico en detalle.
+          </p>
+        </div>
 
-      {/* Experience Section */}
-      <div className="mb-16">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 rounded-xl bg-primary/10 text-primary">
-            <Briefcase size={24} />
+        {/* Experience Section */}
+        <section>
+          <div className="flex items-center gap-3 mb-10 border-b border-outline/10 pb-4">
+            <div className="p-2 rounded-lg bg-primary/10 text-primary">
+              <Briefcase size={24} />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-on-surface">
+              Experiencia Profesional
+            </h2>
           </div>
-          <h2 className="text-2xl font-bold text-on-surface">
-            Experiencia Profesional
-          </h2>
-        </div>
 
-        <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
-          {experienceData.map((item, index) => (
-            <TimelineItem
-              key={item.id}
-              item={item}
-              isLast={index === experienceData.length - 1}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Education Section */}
-      <div>
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 rounded-xl bg-secondary/10 text-secondary">
-            <GraduationCap size={24} />
+          <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
+            {experienceData.map((item, index) => (
+              <TimelineItem
+                key={item.id}
+                item={item}
+                isLast={index === experienceData.length - 1}
+              />
+            ))}
           </div>
-          <h2 className="text-2xl font-bold text-on-surface">Educación</h2>
-        </div>
+        </section>
 
-        <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
-          {educationData.map((item, index) => (
-            <TimelineItem
-              key={item.id}
-              item={item}
-              isLast={index === educationData.length - 1}
-            />
-          ))}
-        </div>
+        {/* Education Section */}
+        <section>
+          <div className="flex items-center gap-3 mb-10 border-b border-outline/10 pb-4">
+            <div className="p-2 rounded-lg bg-secondary/10 text-secondary">
+              <GraduationCap size={24} />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-on-surface">
+              Educación
+            </h2>
+          </div>
+
+          <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
+            {educationData.map((item, index) => (
+              <TimelineItem
+                key={item.id}
+                item={item}
+                isLast={index === educationData.length - 1}
+              />
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );
