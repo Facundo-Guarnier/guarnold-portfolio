@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="items-center hidden gap-1 pr-2 mr-1 sm:flex">
+          <div className="flex items-center gap-1 pr-2 mr-1">
             <a
               href="https://github.com/faguarnier"
               target="_blank"
@@ -112,10 +112,7 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div
           className={cn(
-            "md:hidden absolute top-full left-0 w-full border-b border-outline/10 p-4 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-xl",
-            isDark
-              ? "bg-slate-900/95 backdrop-blur-md"
-              : "bg-white/95 backdrop-blur-md"
+            "md:hidden top-full left-0 w-full p-4 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-xl"
           )}
         >
           {navLinks.map((link) => (
