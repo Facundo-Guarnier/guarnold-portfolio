@@ -41,20 +41,18 @@ const Navbar: React.FC = () => {
             )
       )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="flex items-center justify-between mx-auto max-w-7xl">
         <Link
           to="/"
-          className="text-xl font-bold tracking-tight text-on-surface flex items-center gap-2 group shrink-0"
+          className="flex items-center gap-2 text-xl font-bold tracking-tight text-on-surface group shrink-0"
         >
-          <span className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold shadow-lg shadow-primary/30 transition-transform group-hover:scale-105">
-            G
-          </span>
-          <span className="group-hover:text-primary transition-colors hidden xs:inline">
+          <img src="/assets/g_icon.png" alt="Guarnold" className="w-7 h-7" />
+          <span className="hidden transition-colors group-hover:text-primary xs:inline">
             Guarnold.
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className="items-center hidden gap-6 md:flex">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
@@ -74,12 +72,12 @@ const Navbar: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1 pr-2 mr-1">
+          <div className="items-center hidden gap-1 pr-2 mr-1 sm:flex">
             <a
               href="https://github.com/faguarnier"
               target="_blank"
               rel="noreferrer"
-              className="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30 transition-all"
+              className="p-2 transition-all rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30"
             >
               <Github size={20} />
             </a>
@@ -87,14 +85,14 @@ const Navbar: React.FC = () => {
               href="https://linkedin.com/in/faguarnier"
               target="_blank"
               rel="noreferrer"
-              className="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30 transition-all"
+              className="p-2 transition-all rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30"
             >
               <Linkedin size={20} />
             </a>
           </div>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 md:hidden rounded-full hover:bg-surface-variant/50 text-on-surface-variant transition-colors"
+            className="p-2 transition-colors rounded-full md:hidden hover:bg-surface-variant/50 text-on-surface-variant"
             aria-label="Menu"
           >
             {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
