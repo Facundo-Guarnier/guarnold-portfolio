@@ -1,0 +1,28 @@
+{
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // "editor.formatOnSave": true,
+  // "editor.codeActionsOnSave": {
+  //   "source.fixAll.eslint": "explicit"
+  // },
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "headwind.runOnSave": true,
+  "tailwind-fold.unfoldIfLineSelected": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.js, ${capture}.d.ts, ${capture}.test.ts, ${capture}.spec.ts",
+    "*.tsx": "${capture}.ts, ${capture}.*.tsx, ${capture}.module.css, ${capture}.css",
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js, ${capture}.*.jsx",
+    "tsconfig.json": "tsconfig.*.json",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+    "vite.config.*": "vite.config.*, vitest.config.*, .env, .env.*",
+    "tailwind.config.*": "tailwind.config.*, postcss.config.*"
+  },
+  "cSpell.words": [
+    "TRILEX"
+  ]
+}
