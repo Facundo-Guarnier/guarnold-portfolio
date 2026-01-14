@@ -12,14 +12,17 @@ MCP_PROJECT_DIR="D:\Repositorios_GitHub\guarnold-portfolio\.vscode"
 
 2. **Agregar al `mcp.json` del sistema:**
 
-Ubicación:
+Ubicación para hacerlo a nivel sistema (no en el proyecto):
 
-`C:\Users\TU_USUARIO\.cursor\mcp.json`
-`C:\Users\facun\AppData\Roaming\Code\User\mcp.json`
+`C:\Users\<TU_USUARIO>\AppData\Roaming\Code\User\mcp.json`
+
+Ubicación para hacerlo a nivel proyecto (en el proyecto):
+
+`.vscode/mcp.json`
 
 ```jsonc
 {
-  "mcpServers": {
+  "servers": {
     ...
     "supabase-guarnold-portfolio": {
       "command": "node",
@@ -34,6 +37,4 @@ Ubicación:
 }
 ```
 
-⚠️ **Importante:** Usar rutas absolutas con `\\` en Windows.
-
-3. **Listo.** Reinicia Cursor y el MCP estará disponible.
+3. **Listo.** Reinicia y el MCP estará disponible.
