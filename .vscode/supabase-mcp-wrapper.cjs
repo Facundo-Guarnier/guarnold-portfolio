@@ -2,14 +2,7 @@
 
 /**
  * Wrapper Genérico para Supabase MCP Server
- * Configuración 100% basada en variables de entorno (.env)
- *
- * Variables requeridas en .env:
- * - SUPABASE_ACCESS_TOKEN: Token de acceso de Supabase (sbp_...)
- * - SUPABASE_PROJECT_ID: ID del proyecto de Supabase
- *
- * Variables opcionales:
- * - MCP_PROJECT_DIR: Directorio del proyecto (por defecto: detecta automáticamente)
+ * Ver setup en: .vscode/README.md
  */
 
 const { spawn } = require("child_process");
