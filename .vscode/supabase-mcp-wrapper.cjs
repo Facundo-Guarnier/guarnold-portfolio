@@ -10,7 +10,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Directorio del proyecto (ruta absoluta)
-const PROJECT_DIR = "c:\\repositorios_git\\cv-formatter";
+const PROJECT_DIR = "d:\\Repositorios_GitHub\\cv-formatter";
 
 console.log(`[Supabase MCP - Guarnold CV System] ✓ Proyecto: ${PROJECT_DIR}`);
 
@@ -45,7 +45,9 @@ try {
   // OPCIÓN 1: Archivo .env del proyecto (recomendado)
   accessToken = loadEnvVariable("SUPABASE_ACCESS_TOKEN");
   if (accessToken) {
-    console.log(`[Supabase MCP - Guarnold CV System] ✓ Token obtenido desde .env del proyecto`);
+    console.log(
+      `[Supabase MCP - Guarnold CV System] ✓ Token obtenido desde .env del proyecto`
+    );
   }
 
   // OPCIÓN 2: Variable de entorno del sistema
@@ -78,15 +80,21 @@ try {
     for (const tokenPath of tokenPaths) {
       if (fs.existsSync(tokenPath)) {
         accessToken = fs.readFileSync(tokenPath, "utf-8").trim();
-        console.log(`[Supabase MCP - Guarnold CV System] ✓ Token encontrado en: ${tokenPath}`);
+        console.log(
+          `[Supabase MCP - Guarnold CV System] ✓ Token encontrado en: ${tokenPath}`
+        );
         break;
       }
     }
   }
 
   if (!accessToken) {
-    console.error(`[Supabase MCP - Guarnold CV System] ❌ No se encontró el token de acceso`);
-    console.error(`\n[Supabase MCP - Guarnold CV System] Opciones para configurar el token:\n`);
+    console.error(
+      `[Supabase MCP - Guarnold CV System] ❌ No se encontró el token de acceso`
+    );
+    console.error(
+      `\n[Supabase MCP - Guarnold CV System] Opciones para configurar el token:\n`
+    );
     console.error(`  1. Archivo .env del proyecto (recomendado):`);
     console.error(`     Agrega: SUPABASE_ACCESS_TOKEN="sbp_tu_token_aqui"\n`);
     console.error(`  2. Variable de entorno del sistema:`);
@@ -99,7 +107,10 @@ try {
     process.exit(1);
   }
 } catch (error) {
-  console.error(`[Supabase MCP - Guarnold CV System] Error al leer el token:`, error.message);
+  console.error(
+    `[Supabase MCP - Guarnold CV System] Error al leer el token:`,
+    error.message
+  );
   process.exit(1);
 }
 
