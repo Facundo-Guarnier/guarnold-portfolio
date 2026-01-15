@@ -112,28 +112,110 @@ try {
   process.exit(1);
 }
 
-console.log(`[Supabase MCP] Iniciando servidor MCP...`);
-console.log(`[Supabase MCP] Project ID: ${PROJECT_REF}`);
-console.log(`[Supabase MCP] Token: ${accessToken.substring(0, 10)}...\n`);
+// Función para validar la configuración antes de iniciar el servidor
+async function validateSupabaseConnection() {
+  return new Promise((resolve, reject) => {
+    const https = require("https");
 
-// Ejecutar el servidor real de Supabase MCP
-// En Windows necesitamos shell: true para encontrar npx
-const child = spawn(
-  "npx",
-  [
-    "-y",
-    "@supabase/mcp-server-supabase@latest",
-    "--access-token",
-    accessToken,
-    "--project-ref",
-    PROJECT_REF,
-  ],
-  {
-    stdio: "inherit",
-    shell: true,
-  }
-);
+    console.log(`[Supabase MCP] 🔍 Validando configuración...`);
 
-child.on("exit", (code) => {
-  process.exit(code);
-});
+    const options = {
+      hostname: "api.supabase.com",
+      path: `/v1/projects/${PROJECT_REF}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      timeout: 10000, // 10 segundos
+    };
+
+    const req = https.request(options, (res) => {
+      let data = "";
+
+      res.on("data", (chunk) => {
+        data += chunk;
+      });
+
+      res.on("end", () => {
+        if (res.statusCode === 200) {
+          try {
+            const project = JSON.parse(data);
+            console.log(`[Supabase MCP] ✅ Conexión exitosa`);
+            console.log(
+              `[Supabase MCP] 📦 Proyecto: ${project.name || PROJECT_REF}`
+            );
+            console.log(`[Supabase MCP] 🌐 Región: ${project.region || "N/A"}`);
+            resolve(true);
+          } catch (e) {
+            reject(new Error("Error al parsear respuesta del servidor"));
+          }
+        } else if (res.statusCode === 401) {
+          reject(
+            new Error(
+              "Token inválido o expirado. Genera uno nuevo en:\n     https://supabase.com/dashboard/account/tokens"
+            )
+          );
+        } else if (res.statusCode === 403) {
+          reject(
+            new Error(
+              "Token válido pero sin permisos para acceder al proyecto.\n     Verifica que el PROJECT_REF sea correcto."
+            )
+          );
+        } else if (res.statusCode === 404) {
+          reject(
+            new Error(
+              `Proyecto "${PROJECT_REF}" no encontrado.\n     Verifica SUPABASE_PROJECT_ID en tu .env`
+            )
+          );
+        } else {
+          reject(new Error(`Error HTTP ${res.statusCode}: ${data}`));
+        }
+      });
+    });
+
+    req.on("error", (error) => {
+      reject(new Error(`Error de conexión: ${error.message}`));
+    });
+
+    req.on("timeout", () => {
+      req.destroy();
+      reject(new Error("Timeout: No se pudo conectar a Supabase"));
+    });
+
+    req.end();
+  });
+}
+
+// Validar conexión antes de iniciar el servidor
+validateSupabaseConnection()
+  .then(() => {
+    console.log(`[Supabase MCP] 🚀 Iniciando servidor MCP...\n`);
+
+    // Ejecutar el servidor real de Supabase MCP
+    // En Windows necesitamos shell: true para encontrar npx
+    const child = spawn(
+      "npx",
+      [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        accessToken,
+        "--project-ref",
+        PROJECT_REF,
+      ],
+      {
+        stdio: "inherit",
+        shell: true,
+      }
+    );
+
+    child.on("exit", (code) => {
+      process.exit(code);
+    });
+  })
+  .catch((error) => {
+    console.error(`\n[Supabase MCP] ❌ Error de validación:`);
+    console.error(`  ${error.message}\n`);
+    process.exit(1);
+  });
