@@ -5,12 +5,10 @@
  * - Brand website (guarnold.com.ar) - Main hub for all projects
  * - Repository
  *
- * Configuration via environment variables:
- * - VITE_APP_NAME: Application name
- * - VITE_APP_VERSION: Application version
- * - VITE_BRAND_NAME: Brand name (Guarnold)
- * - VITE_BRAND_URL: Brand website URL
- * - VITE_REPO_URL: Repository URL
+ * Configuration via package.json:
+ * - screenName: Application name
+ * - version: Application version
+ * - gitURL: Repository URL
  *
  * Usage:
  * - <BrandFooter /> - Full version with auto dark mode detection
@@ -21,6 +19,7 @@
 import React from "react";
 import { Github, Globe } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import pkgJson from "../../package.json";
 
 interface BrandFooterProps {
   /** Additional CSS classes */
@@ -40,14 +39,12 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
   compact = false,
   forceDark = false,
 }) => {
-  // Read from environment variables with fallbacks
-  const appName = import.meta.env.VITE_APP_NAME || "Guarnold Portfolio";
-  const appVersion = import.meta.env.VITE_APP_VERSION || "1.0.0";
-  const brandName = import.meta.env.VITE_BRAND_NAME || "Guarnold";
-  const brandUrl = import.meta.env.VITE_BRAND_URL || "https://guarnold.com.ar";
-  const repoUrl =
-    import.meta.env.VITE_REPO_URL ||
-    "https://github.com/faguarnier/guarnold-portfolio";
+  // Read from package.json with fallbacks
+  const appName = pkgJson.screenName || "Guarnold Portfolio";
+  const appVersion = pkgJson.version || "0.0.0";
+  const brandName = "Guarnold";
+  const brandUrl = "https://guarnold.com.ar";
+  const repoUrl = pkgJson.gitURL || "https://github.com/faguarnier/guarnold-portfolio";
 
   // Signature - hardcoded path (won't change)
   const brandSignature = "/assets/guarnold_firma.png";
