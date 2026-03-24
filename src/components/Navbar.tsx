@@ -33,12 +33,12 @@ const Navbar: React.FC = () => {
               "backdrop-blur-md shadow-sm py-2",
               isDark
                 ? "bg-black/70 border-white/10"
-                : "bg-white/70 border-black/5"
+                : "bg-white/70 border-black/5",
             )
           : cn(
               "backdrop-blur-sm py-4 border-transparent",
-              isDark ? "bg-black/60" : "bg-white/60"
-            )
+              isDark ? "bg-black/60" : "bg-white/60",
+            ),
       )}
     >
       <div className="flex items-center justify-between mx-auto max-w-7xl">
@@ -48,13 +48,14 @@ const Navbar: React.FC = () => {
         >
           <div
             className={cn(
-              "p-1 bg-white rounded-md transition-transform group-hover:scale-105",
-              isDark
-                ? "shadow-[0_0_8px_2px_rgba(255,255,255,0.25)]"
-                : "shadow-[0_0_8px_2px_rgba(0,0,0,0.15)]"
+              "p-1.5 rounded-xl bg-surface border border-outline/20 shadow-sm transition-transform group-hover:scale-105",
             )}
           >
-            <img src="/assets/g_icon.png" alt="Guarnold" className="w-6 h-6" />
+            <img
+              src="/assets/g_icon.png"
+              alt="Guarnold"
+              className="w-6 h-6 rounded-md"
+            />
           </div>
           <span className="hidden transition-colors group-hover:text-primary xs:inline">
             Guarnold.
@@ -71,7 +72,7 @@ const Navbar: React.FC = () => {
                   "text-sm font-medium transition-colors hover:text-primary",
                   isActive
                     ? "text-primary font-bold"
-                    : "text-on-surface-variant"
+                    : "text-on-surface-variant",
                 )
               }
             >
@@ -112,7 +113,7 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div
           className={cn(
-            "md:hidden top-full left-0 w-full p-4 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-xl"
+            "md:hidden top-full left-0 w-full p-4 space-y-4 animate-in slide-in-from-top-4 duration-200 shadow-xl",
           )}
         >
           {navLinks.map((link) => (
@@ -123,7 +124,7 @@ const Navbar: React.FC = () => {
               className={({ isActive }) =>
                 cn(
                   "block text-lg font-medium transition-colors",
-                  isActive ? "text-primary" : "text-on-surface-variant"
+                  isActive ? "text-primary" : "text-on-surface-variant",
                 )
               }
             >

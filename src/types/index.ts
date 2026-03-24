@@ -11,6 +11,56 @@ export interface Profile {
   linkedin_url?: string;
 }
 
+export interface IdentitySection {
+  name?: string;
+  nickname?: string;
+  professional_title?: string;
+  avatar_url?: string;
+}
+
+export interface HeroSection {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+}
+
+export interface AboutCardSection {
+  title?: string;
+  role?: string;
+  description?: string;
+}
+
+export interface LocationSection {
+  city?: string;
+  country?: string;
+  background_image?: string;
+}
+
+export interface StackTechnology {
+  name?: string;
+  icon?: string;
+}
+
+export interface StackSection {
+  title?: string;
+  description?: string;
+  technologies?: StackTechnology[];
+}
+
+export interface SocialSection {
+  github?: string;
+  linkedin?: string;
+}
+
+export interface HomeContent {
+  identity?: IdentitySection;
+  hero?: HeroSection;
+  about_card?: AboutCardSection;
+  location?: LocationSection;
+  stack?: StackSection;
+  social?: SocialSection;
+}
+
 export interface Experience {
   id?: string;
   type?: "work" | "education" | string;

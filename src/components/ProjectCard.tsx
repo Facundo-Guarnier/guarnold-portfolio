@@ -19,9 +19,6 @@ const IconMap: Record<
   FlaskConical,
 };
 
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop";
-
 interface ProjectCardProps {
   project: Project;
 }
@@ -34,12 +31,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const safeLink = project.link ?? "#";
   const safeTags = project.tags ?? [];
   const imageSource = project.image_url ?? project.image;
+  const [hasImage, setHasImage] = React.useState(Boolean(imageSource));
 
-  const handleImageError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>,
-  ) => {
-    e.currentTarget.src = FALLBACK_IMAGE;
-  };
+  React.useEffect(() => {
+    setHasImage(Boolean(imageSource));
+  }, [imageSource]);
 
   // Base transition and style classes for consistency
   const cardBaseClasses =
@@ -49,7 +45,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     "absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white text-[10px] uppercase font-bold tracking-wider shadow-lg z-20";
 
   // Layout for projects without images (Abstract gradient + centered icon)
-  if (!imageSource) {
+  if (!hasImage) {
     return (
       <a
         href={safeLink}
@@ -131,7 +127,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <img
             src={imageSource}
             alt={safeTitle}
-            onError={handleImageError}
+            onError={() => setHasImage(false)}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
         )}

@@ -1,18 +1,42 @@
 # Base de datos local en YAML.
 # Cualquier campo puede comentarse temporalmente y la UI debe manejarlo de forma segura.
 
-profile:
-  id: facundo-guarnier
+identity:
   name: Facundo Guarnier
-  role: Ingeniero en Informática | Fullstack Developer
-  location: Mendoza, Argentina
-  location_background_image: /assets/mapa_argentina.png
-
-  bio: Ingeniero en Informática especializado en desarrollo fullstack. Construyo productos digitales con React, Python y Flutter, priorizando rendimiento, UX y arquitectura escalable.
+  nickname: Guarnold
+  professional_title: Ingeniero en Informática | Fullstack Developer
   avatar_url: /assets/guarnold_firma.png
-  # email: facundoguarnier@gmail.com
-  github_url: https://github.com/faguarnier
-  linkedin_url: https://linkedin.com/in/faguarnier
+
+hero:
+  title: "Hola, soy Facundo Guarnier."
+  subtitle: "También me dicen Guarnold."
+  description: "Construyo productos digitales con foco en rendimiento, experiencia de usuario y arquitectura escalable."
+
+about_card:
+  title: Facundo Guarnier
+  role: Ingeniero en Informática
+  description: "Disfruto transformar ideas complejas en soluciones claras, mantenibles y listas para producción."
+
+location:
+  city: Mendoza
+  country: Argentina
+  background_image: /assets/mapa_argentina.png
+
+stack:
+  title: Arsenal
+  description: "Mi stack principal se enfoca en rendimiento, tipado fuerte y escalabilidad."
+  technologies:
+    - { name: Python, icon: code }
+    - { name: React, icon: layout }
+    - { name: Flutter, icon: smartphone }
+    - { name: SQL, icon: database }
+    - { name: TypeScript, icon: code }
+    - { name: FastAPI, icon: cpu }
+    - { name: Docker, icon: box }
+
+social:
+  github: https://github.com/faguarnier
+  linkedin: https://linkedin.com/in/faguarnier
 
 experience:
   - id: work-tinkin
