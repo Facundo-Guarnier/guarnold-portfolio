@@ -20,7 +20,24 @@ const Projects: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div className="animate-pulse">Cargando...</div>;
+    return (
+      <div className="animate-in fade-in duration-300 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="h-12 w-64 rounded-xl bg-surface-variant animate-pulse mb-4" />
+          <div className="h-6 w-[40rem] max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
+
+          <div className="h-10 w-80 max-w-full rounded-xl bg-surface-variant animate-pulse mb-8" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(180px,auto)] pb-12">
+            {[...Array(4)].map((_, index) => (
+              <div
+                key={`project-skeleton-${index}`}
+                className="h-56 rounded-3xl bg-surface-variant animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -85,7 +85,34 @@ const Trajectory: React.FC = () => {
   );
 
   if (loading) {
-    return <div className="animate-pulse">Cargando...</div>;
+    return (
+      <div className="animate-in fade-in duration-300 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div className="h-12 w-64 rounded-xl bg-surface-variant animate-pulse mb-4" />
+          <div className="h-6 w-96 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
+
+          <div className="space-y-16">
+            <section>
+              <div className="h-10 w-80 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
+              <div className="space-y-6 ml-5 md:ml-6">
+                {[...Array(2)].map((_, index) => (
+                  <div key={`work-skeleton-${index}`} className="h-36 rounded-3xl bg-surface-variant animate-pulse" />
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <div className="h-10 w-64 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
+              <div className="space-y-6 ml-5 md:ml-6">
+                {[...Array(2)].map((_, index) => (
+                  <div key={`edu-skeleton-${index}`} className="h-36 rounded-3xl bg-surface-variant animate-pulse" />
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

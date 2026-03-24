@@ -54,7 +54,29 @@ const Home: React.FC = () => {
   ];
 
   if (loading) {
-    return <div className="animate-pulse">Cargando...</div>;
+    return (
+      <div className="w-full animate-in fade-in duration-300">
+        <section className="relative flex flex-col items-center justify-center text-center py-24 md:py-32 overflow-hidden">
+          <div className="space-y-6 max-w-4xl px-4 w-full">
+            <div className="mx-auto h-8 w-40 rounded-full bg-surface-variant animate-pulse" />
+            <div className="mx-auto h-14 w-full max-w-2xl rounded-2xl bg-surface-variant animate-pulse" />
+            <div className="mx-auto h-7 w-full max-w-xl rounded-xl bg-surface-variant animate-pulse" />
+            <div className="mx-auto h-5 w-full max-w-2xl rounded-xl bg-surface-variant animate-pulse" />
+          </div>
+        </section>
+
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 scroll-mt-20">
+          <div className="h-10 w-56 rounded-xl bg-surface-variant animate-pulse mb-10" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto">
+            <div className="md:col-span-2 md:row-span-2 h-80 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="md:col-span-1 md:row-span-2 h-80 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-48 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-48 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-48 rounded-3xl bg-surface-variant animate-pulse" />
+          </div>
+        </section>
+      </div>
+    );
   }
 
   return (

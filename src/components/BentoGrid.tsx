@@ -22,6 +22,14 @@ const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
     }
   };
 
+  if (!projects.length) {
+    return (
+      <div className="rounded-3xl border border-outline/30 bg-surface-variant/60 p-8 text-center text-on-surface-variant">
+        Próximamente más proyectos...
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(180px,auto)] pb-12">
       {projects.map((project, index) => (

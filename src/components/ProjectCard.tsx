@@ -6,7 +6,6 @@ import {
   Sparkles,
   FlaskConical,
   ArrowUpRight,
-  Circle,
 } from "lucide-react";
 
 // Icon mapper for dynamic icons
@@ -31,7 +30,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const iconName = project.icon ?? "Sparkles";
   const Icon = IconMap[iconName] || Sparkles;
   const safeTitle = project.title ?? "Proyecto sin título";
-  const safeDescription = project.description ?? "Descripción no disponible.";
+  const safeDescription = project.description;
   const safeLink = project.link ?? "#";
   const safeTags = project.tags ?? [];
   const imageSource = project.image_url ?? project.image;
@@ -49,7 +48,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const statusBadgeClasses =
     "absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white text-[10px] uppercase font-bold tracking-wider shadow-lg z-20";
 
-  // Layout for projects without images (Icon-focused)
+  // Layout for projects without images (Abstract gradient + centered icon)
   if (!imageSource) {
     return (
       <a
@@ -60,14 +59,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       >
         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        <div className="h-24 bg-gradient-to-br from-primary/20 via-surface-variant to-secondary/20 border-b border-outline/20" />
+        <div className="relative h-44 border-b border-outline/20 bg-gradient-to-br from-primary/20 via-surface-variant to-tertiary/20">
+          <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,var(--md-sys-color-primary)_0,transparent_45%),radial-gradient(circle_at_80%_30%,var(--md-sys-color-secondary)_0,transparent_40%),radial-gradient(circle_at_50%_80%,var(--md-sys-color-tertiary)_0,transparent_40%)]" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="p-4 rounded-3xl bg-surface/80 text-primary shadow-sm border border-outline/20 backdrop-blur-sm">
+              <Icon size={36} />
+            </div>
+          </div>
+        </div>
 
         <div className="p-6 flex flex-col h-full justify-between">
           {/* Top section: Icon and Status */}
           <div className="relative z-10 flex justify-between items-start mb-6">
-            <div className="p-3 rounded-2xl bg-surface text-primary shadow-sm border border-outline/10">
-              <Icon size={24} />
-            </div>
+            <div />
 
             <div className="flex items-center gap-2">
               {project.status && (
@@ -89,9 +93,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             <h3 className="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
               {safeTitle}
             </h3>
-            <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-3">
-              {safeDescription}
-            </p>
+            {safeDescription && (
+              <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-3">
+                {safeDescription}
+              </p>
+            )}
           </div>
 
           {/* Footer tags */}
@@ -152,9 +158,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             />
           </div>
 
-          <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-3">
-            {safeDescription}
-          </p>
+          {safeDescription && (
+            <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-3">
+              {safeDescription}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 mt-4">

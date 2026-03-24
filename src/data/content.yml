@@ -2,50 +2,111 @@
 # Cualquier campo puede comentarse temporalmente y la UI debe manejarlo de forma segura.
 
 profile:
-  name: Guarnold
-  role: Full Stack Developer
-  location: Argentina
-  bio: Construyo productos digitales con enfoque en UX y rendimiento.
-  avatar_url: https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80
+  id: facundo-guarnier
+  name: Facundo Guarnier
+  role: Ingeniero en Informática | Fullstack Developer
+  location: Mendoza, Argentina
+  bio: Ingeniero en Informática especializado en desarrollo fullstack. Construyo productos digitales con React, Python y Flutter, priorizando rendimiento, UX y arquitectura escalable.
+  avatar_url: /assets/guarnold_firma.png
+  email: facundoguarnier@gmail.com
+  github_url: https://github.com/faguarnier
+  linkedin_url: https://linkedin.com/in/faguarnier
 
 experience:
-  - id: exp-1
+  - id: work-tinkin
     type: work
-    company: Freelance
-    role: Full Stack Developer
-    start_date: "2023-01"
+    company: Tinkin (Remoto)
+    role: Software Developer
+    start_date: "2024-08"
     end_date: null
-    description: Desarrollo de aplicaciones web con React, TypeScript y Node.js.
+    description: Desarrollo full-stack en entorno Scrum. Participación en Fideval App (Flutter), Mercately (React/TypeScript) y Kamina Academy (FastAPI), además de sesiones técnicas internas.
+    technologies:
+      - Flutter
+      - React
+      - TypeScript
+      - FastAPI
+      - Scrum
 
-  - id: exp-2
+  - id: work-freelance
+    type: work
+    company: Autónomo
+    role: Freelance Developer
+    start_date: "2021-01"
+    end_date: null
+    description: Desarrollo de soluciones web a medida y automatizaciones con Python y Computer Vision para clientes independientes.
+    technologies:
+      - React
+      - Python
+      - Computer Vision
+
+  - id: edu-um
     type: education
-    institution: Universidad Tecnológica
-    title: Ingeniería en Sistemas
-    start_date: "2019-03"
-    end_date: "2022-12"
-    description: Formación en arquitectura de software y bases de datos.
+    institution: Universidad de Mendoza
+    title: Ingeniería en Informática
+    start_date: "2020-03"
+    end_date: "2025-12"
+    description: Formación integral en ingeniería de software, arquitectura y sistemas distribuidos. Proyecto de tesis: SemaforIA.
+    technologies:
+      - Ingeniería de Software
+      - Arquitectura
+      - IA
+
+  - id: edu-english
+    type: education
+    institution: Clases Particulares
+    title: Formación en Idioma Inglés (B1)
+    start_date: "2021-01"
+    end_date: null
+    description: Entrenamiento continuo para lectura técnica, comunicación profesional y colaboración internacional.
 
 projects:
-  - id: cv
-    title: Curriculum Vitae
-    description: Mi trayectoria profesional y experiencia en formato PDF.
-    icon: FileText
+  - id: semaforia
+    title: SemaforIA
+    description: Tesis universitaria basada en Reinforcement Learning para optimización de semáforos y flujo vehicular.
+    icon: Sparkles
     link: "#"
     tags:
-      - Resume
-      - Professional
-    size: tall
-    status: live
-    image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80
+      - Thesis
+      - Reinforcement Learning
+      - Python
+    size: large
+    status: wip
+    image_url: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80
 
-  - id: buckshot
+  - id: buckshot-tracker
     title: Buckshot Tracker
-    description: Herramienta de seguimiento y conteo para juegos de estrategia.
+    description: Herramienta de seguimiento y conteo para partidas estratégicas con interfaz rápida y visual.
     icon: Crosshair
     link: "#"
     tags:
       - Game Tool
       - React
+      - TypeScript
     size: medium
     status: live
-    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80
+    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
+
+  - id: curriculum-vitae
+    title: Curriculum Vitae
+    description: CV online y descargable con resumen profesional, stack técnico y experiencia.
+    icon: FileText
+    link: https://cv.guarnold.com.ar
+    tags:
+      - Resume
+      - Professional
+      - Personal Branding
+    size: tall
+    status: live
+    image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
+
+  - id: guarnold-lab
+    title: Guarnold Lab
+    description: Espacio de prototipos y pruebas rápidas para ideas de producto y automatizaciones.
+    icon: FlaskConical
+    link: "#"
+    tags:
+      - R&D
+      - Experiments
+    size: small
+    status: demo
+    # image_url: puede comentarse para probar fallback visual
