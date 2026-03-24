@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   User,
   MapPin,
@@ -15,10 +15,25 @@ import {
 import Hero from "../components/Hero";
 import { CardComponent } from "../components/CardComponent";
 import { cn } from "../utils";
+import { getProfile } from "../services/dataService";
+import type { Profile } from "../types";
 
 const Home: React.FC = () => {
   const [copied, setCopied] = useState(false);
-  const email = "facundoguarnier@gmail.com";
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const data = await getProfile();
+      setProfile(data);
+      setLoading(false);
+    };
+
+    fetchProfile();
+  }, []);
+
+  const email = profile?.email ?? "facundoguarnier@gmail.com";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(email);
@@ -38,10 +53,14 @@ const Home: React.FC = () => {
     { name: "SQL", icon: <Terminal size={14} /> },
   ];
 
+  if (loading) {
+    return <div className="animate-pulse">Cargando...</div>;
+  }
+
   return (
     <div className="w-full animate-in fade-in duration-500">
       {/* Hero Section */}
-      <Hero />
+      <Hero profile={profile} />
 
       {/* Personal Bento Grid Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 scroll-mt-20">
@@ -62,23 +81,24 @@ const Home: React.FC = () => {
               <div className="space-y-4 text-center md:text-left">
                 <div>
                   <h2 className="text-3xl font-bold text-on-surface">
-                    Facundo Guarnier
+                    {profile?.name ?? "Facundo Guarnier"}
                   </h2>
-                  <p className="text-primary font-medium">
-                    Software Engineer | Fullstack Developer
-                  </p>
+                  {profile?.role && (
+                    <p className="text-primary font-medium">{profile.role}</p>
+                  )}
                 </div>
-                <p className="text-on-surface-variant leading-relaxed">
-                  Ingeniero en Informática especializado en el ciclo de vida
-                  completo del desarrollo. Me motiva crear tecnología con
-                  propósito, optimizando procesos y construyendo soluciones
-                  escalables que generen un impacto real.
-                </p>
+                {profile?.bio && (
+                  <p className="text-on-surface-variant leading-relaxed">
+                    {profile.bio}
+                  </p>
+                )}
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
-                  <div className="flex items-center gap-2 text-sm text-on-surface-variant bg-surface-variant/50 px-3 py-1 rounded-full border border-outline/10">
-                    <MapPin size={16} className="text-primary" />
-                    Mendoza, Argentina
-                  </div>
+                  {profile?.location && (
+                    <div className="flex items-center gap-2 text-sm text-on-surface-variant bg-surface-variant/50 px-3 py-1 rounded-full border border-outline/10">
+                      <MapPin size={16} className="text-primary" />
+                      {profile.location}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -122,7 +142,7 @@ const Home: React.FC = () => {
                 "mt-4 w-full py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-bold transition-all",
                 copied
                   ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                  : "bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary border border-outline/10"
+                  : "bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary border border-outline/10",
               )}
             >
               {copied ? <Check size={16} /> : <Copy size={16} />}
@@ -140,7 +160,9 @@ const Home: React.FC = () => {
             </div>
             <div className="grid grid-cols-2 gap-3 mt-4">
               <a
-                href="https://linkedin.com/in/faguarnier"
+                href={
+                  profile?.linkedin_url ?? "https://linkedin.com/in/faguarnier"
+                }
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 p-2 rounded-xl bg-[#0077B5]/10 text-[#0077B5] border border-[#0077B5]/20 hover:scale-105 transition-transform"
@@ -149,7 +171,7 @@ const Home: React.FC = () => {
                 <span className="text-xs font-bold">LinkedIn</span>
               </a>
               <a
-                href="https://github.com/faguarnier"
+                href={profile?.github_url ?? "https://github.com/faguarnier"}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 p-2 rounded-xl bg-on-surface/10 text-on-surface border border-outline/20 hover:scale-105 transition-transform"
@@ -172,8 +194,15 @@ const Home: React.FC = () => {
                   <MapPin size={20} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-on-surface">Mendoza</h4>
-                  <p className="text-xs text-on-surface-variant">Argentina</p>
+                  <h4 className="font-bold text-on-surface">
+                    {profile?.location?.split(",")[0] ?? "Mendoza"}
+                  </h4>
+                  {profile?.location && (
+                    <p className="text-xs text-on-surface-variant">
+                      {profile.location.split(",").slice(1).join(",").trim() ||
+                        "Argentina"}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

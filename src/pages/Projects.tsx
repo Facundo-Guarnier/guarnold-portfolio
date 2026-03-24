@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BentoGrid from "../components/BentoGrid";
 import GithubStats from "../components/GithubStats";
 import { Sparkles, Code2 } from "lucide-react";
+import { getProjects } from "../services/dataService";
+import type { Project } from "../types";
 
 const Projects: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const data = await getProjects();
+      setProjects(data);
+      setLoading(false);
+    };
+
+    fetchProjects();
+  }, []);
+
+  if (loading) {
+    return <div className="animate-pulse">Cargando...</div>;
+  }
+
   return (
     <div className="animate-in fade-in duration-700 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -29,7 +48,7 @@ const Projects: React.FC = () => {
                 Proyectos Destacados
               </h2>
             </div>
-            <BentoGrid />
+            <BentoGrid projects={projects} />
           </section>
 
           {/* Section 2: Github Stats */}

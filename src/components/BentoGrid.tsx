@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { getProjects } from "../services/dataService";
+import React from "react";
 import type { Project } from "../types";
 import ProjectCard from "./ProjectCard";
 
-const BentoGrid: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+interface BentoGridProps {
+  projects?: Project[];
+}
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const data = await getProjects();
-      setProjects(data);
-      setLoading(false);
-    };
-
-    fetchProjects();
-  }, []);
-
+const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
   const getSizeClasses = (size?: string) => {
     switch (size) {
       case "tall":
@@ -31,19 +21,6 @@ const BentoGrid: React.FC = () => {
         return "md:col-span-1 md:row-span-1";
     }
   };
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(180px,auto)] pb-12">
-        {[...Array(3)].map((_, index) => (
-          <div
-            key={index}
-            className="h-48 rounded-3xl bg-surface-variant animate-pulse"
-          />
-        ))}
-      </div>
-    );
-  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(180px,auto)] pb-12">

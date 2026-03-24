@@ -1,59 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Briefcase, GraduationCap, Calendar } from "lucide-react";
 import { cn } from "../utils";
 import { CardComponent } from "../components/CardComponent";
+import { getExperience } from "../services/dataService";
+import type { Experience } from "../types";
 
-interface TrajectoryItem {
-  id: string;
-  title: string;
-  organization: string;
-  period: string;
-  description: string;
-}
-
-const experienceData: TrajectoryItem[] = [
-  {
-    id: "tinkin",
-    title: "Software Developer",
-    organization: "Tinkin (Remoto)",
-    period: "Ago 2024 - Presente",
-    description:
-      "Desarrollo full-stack (Scrum). Fideval App (Flutter), Mercately (React/TS), Kamina Academy (FastAPI). Dictado de sesiones técnicas.",
-  },
-  {
-    id: "freelance",
-    title: "Freelance Developer",
-    organization: "Autónomo",
-    period: "2021 - Presente",
-    description:
-      "Desarrollo de soluciones web a medida y scripts de automatización (Python/Computer Vision).",
-  },
-];
-
-const educationData: TrajectoryItem[] = [
-  {
-    id: "university",
-    title: "Ingeniería en Informática",
-    organization: "Universidad de Mendoza",
-    period: "2020 - 2025",
-    description:
-      "Formación integral con promedio destacado. Tesis: 'SemaforIA' (Reinforcement Learning).",
-  },
-  {
-    id: "english",
-    title: "Formación en Idioma Inglés",
-    organization: "Clases Particulares",
-    period: "2021 - Presente",
-    description:
-      "Nivel B1 alcanzado. Formación continua orientada a la lectura de documentación técnica y comunicación profesional.",
-  },
-];
-
-const TimelineItem: React.FC<{ item: TrajectoryItem; isLast: boolean }> = ({
+const TimelineItem: React.FC<{ item: Experience; isLast: boolean }> = ({
   item,
   isLast,
 }) => {
-  const isPresent = item.period.toLowerCase().includes("presente");
+  const startDate = item.start_date;
+  const endDate = item.end_date;
+  const period = startDate
+    ? `${startDate}${endDate ? ` - ${endDate}` : " - Presente"}`
+    : (endDate ?? "Fecha no especificada");
+  const isPresent = !endDate;
+  const title = item.role ?? item.title ?? "Sin título";
+  const organization =
+    item.company ?? item.institution ?? "Organización no especificada";
 
   return (
     <div className={cn("relative pl-8 md:pl-10", !isLast && "pb-12")}>
@@ -63,7 +27,7 @@ const TimelineItem: React.FC<{ item: TrajectoryItem; isLast: boolean }> = ({
           "absolute left-[-5px] top-[26px] w-3 h-3 rounded-full border-2 ring-4 ring-background transition-colors duration-300 z-10",
           isPresent
             ? "bg-green-500 border-green-500"
-            : "bg-surface-variant border-outline"
+            : "bg-surface-variant border-outline",
         )}
       />
 
@@ -71,10 +35,10 @@ const TimelineItem: React.FC<{ item: TrajectoryItem; isLast: boolean }> = ({
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 mb-3">
           <div>
             <h3 className="text-lg md:text-xl font-bold text-on-surface group-hover:text-primary transition-colors">
-              {item.title}
+              {title}
             </h3>
             <span className="text-primary font-semibold text-sm md:text-base">
-              {item.organization}
+              {organization}
             </span>
           </div>
 
@@ -83,23 +47,47 @@ const TimelineItem: React.FC<{ item: TrajectoryItem; isLast: boolean }> = ({
               "flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider w-fit shrink-0",
               isPresent
                 ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                : "bg-surface-variant text-on-surface-variant border border-outline/10"
+                : "bg-surface-variant text-on-surface-variant border border-outline/10",
             )}
           >
             <Calendar size={12} />
-            {item.period}
+            {period}
           </div>
         </div>
 
-        <p className="text-on-surface-variant text-sm leading-relaxed">
-          {item.description}
-        </p>
+        {item.description && (
+          <p className="text-on-surface-variant text-sm leading-relaxed">
+            {item.description}
+          </p>
+        )}
       </CardComponent>
     </div>
   );
 };
 
 const Trajectory: React.FC = () => {
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchExperience = async () => {
+      const data = await getExperience();
+      setExperience(data);
+      setLoading(false);
+    };
+
+    fetchExperience();
+  }, []);
+
+  const workExperience = experience.filter((item) => item.type === "work");
+  const educationExperience = experience.filter(
+    (item) => item.type === "education",
+  );
+
+  if (loading) {
+    return <div className="animate-pulse">Cargando...</div>;
+  }
+
   return (
     <div className="animate-in fade-in duration-700 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -126,11 +114,11 @@ const Trajectory: React.FC = () => {
             </div>
 
             <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
-              {experienceData.map((item, index) => (
+              {workExperience.map((item, index) => (
                 <TimelineItem
-                  key={item.id}
+                  key={item.id ?? `work-${index}`}
                   item={item}
-                  isLast={index === experienceData.length - 1}
+                  isLast={index === workExperience.length - 1}
                 />
               ))}
             </div>
@@ -148,11 +136,11 @@ const Trajectory: React.FC = () => {
             </div>
 
             <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
-              {educationData.map((item, index) => (
+              {educationExperience.map((item, index) => (
                 <TimelineItem
-                  key={item.id}
+                  key={item.id ?? `education-${index}`}
                   item={item}
-                  isLast={index === educationData.length - 1}
+                  isLast={index === educationExperience.length - 1}
                 />
               ))}
             </div>

@@ -60,6 +60,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       >
         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
+        <div className="h-24 bg-gradient-to-br from-primary/20 via-surface-variant to-secondary/20 border-b border-outline/20" />
+
         <div className="p-6 flex flex-col h-full justify-between">
           {/* Top section: Icon and Status */}
           <div className="relative z-10 flex justify-between items-start mb-6">
