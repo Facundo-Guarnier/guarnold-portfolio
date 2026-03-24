@@ -63,7 +63,6 @@ projects:
   - id: semaforia
     title: SemaforIA
     description: Tesis universitaria basada en Reinforcement Learning para optimización de semáforos y flujo vehicular.
-    icon: Sparkles
     link: "#"
     tags:
       - Thesis
@@ -71,12 +70,12 @@ projects:
       - Python
     size: large
     status: wip
-    image_url: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80
+    icon: Sparkles
+    # image_url: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80
 
   - id: buckshot-tracker
     title: Buckshot Tracker
     description: Herramienta de seguimiento y conteo para partidas estratégicas con interfaz rápida y visual.
-    icon: Crosshair
     link: "#"
     tags:
       - Game Tool
@@ -84,12 +83,12 @@ projects:
       - TypeScript
     size: medium
     status: live
-    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
+    icon: Crosshair
+    # image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
 
   - id: curriculum-vitae
     title: Curriculum Vitae
     description: CV online y descargable con resumen profesional, stack técnico y experiencia.
-    icon: FileText
     link: https://cv.guarnold.com.ar
     tags:
       - Resume
@@ -97,16 +96,17 @@ projects:
       - Personal Branding
     size: tall
     status: live
-    image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
+    icon: FileText
+    # image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
 
   - id: guarnold-lab
     title: Guarnold Lab
     description: Espacio de prototipos y pruebas rápidas para ideas de producto y automatizaciones.
-    icon: FlaskConical
     link: "#"
     tags:
       - R&D
       - Experiments
     size: small
     status: demo
+    icon: FlaskConical
     # image_url: puede comentarse para probar fallback visual
