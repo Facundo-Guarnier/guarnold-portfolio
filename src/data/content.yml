@@ -1,0 +1,51 @@
+# Base de datos local en YAML.
+# Cualquier campo puede comentarse temporalmente y la UI debe manejarlo de forma segura.
+
+profile:
+  name: Guarnold
+  role: Full Stack Developer
+  location: Argentina
+  bio: Construyo productos digitales con enfoque en UX y rendimiento.
+  avatar_url: https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80
+
+experience:
+  - id: exp-1
+    type: work
+    company: Freelance
+    role: Full Stack Developer
+    start_date: "2023-01"
+    end_date: null
+    description: Desarrollo de aplicaciones web con React, TypeScript y Node.js.
+
+  - id: exp-2
+    type: education
+    institution: Universidad Tecnológica
+    title: Ingeniería en Sistemas
+    start_date: "2019-03"
+    end_date: "2022-12"
+    description: Formación en arquitectura de software y bases de datos.
+
+projects:
+  - id: cv
+    title: Curriculum Vitae
+    description: Mi trayectoria profesional y experiencia en formato PDF.
+    icon: FileText
+    link: "#"
+    tags:
+      - Resume
+      - Professional
+    size: tall
+    status: live
+    image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80
+
+  - id: buckshot
+    title: Buckshot Tracker
+    description: Herramienta de seguimiento y conteo para juegos de estrategia.
+    icon: Crosshair
+    link: "#"
+    tags:
+      - Game Tool
+      - React
+    size: medium
+    status: live
+    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&q=80
