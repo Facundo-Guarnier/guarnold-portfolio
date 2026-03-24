@@ -6,6 +6,8 @@ profile:
   name: Facundo Guarnier
   role: Ingeniero en Informática | Fullstack Developer
   location: Mendoza, Argentina
+  location_background_image: public/assets/mapa_argentina.jpg
+
   bio: Ingeniero en Informática especializado en desarrollo fullstack. Construyo productos digitales con React, Python y Flutter, priorizando rendimiento, UX y arquitectura escalable.
   avatar_url: /assets/guarnold_firma.png
   # email: facundoguarnier@gmail.com

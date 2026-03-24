@@ -24,20 +24,20 @@ const TimelineItem: React.FC<{ item: Experience; isLast: boolean }> = ({
       {/* Dot on the timeline - positioned to align with the card header roughly */}
       <div
         className={cn(
-          "absolute left-[-5px] top-[26px] w-3 h-3 rounded-full border-2 ring-4 ring-background transition-colors duration-300 z-10",
+          "absolute left-[-7px] top-[26px] w-3 h-3 rounded-full border-2 ring-4 ring-background transition-colors duration-300 z-10",
           isPresent
             ? "bg-green-500 border-green-500"
             : "bg-surface-variant border-outline",
         )}
       />
 
-      <CardComponent className="p-5 md:p-6 hover:shadow-lg transition-all duration-300 hover:border-primary/30 group">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 mb-3">
+      <CardComponent className="p-5 transition-all duration-300 md:p-6 hover:shadow-lg hover:border-primary/30 group">
+        <div className="flex flex-col justify-between gap-3 mb-3 md:flex-row md:items-start">
           <div>
-            <h3 className="text-lg md:text-xl font-bold text-on-surface group-hover:text-primary transition-colors">
+            <h3 className="text-lg font-bold transition-colors md:text-xl text-on-surface group-hover:text-primary">
               {title}
             </h3>
-            <span className="text-primary font-semibold text-sm md:text-base">
+            <span className="text-sm font-semibold text-primary md:text-base">
               {organization}
             </span>
           </div>
@@ -56,7 +56,7 @@ const TimelineItem: React.FC<{ item: Experience; isLast: boolean }> = ({
         </div>
 
         {item.description && (
-          <p className="text-on-surface-variant text-sm leading-relaxed">
+          <p className="text-sm leading-relaxed text-on-surface-variant">
             {item.description}
           </p>
         )}
@@ -86,15 +86,15 @@ const Trajectory: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="animate-in fade-in duration-300 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="h-12 w-64 rounded-xl bg-surface-variant animate-pulse mb-4" />
-          <div className="h-6 w-96 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
+      <div className="w-full duration-300 animate-in fade-in">
+        <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-24">
+          <div className="w-64 h-12 mb-4 rounded-xl bg-surface-variant animate-pulse" />
+          <div className="h-6 max-w-full mb-10 w-96 rounded-xl bg-surface-variant animate-pulse" />
 
           <div className="space-y-16">
             <section>
-              <div className="h-10 w-80 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
-              <div className="space-y-6 ml-5 md:ml-6">
+              <div className="h-10 max-w-full mb-10 w-80 rounded-xl bg-surface-variant animate-pulse" />
+              <div className="ml-5 space-y-6 md:ml-6">
                 {[...Array(2)].map((_, index) => (
                   <div
                     key={`work-skeleton-${index}`}
@@ -105,8 +105,8 @@ const Trajectory: React.FC = () => {
             </section>
 
             <section>
-              <div className="h-10 w-64 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
-              <div className="space-y-6 ml-5 md:ml-6">
+              <div className="w-64 h-10 max-w-full mb-10 rounded-xl bg-surface-variant animate-pulse" />
+              <div className="ml-5 space-y-6 md:ml-6">
                 {[...Array(2)].map((_, index) => (
                   <div
                     key={`edu-skeleton-${index}`}
@@ -122,14 +122,14 @@ const Trajectory: React.FC = () => {
   }
 
   return (
-    <div className="animate-in fade-in duration-700 w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+    <div className="w-full duration-700 animate-in fade-in">
+      <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-24">
         {/* Header - Fixed height so subtitle position is consistent */}
-        <header className="max-w-3xl h-32 md:h-36 mb-8">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-4">
+        <header className="h-32 max-w-3xl mb-8 md:h-36">
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight md:text-5xl text-on-surface">
             Trayectoria
           </h1>
-          <p className="text-lg text-on-surface-variant leading-relaxed">
+          <p className="text-lg leading-relaxed text-on-surface-variant">
             Mi camino profesional y académico en detalle.
           </p>
         </header>
@@ -137,16 +137,16 @@ const Trajectory: React.FC = () => {
         {/* Sections Container */}
         <div className="space-y-16">
           <section>
-            <div className="flex items-center gap-3 mb-10 border-b border-outline/10 pb-4">
+            <div className="flex items-center gap-3 pb-4 mb-10 border-b border-outline/10">
               <div className="p-2 rounded-lg bg-primary/10 text-primary">
                 <Briefcase size={24} />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-on-surface">
+              <h2 className="text-2xl font-bold md:text-3xl text-on-surface">
                 Experiencia Profesional
               </h2>
             </div>
 
-            <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
+            <div className="pt-2 pb-2 ml-5 border-l-2 border-primary/20 md:ml-6">
               {workExperience.map((item, index) => (
                 <TimelineItem
                   key={item.id ?? `work-${index}`}
@@ -159,16 +159,16 @@ const Trajectory: React.FC = () => {
 
           {/* Education Section */}
           <section>
-            <div className="flex items-center gap-3 mb-10 border-b border-outline/10 pb-4">
+            <div className="flex items-center gap-3 pb-4 mb-10 border-b border-outline/10">
               <div className="p-2 rounded-lg bg-secondary/10 text-secondary">
                 <GraduationCap size={24} />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-on-surface">
+              <h2 className="text-2xl font-bold md:text-3xl text-on-surface">
                 Educación
               </h2>
             </div>
 
-            <div className="border-l-2 border-primary/20 ml-5 md:ml-6 pt-2 pb-2">
+            <div className="pt-2 pb-2 ml-5 border-l-2 border-primary/20 md:ml-6">
               {educationExperience.map((item, index) => (
                 <TimelineItem
                   key={item.id ?? `education-${index}`}

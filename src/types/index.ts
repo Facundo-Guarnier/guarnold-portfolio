@@ -3,6 +3,7 @@ export interface Profile {
   name?: string;
   role?: string;
   location?: string;
+  location_background_image?: string;
   bio?: string;
   avatar_url?: string;
   email?: string;
