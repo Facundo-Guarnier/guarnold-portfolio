@@ -44,7 +44,8 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
   const appVersion = pkgJson.version || "0.0.0";
   const brandName = "Guarnold";
   const brandUrl = "https://guarnold.com.ar";
-  const repoUrl = pkgJson.gitURL || "https://github.com/faguarnier/guarnold-portfolio";
+  const repoUrl =
+    pkgJson.gitURL || "https://github.com/faguarnier/guarnold-portfolio";
 
   // Signature - hardcoded path (won't change)
   const brandSignature = "/assets/guarnold_firma.png";
