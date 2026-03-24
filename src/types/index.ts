@@ -70,6 +70,8 @@ export interface Experience {
   title?: string;
   start_date?: string;
   end_date?: string | null;
+  status?: string;
+  is_completed?: boolean;
   description?: string;
   technologies?: string[];
 }

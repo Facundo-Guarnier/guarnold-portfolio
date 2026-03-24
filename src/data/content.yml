@@ -45,6 +45,8 @@ experience:
     role: Software Developer
     start_date: "2024-08"
     end_date: null
+    status: "En curso"
+    is_completed: false
     description: Desarrollo full-stack en entorno Scrum. Participación en Fideval App (Flutter), Mercately (React/TypeScript) y Kamina Academy (FastAPI), además de sesiones técnicas internas.
     technologies:
       - Flutter
@@ -59,6 +61,8 @@ experience:
     role: Freelance Developer
     start_date: "2021-01"
     end_date: null
+    status: "En curso"
+    is_completed: false
     description: Desarrollo de soluciones web a medida y automatizaciones con Python y Computer Vision para clientes independientes.
     technologies:
       - React
@@ -71,6 +75,8 @@ experience:
     title: Ingeniería en Informática
     start_date: "2020-03"
     end_date: "2025-12"
+    status: "Graduado"
+    is_completed: true
     description: "Formación integral en ingeniería de software, arquitectura y sistemas distribuidos. Proyecto de tesis: SemaforIA."
     technologies:
       - Ingeniería de Software
@@ -83,6 +89,8 @@ experience:
     title: Formación en Idioma Inglés (B1)
     start_date: "2021-01"
     end_date: null
+    status: "En curso"
+    is_completed: false
     description: Entrenamiento continuo para lectura técnica, comunicación profesional y colaboración internacional.
 
 projects:

@@ -48,14 +48,10 @@ const Navbar: React.FC = () => {
         >
           <div
             className={cn(
-              "p-1.5 rounded-xl bg-surface border border-outline/20 shadow-sm transition-transform group-hover:scale-105",
+              "p-1 bg-white rounded-md transition-transform group-hover:scale-105 shadow-[0_0_8px_2px_rgba(0,0,0,0.15)]",
             )}
           >
-            <img
-              src="/assets/g_icon.png"
-              alt="Guarnold"
-              className="w-6 h-6 rounded-md"
-            />
+            <img src="/assets/g_icon.png" alt="Guarnold" className="w-6 h-6" />
           </div>
           <span className="hidden transition-colors group-hover:text-primary xs:inline">
             Guarnold.
