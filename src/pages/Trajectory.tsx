@@ -96,7 +96,10 @@ const Trajectory: React.FC = () => {
               <div className="h-10 w-80 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
               <div className="space-y-6 ml-5 md:ml-6">
                 {[...Array(2)].map((_, index) => (
-                  <div key={`work-skeleton-${index}`} className="h-36 rounded-3xl bg-surface-variant animate-pulse" />
+                  <div
+                    key={`work-skeleton-${index}`}
+                    className="h-36 rounded-3xl bg-surface-variant animate-pulse"
+                  />
                 ))}
               </div>
             </section>
@@ -105,7 +108,10 @@ const Trajectory: React.FC = () => {
               <div className="h-10 w-64 max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
               <div className="space-y-6 ml-5 md:ml-6">
                 {[...Array(2)].map((_, index) => (
-                  <div key={`edu-skeleton-${index}`} className="h-36 rounded-3xl bg-surface-variant animate-pulse" />
+                  <div
+                    key={`edu-skeleton-${index}`}
+                    className="h-36 rounded-3xl bg-surface-variant animate-pulse"
+                  />
                 ))}
               </div>
             </section>
