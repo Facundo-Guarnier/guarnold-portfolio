@@ -31,14 +31,14 @@ const TimelineItem: React.FC<{ item: Experience; isLast: boolean }> = ({
     : (endLabel ?? "Fecha no especificada");
 
   const isCompleted = Boolean(item.is_completed);
-  const statusLabel = item.status ?? (isCompleted ? "Completado" : "En curso");
+  const statusLabel = item.status;
   const title = item.role ?? item.title ?? "Sin título";
   const organization =
     item.company ?? item.institution ?? "Organización no especificada";
 
   return (
     <div className={cn("relative pl-8 md:pl-10", !isLast && "pb-12")}>
-      <div className="absolute left-[-13px] top-[20px] z-10 ring-4 rounded-full ring-background bg-background">
+      <div className="absolute left-[-9px] top-[20px] z-10 ring-4 rounded-full ring-background bg-background">
         {isCompleted ? (
           <CheckCircle2 size={16} className="text-primary" />
         ) : (
@@ -63,21 +63,22 @@ const TimelineItem: React.FC<{ item: Experience; isLast: boolean }> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2 md:justify-end">
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider w-fit shrink-0 bg-surface-variant text-on-surface-variant border border-outline/10">
+            <div className="flex items-center gap-2 px-3 py-1 text-xs font-bold tracking-wider uppercase border rounded-full w-fit shrink-0 bg-surface-variant text-on-surface-variant border-outline/10">
               <Calendar size={12} />
               {period}
             </div>
-
-            <div
-              className={cn(
-                "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border w-fit shrink-0",
-                isCompleted
-                  ? "bg-primary/10 text-primary border-primary/20"
-                  : "bg-secondary/10 text-secondary border-secondary/20",
-              )}
-            >
-              {statusLabel}
-            </div>
+            {statusLabel && (
+              <div
+                className={cn(
+                  "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border w-fit shrink-0",
+                  isCompleted
+                    ? "bg-primary/10 text-primary border-primary/20"
+                    : "bg-secondary/10 text-secondary border-secondary/20",
+                )}
+              >
+                {statusLabel}
+              </div>
+            )}
           </div>
         </div>
 

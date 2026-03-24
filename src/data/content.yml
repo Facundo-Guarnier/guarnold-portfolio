@@ -61,7 +61,7 @@ experience:
     role: Freelance Developer
     start_date: "2021-01"
     end_date: null
-    status: "En curso"
+    # status: "En curso"
     is_completed: false
     description: Desarrollo de soluciones web a medida y automatizaciones con Python y Computer Vision para clientes independientes.
     technologies:
