@@ -1,8 +1,11 @@
 {
   "name": "guarnold-portfolio",
+  "screenName": "Guarnold Portfolio",
+  "description": "Personal portfolio website showcasing my projects and skills as a software developer.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "gitURL": "https://github.com/Facundo-Guarnier/guarnold-portfolio",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

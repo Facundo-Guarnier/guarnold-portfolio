@@ -8,7 +8,7 @@ profile:
   location: Mendoza, Argentina
   bio: Ingeniero en Informática especializado en desarrollo fullstack. Construyo productos digitales con React, Python y Flutter, priorizando rendimiento, UX y arquitectura escalable.
   avatar_url: /assets/guarnold_firma.png
-  email: facundoguarnier@gmail.com
+  # email: facundoguarnier@gmail.com
   github_url: https://github.com/faguarnier
   linkedin_url: https://linkedin.com/in/faguarnier
 

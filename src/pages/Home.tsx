@@ -33,9 +33,10 @@ const Home: React.FC = () => {
     fetchProfile();
   }, []);
 
-  const email = profile?.email ?? "facundoguarnier@gmail.com";
+  const email = profile?.email;
 
   const copyToClipboard = () => {
+    if (!email) return;
     navigator.clipboard.writeText(email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -146,31 +147,35 @@ const Home: React.FC = () => {
           </CardComponent>
 
           {/* Contact Card (Small) */}
-          <CardComponent className="p-6 flex flex-col justify-between group">
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                <Mail size={20} />
+          {email && (
+            <CardComponent className="p-6 flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <Mail size={20} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-on-surface">
+                    Contacto Directo
+                  </h4>
+                  <p className="text-xs text-on-surface-variant truncate">
+                    {email}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold text-on-surface">Contacto Directo</h4>
-                <p className="text-xs text-on-surface-variant truncate">
-                  {email}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={copyToClipboard}
-              className={cn(
-                "mt-4 w-full py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-bold transition-all",
-                copied
-                  ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                  : "bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary border border-outline/10",
-              )}
-            >
-              {copied ? <Check size={16} /> : <Copy size={16} />}
-              {copied ? "Copiado" : "Copiar Email"}
-            </button>
-          </CardComponent>
+              <button
+                onClick={copyToClipboard}
+                className={cn(
+                  "mt-4 w-full py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-bold transition-all",
+                  copied
+                    ? "bg-green-500/20 text-green-500 border border-green-500/30"
+                    : "bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary border border-outline/10",
+                )}
+              >
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+                {copied ? "Copiado" : "Copiar Email"}
+              </button>
+            </CardComponent>
+          )}
 
           {/* Social Card (Small) */}
           <CardComponent className="p-6 flex flex-col justify-between">
