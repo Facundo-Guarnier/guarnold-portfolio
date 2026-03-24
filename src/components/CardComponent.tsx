@@ -1,28 +1,32 @@
-import React from 'react';
-import { cn } from '../utils';
-import { theme } from '../theme';
+import React from "react";
+import { cn } from "../utils";
+import { theme } from "../theme";
 
 interface CardComponentProps {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   onClick?: () => void;
 }
 
-export const CardComponent: React.FC<CardComponentProps> = ({ 
-  children, 
-  className, 
-  onClick 
+export const CardComponent: React.FC<CardComponentProps> = ({
+  children,
+  className,
+  style,
+  onClick,
 }) => {
   return (
-    <div 
+    <div
       onClick={onClick}
+      style={style}
       className={cn(
         "relative overflow-hidden transition-all duration-300",
         "bg-[rgba(255,255,255,0.05)] backdrop-blur-md",
         "border border-[rgba(255,255,255,0.1)] shadow-xl",
         "rounded-[1rem]",
-        onClick && "cursor-pointer hover:bg-[rgba(255,255,255,0.08)] active:scale-[0.98]",
-        className
+        onClick &&
+          "cursor-pointer hover:bg-[rgba(255,255,255,0.08)] active:scale-[0.98]",
+        className,
       )}
     >
       {children}
