@@ -6,6 +6,7 @@ import {
   Sparkles,
   FlaskConical,
   ArrowUpRight,
+  Github,
 } from "lucide-react";
 
 // Icon mapper for dynamic icons
@@ -29,6 +30,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const safeTitle = project.title ?? "Proyecto sin título";
   const safeDescription = project.description;
   const safeLink = project.link ?? "#";
+  const githubLink = project.github_url;
   const safeTags = project.tags ?? [];
   const imageSource = project.image_url ?? project.image;
   const [hasImage, setHasImage] = React.useState(Boolean(imageSource));
@@ -36,6 +38,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   React.useEffect(() => {
     setHasImage(Boolean(imageSource));
   }, [imageSource]);
+
+  const openUrl = (url?: string) => {
+    if (!url || url === "#") return;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   // Base transition and style classes for consistency
   const cardBaseClasses =
@@ -47,11 +54,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   // Layout for projects without images (Abstract gradient + centered icon)
   if (!hasImage) {
     return (
-      <a
-        href={safeLink}
-        target="_blank"
-        rel="noopener noreferrer"
+      <article
         className={cardBaseClasses}
+        role="button"
+        tabIndex={0}
+        onClick={() => openUrl(safeLink)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openUrl(safeLink);
+          }
+        }}
       >
         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -76,6 +89,20 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     {project.status}
                   </span>
                 </div>
+              )}
+
+              {githubLink && (
+                <button
+                  type="button"
+                  aria-label="Ver repositorio en GitHub"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    openUrl(githubLink);
+                  }}
+                  className="p-2 rounded-full bg-surface/50 text-on-surface/70 hover:text-primary transition-colors border border-outline/10"
+                >
+                  <Github size={16} />
+                </button>
               )}
 
               <div className="p-2 rounded-full bg-surface/50 text-on-surface opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 border border-outline/10">
@@ -108,17 +135,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             ))}
           </div>
         </div>
-      </a>
+      </article>
     );
   }
 
   // Layout for projects with images (Preview-focused)
   return (
-    <a
-      href={safeLink}
-      target="_blank"
-      rel="noopener noreferrer"
+    <article
       className={cardBaseClasses}
+      role="button"
+      tabIndex={0}
+      onClick={() => openUrl(safeLink)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openUrl(safeLink);
+        }
+      }}
     >
       <div
         className={`relative overflow-hidden w-full ${project.size === "tall" ? "h-64" : "h-48"}`}
@@ -148,10 +181,26 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             <h3 className="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">
               {safeTitle}
             </h3>
-            <ArrowUpRight
-              size={20}
-              className="text-on-surface-variant opacity-50 group-hover:opacity-100 group-hover:text-primary group-hover:-translate-y-0.5 transition-all duration-300"
-            />
+            <div className="flex items-center gap-2">
+              {githubLink && (
+                <button
+                  type="button"
+                  aria-label="Ver repositorio en GitHub"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    openUrl(githubLink);
+                  }}
+                  className="p-1.5 rounded-full text-on-surface/70 hover:text-primary transition-colors"
+                >
+                  <Github size={16} />
+                </button>
+              )}
+
+              <ArrowUpRight
+                size={20}
+                className="text-on-surface-variant opacity-50 group-hover:opacity-100 group-hover:text-primary group-hover:-translate-y-0.5 transition-all duration-300"
+              />
+            </div>
           </div>
 
           {safeDescription && (
@@ -172,7 +221,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           ))}
         </div>
       </div>
-    </a>
+    </article>
   );
 };
 

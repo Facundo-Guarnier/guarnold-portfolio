@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BentoGrid from "../components/BentoGrid";
-import GithubStats from "../components/GithubStats";
-import { Sparkles, Code2 } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { getProjects } from "../services/dataService";
 import type { Project } from "../types";
 
@@ -54,33 +53,17 @@ const Projects: React.FC = () => {
           </p>
         </header>
 
-        {/* Sections Container */}
-        <div className="space-y-16">
-          <section>
-            <div className="flex items-center gap-3 mb-10 border-b border-outline/10 pb-4">
-              <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                <Sparkles size={24} />
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-on-surface">
-                Proyectos Destacados
-              </h2>
+        <section>
+          <div className="flex items-center gap-3 mb-10 border-b border-outline/10 pb-4">
+            <div className="p-2 rounded-lg bg-primary/10 text-primary">
+              <Sparkles size={24} />
             </div>
-            <BentoGrid projects={projects} />
-          </section>
-
-          {/* Section 2: Github Stats */}
-          <section>
-            <div className="flex items-center gap-3 mb-10 border-b border-outline/10 pb-4">
-              <div className="p-2 rounded-lg bg-secondary/10 text-secondary">
-                <Code2 size={24} />
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-on-surface">
-                Actividad en Código (GitHub)
-              </h2>
-            </div>
-            <GithubStats />
-          </section>
-        </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-on-surface">
+              Proyectos Destacados
+            </h2>
+          </div>
+          <BentoGrid projects={projects} />
+        </section>
       </div>
     </div>
   );

@@ -2,8 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   User,
   MapPin,
-  Github,
-  Linkedin,
   Terminal,
   Code2,
   Box,
@@ -15,6 +13,7 @@ import {
   Download,
 } from "lucide-react";
 import { CardComponent } from "../components/CardComponent";
+import GithubProfileCard from "../components/GithubProfileCard";
 import { getHomeContent } from "../services/dataService";
 import type { HomeContent } from "../types";
 
@@ -242,40 +241,7 @@ const Home: React.FC = () => {
             </div>
           </CardComponent>
 
-          <CardComponent className="flex flex-col justify-between p-6 transition-transform duration-300 md:col-span-2 hover:-translate-y-1">
-            <div className="space-y-2">
-              <h4 className="font-bold text-on-surface">Redes</h4>
-              <p className="text-xs text-on-surface-variant">
-                Conectemos en línea.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 mt-4 sm:grid-cols-2">
-              {homeContent?.social?.linkedin && (
-                <a
-                  href={homeContent.social.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 p-2 transition-transform border rounded-xl bg-surface-variant text-on-surface border-outline/20 hover:scale-105"
-                >
-                  <Linkedin size={18} />
-                  <span className="text-xs font-bold">LinkedIn</span>
-                </a>
-              )}
-
-              {homeContent?.social?.github && (
-                <a
-                  href={homeContent.social.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 p-2 transition-transform border rounded-xl bg-surface-variant text-on-surface border-outline/20 hover:scale-105"
-                >
-                  <Github size={18} />
-                  <span className="text-xs font-bold">GitHub</span>
-                </a>
-              )}
-            </div>
-          </CardComponent>
+          <GithubProfileCard profileUrl={homeContent?.social?.github} />
         </div>
       </section>
     </div>

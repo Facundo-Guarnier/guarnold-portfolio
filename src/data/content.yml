@@ -97,7 +97,8 @@ projects:
   - id: semaforia
     title: SemaforIA
     description: Tesis universitaria basada en Reinforcement Learning para optimización de semáforos y flujo vehicular.
-    link: "#"
+    link: https://semaforia.guarnold.com.ar
+    github_url: https://github.com/faguarnier
     tags:
       - Thesis
       - Reinforcement Learning
@@ -110,7 +111,8 @@ projects:
   - id: buckshot-tracker
     title: Buckshot Tracker
     description: Herramienta de seguimiento y conteo para partidas estratégicas con interfaz rápida y visual.
-    link: "#"
+    link: https://buckshot.guarnold.com.ar
+    github_url: https://github.com/faguarnier
     tags:
       - Game Tool
       - React
@@ -124,6 +126,7 @@ projects:
     title: Curriculum Vitae
     description: CV online y descargable con resumen profesional, stack técnico y experiencia.
     link: https://cv.guarnold.com.ar
+    github_url: https://github.com/faguarnier
     tags:
       - Resume
       - Professional
@@ -136,7 +139,8 @@ projects:
   - id: guarnold-lab
     title: Guarnold Lab
     description: Espacio de prototipos y pruebas rápidas para ideas de producto y automatizaciones.
-    link: "#"
+    link: https://guarnold.com.ar
+    github_url: https://github.com/faguarnier
     tags:
       - R&D
       - Experiments
@@ -144,3 +148,29 @@ projects:
     status: demo
     icon: FlaskConical
     # image_url: puede comentarse para probar fallback visual
+
+  - id: fideval-app
+    title: Fideval App
+    description: App fintech mobile para gestión de inversiones y visualización de mercado.
+    link: "#"
+    github_url: https://github.com/faguarnier
+    tags:
+      - Mobile
+      - Dart
+      - Fintech
+    size: small
+    status: live
+    icon: Crosshair
+
+  - id: facial-recon-script
+    title: Facial-Recon-Script
+    description: Scripts de visión por computadora con OpenCV para reconocimiento facial robusto.
+    link: "#"
+    github_url: https://github.com/faguarnier
+    tags:
+      - Python
+      - OpenCV
+      - Computer Vision
+    size: small
+    status: demo
+    icon: Sparkles

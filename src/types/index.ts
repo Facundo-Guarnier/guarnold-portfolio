@@ -82,6 +82,7 @@ export interface Project {
   description?: string;
   icon?: string;
   link?: string;
+  github_url?: string;
   tags?: string[];
   size?: "small" | "medium" | "large" | "tall" | string;
   status?: "live" | "wip" | "demo" | string;
