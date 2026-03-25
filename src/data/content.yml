@@ -94,6 +94,8 @@ experience:
     description: Entrenamiento continuo para lectura técnica, comunicación profesional y colaboración internacional.
 
 projects:
+  # size: 'small' | 'medium' | 'large' | 'tall';
+
   - id: buckshot-tracker
     title: Buckshot Tracker Pro
     description: Calculadora de probabilidades para Buckshot Roulette con conteo de balas, historial y marcado visual en tiempo real.
@@ -104,7 +106,7 @@ projects:
       - React
       - TypeScript
       - Tailwind CSS
-    size: medium
+    size: large
     status: live
     icon: Crosshair
     image_url: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80"

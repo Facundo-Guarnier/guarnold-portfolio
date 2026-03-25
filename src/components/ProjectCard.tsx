@@ -64,14 +64,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   const ActionButtons = () => (
     <div className="flex items-center gap-2">
-      {project.status && (
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-sm">
-          <span className="text-[10px] uppercase font-bold tracking-wider">
-            {project.status}
-          </span>
-        </div>
-      )}
-
       {githubLink && (
         <button
           type="button"
@@ -80,7 +72,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             event.stopPropagation();
             openUrl(githubLink);
           }}
-          className="p-2 rounded-full bg-surface/60 text-on-surface/70 hover:text-primary transition-colors border border-outline/10"
+          className="p-2 transition-colors border rounded-full bg-surface/60 text-on-surface/70 hover:text-primary border-outline/10"
         >
           <Github size={16} />
         </button>
@@ -93,12 +85,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           event.stopPropagation();
           openUrl(safeLink);
         }}
-        className="p-2 rounded-full bg-surface/60 text-on-surface/70 hover:text-primary transition-colors border border-outline/10"
+        className="p-2 transition-colors border rounded-full bg-surface/60 text-on-surface/70 hover:text-primary border-outline/10"
       >
         <ArrowUpRight size={16} />
       </button>
     </div>
   );
+
+  const StatusChip = () =>
+    project.status ? (
+      <div className="absolute top-3 right-3 z-20 px-2.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-sm">
+        <span className="text-[13px] uppercase font-bold tracking-wider">
+          {project.status}
+        </span>
+      </div>
+    ) : null;
 
   // Layout for projects without images (Abstract gradient + centered icon)
   if (!hasImage) {
@@ -115,26 +116,27 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           }
         }}
       >
-        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-primary/5 group-hover:opacity-100" />
 
         <div
           className={`relative ${imageHeightClass} border-b border-outline/20 bg-gradient-to-br from-primary/20 via-surface to-primary/10`}
         >
+          <StatusChip />
           <div className="absolute inset-0 opacity-35 bg-[radial-gradient(circle_at_20%_20%,var(--md-sys-color-primary)_0,transparent_45%),radial-gradient(circle_at_80%_30%,var(--md-sys-color-secondary)_0,transparent_40%),radial-gradient(circle_at_50%_80%,var(--md-sys-color-tertiary)_0,transparent_40%)]" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-2xl bg-surface/85 text-primary shadow-sm border border-outline/20 backdrop-blur-sm flex items-center justify-center">
+            <div className="flex items-center justify-center w-12 h-12 border shadow-sm rounded-2xl bg-surface/85 text-primary border-outline/20 backdrop-blur-sm">
               <Icon size={30} />
             </div>
           </div>
         </div>
 
-        <div className="p-5 md:p-6 flex flex-col h-full">
-          <div className="relative z-10 flex justify-end items-start mb-4">
+        <div className="flex flex-col h-full p-5 md:p-6">
+          <div className="relative z-10 flex items-start justify-end mb-4">
             <ActionButtons />
           </div>
 
           <div className="relative z-10 flex-1 min-h-0">
-            <h3 className="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
+            <h3 className="mb-2 text-xl font-bold transition-colors text-on-surface group-hover:text-primary">
               {safeTitle}
             </h3>
             {safeDescription && (
@@ -146,7 +148,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             )}
           </div>
 
-          <div className="relative z-10 flex flex-wrap gap-2 mt-auto pt-3 border-t border-outline/10">
+          <div className="relative z-10 flex flex-wrap gap-2 pt-3 mt-auto border-t border-outline/10">
             {visibleTags.map((tag) => (
               <span
                 key={tag}
@@ -176,22 +178,23 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       }}
     >
       <div className={`relative overflow-hidden w-full ${imageHeightClass}`}>
+        <StatusChip />
         {imageSource && (
           <img
             src={imageSource}
             alt={safeTitle}
             onError={() => setHasImage(false)}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-110"
           />
         )}
         {/* Darkening overlay for readability of status on light images */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent opacity-60" />
       </div>
 
-      <div className="p-6 flex flex-col flex-1 justify-between bg-surface-variant">
-        <div className="min-h-0 flex-1">
-          <div className="flex justify-between items-start mb-2 gap-3">
-            <h3 className="text-xl font-bold text-on-surface group-hover:text-primary transition-colors">
+      <div className="flex flex-col justify-between flex-1 p-6 bg-surface-variant">
+        <div className="flex-1 min-h-0">
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <h3 className="text-xl font-bold transition-colors text-on-surface group-hover:text-primary">
               {safeTitle}
             </h3>
             <ActionButtons />
@@ -206,7 +209,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           )}
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-auto pt-3 border-t border-outline/10">
+        <div className="flex flex-wrap gap-2 pt-3 mt-auto border-t border-outline/10">
           {visibleTags.map((tag) => (
             <span
               key={tag}
