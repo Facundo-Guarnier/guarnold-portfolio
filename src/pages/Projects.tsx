@@ -22,12 +22,12 @@ const Projects: React.FC = () => {
   if (loading) {
     return (
       <div className="animate-in fade-in duration-300 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
           <div className="h-12 w-64 rounded-xl bg-surface-variant animate-pulse mb-4" />
           <div className="h-6 w-[40rem] max-w-full rounded-xl bg-surface-variant animate-pulse mb-10" />
 
           <div className="h-10 w-80 max-w-full rounded-xl bg-surface-variant animate-pulse mb-8" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(180px,auto)] pb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)] pb-10">
             {[...Array(4)].map((_, index) => (
               <div
                 key={`project-skeleton-${index}`}
@@ -42,9 +42,9 @@ const Projects: React.FC = () => {
 
   return (
     <div className="animate-in fade-in duration-700 w-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Header - Fixed height so subtitle position is consistent */}
-        <header className="max-w-3xl h-32 md:h-36 mb-8">
+        <header className="max-w-3xl h-28 md:h-32 mb-6">
           <h1 className="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight mb-4">
             Portfolio
           </h1>

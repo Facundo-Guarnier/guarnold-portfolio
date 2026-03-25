@@ -127,7 +127,7 @@ const Trajectory: React.FC = () => {
   if (loading) {
     return (
       <div className="w-full duration-300 animate-in fade-in">
-        <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-24">
+        <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-16">
           <div className="w-64 h-12 mb-4 rounded-xl bg-surface-variant animate-pulse" />
           <div className="h-6 max-w-full mb-10 w-96 rounded-xl bg-surface-variant animate-pulse" />
 
@@ -165,7 +165,7 @@ const Trajectory: React.FC = () => {
     <div className="w-full duration-700 animate-in fade-in">
       <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-24">
         {/* Header - Fixed height so subtitle position is consistent */}
-        <header className="h-32 max-w-3xl mb-8 md:h-36">
+        <header className="h-28 max-w-3xl mb-6 md:h-32">
           <h1 className="mb-4 text-4xl font-extrabold tracking-tight md:text-5xl text-on-surface">
             Trayectoria
           </h1>

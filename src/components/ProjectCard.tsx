@@ -55,11 +55,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       >
         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        <div className="relative h-44 border-b border-outline/20 bg-gradient-to-br from-primary/20 via-surface-variant to-tertiary/20">
-          <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_20%_20%,var(--md-sys-color-primary)_0,transparent_45%),radial-gradient(circle_at_80%_30%,var(--md-sys-color-secondary)_0,transparent_40%),radial-gradient(circle_at_50%_80%,var(--md-sys-color-tertiary)_0,transparent_40%)]" />
+        <div className="relative h-44 border-b border-outline/20 bg-gradient-to-br from-primary/20 via-surface to-primary/10">
+          <div className="absolute inset-0 opacity-35 bg-[radial-gradient(circle_at_20%_20%,var(--md-sys-color-primary)_0,transparent_45%),radial-gradient(circle_at_80%_30%,var(--md-sys-color-secondary)_0,transparent_40%),radial-gradient(circle_at_50%_80%,var(--md-sys-color-tertiary)_0,transparent_40%)]" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="p-4 rounded-3xl bg-surface/80 text-primary shadow-sm border border-outline/20 backdrop-blur-sm">
-              <Icon size={36} />
+            <div className="w-12 h-12 rounded-2xl bg-surface/85 text-primary shadow-sm border border-outline/20 backdrop-blur-sm flex items-center justify-center">
+              <Icon size={30} />
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
               {safeTitle}
             </h3>
             {safeDescription && (
-              <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-3">
+              <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-2">
                 {safeDescription}
               </p>
             )}
@@ -155,7 +155,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </div>
 
           {safeDescription && (
-            <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-3">
+            <p className="text-sm text-on-surface-variant leading-relaxed mb-4 line-clamp-2">
               {safeDescription}
             </p>
           )}

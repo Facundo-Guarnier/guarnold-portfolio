@@ -66,7 +66,7 @@ const Home: React.FC = () => {
   if (loading) {
     return (
       <div className="w-full duration-300 animate-in fade-in">
-        <section className="relative flex flex-col items-center justify-center py-24 overflow-hidden text-center md:py-32">
+        <section className="relative flex flex-col items-center justify-center pt-20 pb-14 overflow-hidden text-center md:pt-24 md:pb-16">
           <div className="w-full max-w-4xl px-4 space-y-6">
             <div className="w-40 h-8 mx-auto rounded-full bg-surface-variant animate-pulse" />
             <div className="w-full max-w-2xl mx-auto h-14 rounded-2xl bg-surface-variant animate-pulse" />
@@ -75,7 +75,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-24 scroll-mt-20">
+        <section className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-16 scroll-mt-20">
           <div className="w-56 h-10 mb-10 rounded-xl bg-surface-variant animate-pulse" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
             <div className="md:col-span-2 h-80 rounded-3xl bg-surface-variant animate-pulse" />
@@ -90,7 +90,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full duration-500 animate-in fade-in">
-      <section className="relative flex flex-col items-center justify-center py-24 overflow-hidden text-center md:py-32">
+      <section className="relative flex flex-col items-center justify-center pt-20 pb-14 overflow-hidden text-center md:pt-24 md:pb-16">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 to-background" />
         <div className="absolute w-64 h-64 rounded-full top-1/4 left-1/4 bg-secondary/10 blur-3xl" />
         <div className="absolute w-64 h-64 rounded-full bottom-1/4 right-1/4 bg-tertiary/10 blur-3xl" />
@@ -102,14 +102,18 @@ const Home: React.FC = () => {
 
           <div className="space-y-2">
             {homeContent?.hero?.title && (
-              <h1 className="text-5xl font-extrabold leading-tight tracking-tight md:text-6xl text-on-surface text-balance">
+              <h1 className="text-5xl font-extrabold leading-tight tracking-tighter md:text-6xl text-on-surface text-balance">
                 {homeContent.hero.title}
               </h1>
             )}
 
             {homeContent?.hero?.subtitle && (
-              <p className="text-xl italic font-medium md:text-2xl text-on-surface-variant opacity-80">
-                {homeContent.hero.subtitle}
+              <p className="text-lg italic font-medium md:text-xl text-on-surface-variant opacity-85">
+                {homeContent.hero.subtitle.split("Guarnold")[0]}
+                {homeContent.hero.subtitle.includes("Guarnold") && (
+                  <span className="font-bold text-primary">Guarnold</span>
+                )}
+                {homeContent.hero.subtitle.split("Guarnold")[1]}
               </p>
             )}
           </div>
@@ -142,7 +146,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-24 scroll-mt-20">
+      <section className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-16 scroll-mt-20">
         <div className="flex items-center justify-between pb-4 mb-10 border-b border-outline/10">
           <h2 className="flex items-center gap-3 text-3xl font-bold text-on-surface">
             <span className="w-2 h-8 rounded-full bg-primary"></span>
