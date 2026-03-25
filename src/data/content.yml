@@ -95,96 +95,225 @@ experience:
 
 projects:
   - id: buckshot-tracker
-    title: Buckshot Tracker
-    description: Herramienta de seguimiento y conteo para partidas estratégicas con interfaz rápida y visual.
+    title: Buckshot Tracker Pro
+    description: Calculadora de probabilidades para Buckshot Roulette con conteo de balas, historial y marcado visual en tiempo real.
     link: https://buckshot-tracker.guarnold.com.ar/
-    github_url: https://github.com/faguarnier
+    github_url: https://github.com/Facundo-Guarnier/buckshot-tracker-pro
     tags:
       - Game Tool
       - React
       - TypeScript
+      - Tailwind CSS
     size: medium
     status: live
     icon: Crosshair
-    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
 
   - id: ojc
     title: Optimizar JSON Chat AI Studio
-    description: Elimina cadenas de pensamiento y campos innecesarios del historial de chat exportado de AI Studio.
+    description: Herramienta web para limpiar JSON exportado de Google AI Studio, eliminando isThought y campos internos innecesarios.
     link: https://ojc.guarnold.com.ar/
-    github_url: https://github.com/faguarnier
+    github_url: https://github.com/Facundo-Guarnier/optimizar_json_chat_aistudio
     tags:
-      - R&D
-      - Experiments
+      - React
+      - TypeScript
+      - JSON Tool
+      - AI Studio
     size: small
     status: demo
     icon: FlaskConical
-    image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
 
   - id: scoremaster
-    title: ScoreMaster
-    description: Aplicación de seguimiento de puntajes para juegos de mesa con interfaz intuitiva y personalizable.
-    link: "https://scoremaster.guarnold.com.ar/"
-    github_url: https://github.com/faguarnier
+    title: Score Master
+    description: Contador de puntos para juegos de cartas argentinos (Truco, Escoba, Generala, Mosca y Canasta) con historial y temas.
+    link: https://scoremaster.guarnold.com.ar/
+    github_url: https://github.com/Facundo-Guarnier/scoremaster
     tags:
-      - Mobile
-      - Dart
-      - Fintech
+      - Game Tool
+      - React
+      - TypeScript
+      - React Router
     size: small
     status: live
     icon: Crosshair
-    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
-
-  - id: semaforia
-    title: SemaforIA
-    description: Tesis universitaria basada en Reinforcement Learning para optimización de semáforos y flujo vehicular.
-    link: https://semaforia.guarnold.com.ar
-    github_url: https://github.com/faguarnier
-    tags:
-      - Thesis
-      - Reinforcement Learning
-      - Python
-    size: large
-    status: wip
-    icon: Sparkles
-    # image_url: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80
 
   - id: curriculum-vitae
     title: Curriculum Vitae
-    description: CV online y descargable con resumen profesional, stack técnico y experiencia.
+    description: Editor de CV online con vista previa en tiempo real, exportación a PDF y enlace compartible.
     link: https://cv.guarnold.com.ar
-    github_url: https://github.com/faguarnier
+    github_url: https://github.com/Facundo-Guarnier/cv-formatter
     tags:
       - Resume
-      - Professional
-      - Personal Branding
+      - React
+      - TypeScript
+      - Supabase
     size: tall
     status: live
     icon: FileText
-    # image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
 
-  - id: fideval-app
-    title: Fideval App
-    description: App fintech mobile para gestión de inversiones y visualización de mercado.
+  - id: guarnold-portfolio
+    title: Guarnold Portfolio
+    description: Portfolio personal con contenido gestionado en YAML, navegación SPA y presentación de experiencia, stack y proyectos.
     link: "#"
-    github_url: https://github.com/faguarnier
+    github_url: https://github.com/Facundo-Guarnier/guarnold-portfolio
     tags:
-      - Mobile
-      - Dart
-      - Fintech
-    size: small
-    status: live
+      - React
+      - TypeScript
+      - Portfolio
+      - Supabase
+    size: medium
+    status: wip
+    icon: FileText
+
+  - id: trilex-store
+    title: Trilex Store
+    description: E-commerce headless de relojes de lujo con Shopify Storefront API, arquitectura mobile-first y foco en SEO.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/trilex-store
+    tags:
+      - E-commerce
+      - React
+      - TypeScript
+      - Shopify
+    size: large
+    status: wip
+    icon: Sparkles
+
+  - id: admin-trilex-store
+    title: Admin Trilex Store
+    description: Panel administrativo para operación de tienda con stack React + Supabase y componentes shadcn/ui.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/admin-trilex-store
+    tags:
+      - Admin Panel
+      - React
+      - TypeScript
+      - Supabase
+    size: medium
+    status: wip
     icon: Crosshair
 
-  - id: facial-recon-script
-    title: Facial-Recon-Script
-    description: Scripts de visión por computadora con OpenCV para reconocimiento facial robusto.
+  - id: dafre-operations-center
+    title: DAFRE Operations Center
+    description: Centro de operaciones para gestión logística y operativa con calendario, reportes y pruebas E2E con Cypress.
     link: "#"
-    github_url: https://github.com/faguarnier
+    github_url: https://github.com/tomimunozmero/dafre-operations-center
+    tags:
+      - Operations
+      - React
+      - TypeScript
+      - Supabase
+    size: large
+    status: wip
+    icon: Sparkles
+
+  - id: docgen-portal
+    title: Guarnold Initializr
+    description: Generador de bases de proyecto React con Vite, Tailwind y componentes Radix para acelerar nuevos desarrollos.
+    link: https://ai.studio/apps/drive/1wwOsww0R-o5tJLKxkEURO56QCHU97yND
+    github_url: https://github.com/Facundo-Guarnier/docgen-portal
+    tags:
+      - Developer Tool
+      - React
+      - TypeScript
+      - Vite
+    size: medium
+    status: demo
+    icon: FlaskConical
+
+  - id: love-suite-inventory
+    title: Love Suite Inventory
+    description: Sistema de inventario hotelero con roles, transacciones, control de stock y backend en Supabase.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/love-web-app
+    tags:
+      - Inventory
+      - React
+      - TypeScript
+      - Supabase
+    size: large
+    status: wip
+    icon: Crosshair
+
+  - id: nono-enrique-erp
+    title: Panadería ERP
+    description: ERP para panadería con gestión de ventas, soporte de importación CSV/Excel y flujo operativo centralizado.
+    link: https://ai.studio/apps/drive/1T4FMxUO06IPV3Du96UwGkjomQGZ9hFSI
+    github_url: https://github.com/Facundo-Guarnier/nono-enrique-erp
+    tags:
+      - ERP
+      - React
+      - TypeScript
+      - Supabase
+    size: large
+    status: demo
+    icon: Sparkles
+
+  - id: nono-enrique-website
+    title: El Nono Enrique Website
+    description: Landing web para panadería artesanal con enfoque mobile-first, Tailwind v4 y animaciones con Framer Motion.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/nono-enrique-website
+    tags:
+      - Landing Page
+      - React
+      - TypeScript
+      - Tailwind CSS
+    size: medium
+    status: wip
+    icon: FileText
+
+  - id: pivot
+    title: Pivot
+    description: Plataforma de aprendizaje de gramática inglesa A1-B2 con arquitectura de estado separada y backend Supabase.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/Pivot
+    tags:
+      - EdTech
+      - React
+      - TypeScript
+      - Supabase
+    size: large
+    status: wip
+    icon: Sparkles
+
+  - id: project-agq
+    title: Project AGQ
+    description: Sistema de gestión de ventas por reparto para supermercado con estrategia de evolución hacia app de escritorio.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/Project-AGQ
+    tags:
+      - Sales Management
+      - React
+      - TypeScript
+      - Supabase
+    size: large
+    status: wip
+    icon: Crosshair
+
+  - id: inventario-sole
+    title: Inventario Sole
+    description: Sistema de inventario para tienda física y online con backend Python, PostgreSQL e integración con Mercado Shop.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/Inventario-Sole
     tags:
       - Python
-      - OpenCV
-      - Computer Vision
-    size: small
+      - Flask
+      - PostgreSQL
+      - Angular
+    size: large
+    status: wip
+    icon: Sparkles
+
+  - id: skal-nutricion
+    title: SKAL Nutrición
+    description: Automatización de planes alimentarios con Google Sheets API y generación de documentos Word/PDF.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/SKAL-nutricion
+    tags:
+      - Python
+      - Automation
+      - Google Sheets API
+      - Document Generation
+    size: medium
     status: demo
     icon: Sparkles
