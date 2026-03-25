@@ -94,6 +94,47 @@ experience:
     description: Entrenamiento continuo para lectura técnica, comunicación profesional y colaboración internacional.
 
 projects:
+  - id: buckshot-tracker
+    title: Buckshot Tracker
+    description: Herramienta de seguimiento y conteo para partidas estratégicas con interfaz rápida y visual.
+    link: https://buckshot-tracker.guarnold.com.ar/
+    github_url: https://github.com/faguarnier
+    tags:
+      - Game Tool
+      - React
+      - TypeScript
+    size: medium
+    status: live
+    icon: Crosshair
+    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
+
+  - id: ojc
+    title: Optimizar JSON Chat AI Studio
+    description: Elimina cadenas de pensamiento y campos innecesarios del historial de chat exportado de AI Studio.
+    link: https://ojc.guarnold.com.ar/
+    github_url: https://github.com/faguarnier
+    tags:
+      - R&D
+      - Experiments
+    size: small
+    status: demo
+    icon: FlaskConical
+    image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
+
+  - id: scoremaster
+    title: ScoreMaster
+    description: Aplicación de seguimiento de puntajes para juegos de mesa con interfaz intuitiva y personalizable.
+    link: "https://scoremaster.guarnold.com.ar/"
+    github_url: https://github.com/faguarnier
+    tags:
+      - Mobile
+      - Dart
+      - Fintech
+    size: small
+    status: live
+    icon: Crosshair
+    image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
+
   - id: semaforia
     title: SemaforIA
     description: Tesis universitaria basada en Reinforcement Learning para optimización de semáforos y flujo vehicular.
@@ -106,21 +147,7 @@ projects:
     size: large
     status: wip
     icon: Sparkles
-    image_url: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80
-
-  - id: buckshot-tracker
-    title: Buckshot Tracker
-    description: Herramienta de seguimiento y conteo para partidas estratégicas con interfaz rápida y visual.
-    link: https://buckshot.guarnold.com.ar
-    github_url: https://github.com/faguarnier
-    tags:
-      - Game Tool
-      - React
-      - TypeScript
-    size: medium
-    status: live
-    icon: Crosshair
-    # image_url: https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=1200&q=80
+    # image_url: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80
 
   - id: curriculum-vitae
     title: Curriculum Vitae
@@ -134,20 +161,7 @@ projects:
     size: tall
     status: live
     icon: FileText
-    image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
-
-  - id: guarnold-lab
-    title: Guarnold Lab
-    description: Espacio de prototipos y pruebas rápidas para ideas de producto y automatizaciones.
-    link: https://guarnold.com.ar
-    github_url: https://github.com/faguarnier
-    tags:
-      - R&D
-      - Experiments
-    size: small
-    status: demo
-    icon: FlaskConical
-    # image_url: puede comentarse para probar fallback visual
+    # image_url: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80
 
   - id: fideval-app
     title: Fideval App
