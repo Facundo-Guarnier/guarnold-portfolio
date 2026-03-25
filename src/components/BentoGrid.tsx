@@ -7,18 +7,29 @@ interface BentoGridProps {
 }
 
 const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
+  const normalizeSize = (size?: string) => {
+    const normalized = (size ?? "small").toLowerCase();
+
+    if (!["small", "medium", "large", "tall"].includes(normalized)) {
+      return "small";
+    }
+
+    return normalized;
+  };
+
   const getSizeClasses = (size?: string) => {
-    switch (size) {
+    const resolvedSize = normalizeSize(size);
+
+    switch (resolvedSize) {
       case "tall":
-        return "md:row-span-2 md:col-span-1";
+        return "min-h-[20rem]";
       case "large":
-        return "md:col-span-2 md:row-span-2";
+        return "min-h-[17.5rem]";
       case "medium":
-        // Spanning 2 columns makes medium items wide
-        return "md:col-span-2 md:row-span-1";
+        return "min-h-[15.5rem]";
       case "small":
       default:
-        return "md:col-span-1 md:row-span-1";
+        return "min-h-[14rem]";
     }
   };
 
@@ -31,13 +42,15 @@ const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(180px,auto)] pb-12">
+    <div className="columns-1 md:columns-2 xl:columns-3 [column-gap:1.5rem] pb-10">
       {projects.map((project, index) => (
         <div
           key={project.id ?? `${project.title ?? "project"}-${index}`}
-          className={getSizeClasses(project.size)}
+          className={`mb-6 break-inside-avoid ${getSizeClasses(project.size)}`}
         >
-          <ProjectCard project={project} />
+          <ProjectCard
+            project={{ ...project, size: normalizeSize(project.size) }}
+          />
         </div>
       ))}
     </div>

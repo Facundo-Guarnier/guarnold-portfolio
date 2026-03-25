@@ -107,6 +107,7 @@ projects:
     size: medium
     status: live
     icon: Crosshair
+    image_url: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80"
 
   - id: ojc
     title: Optimizar JSON Chat AI Studio
@@ -121,6 +122,7 @@ projects:
     size: small
     status: demo
     icon: FlaskConical
+    image_url: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80"
 
   - id: scoremaster
     title: Score Master
@@ -135,6 +137,7 @@ projects:
     size: small
     status: live
     icon: Crosshair
+    image_url: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80"
 
   - id: curriculum-vitae
     title: Curriculum Vitae
@@ -149,6 +152,7 @@ projects:
     size: tall
     status: live
     icon: FileText
+    image_url: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80"
 
   - id: guarnold-portfolio
     title: Guarnold Portfolio
@@ -160,7 +164,7 @@ projects:
       - TypeScript
       - Portfolio
       - Supabase
-    size: medium
+    size: tall
     status: wip
     icon: FileText
 
@@ -174,7 +178,7 @@ projects:
       - React
       - TypeScript
       - Shopify
-    size: large
+    size: small
     status: wip
     icon: Sparkles
 
