@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   User,
   MapPin,
+  Linkedin,
+  Github,
   Terminal,
   Code2,
   Box,
@@ -13,7 +15,6 @@ import {
   Download,
 } from "lucide-react";
 import { CardComponent } from "../components/CardComponent";
-import GithubProfileCard from "../components/GithubProfileCard";
 import { getHomeContent } from "../services/dataService";
 import type { HomeContent } from "../types";
 
@@ -74,7 +75,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        <section className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-16 scroll-mt-20">
+        <section className="px-4 pt-8 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:pt-10 md:pb-14 scroll-mt-20">
           <div className="w-56 h-10 mb-10 rounded-xl bg-surface-variant animate-pulse" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
             <div className="md:col-span-2 h-80 rounded-3xl bg-surface-variant animate-pulse" />
@@ -145,7 +146,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      <section className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-16 scroll-mt-20">
+      <section className="px-4 pt-8 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:pt-10 md:pb-14 scroll-mt-20">
         <div className="flex items-center justify-between pb-4 mb-10 border-b border-outline/10">
           <h2 className="flex items-center gap-3 text-3xl font-bold text-on-surface">
             <span className="w-2 h-8 rounded-full bg-primary"></span>
@@ -154,7 +155,7 @@ const Home: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
-          <CardComponent className="flex flex-col justify-center p-8 transition-transform duration-300 md:col-span-2 hover:-translate-y-1">
+          <CardComponent className="flex flex-col justify-center p-8 transition-transform duration-300 md:col-span-2 hover:-translate-y-1 rounded-3xl shadow-sm bg-surface">
             <div className="flex flex-col items-center gap-8 md:flex-row">
               <div className="flex items-center justify-center w-40 h-40 overflow-hidden border-2 rounded-3xl bg-primary/20 shrink-0 border-primary/30">
                 {homeContent?.identity?.avatar_url ? (
@@ -190,7 +191,7 @@ const Home: React.FC = () => {
             </div>
           </CardComponent>
 
-          <CardComponent className="md:col-start-3 md:row-start-1 md:row-span-2 p-0 overflow-hidden group relative min-h-[28rem] hover:-translate-y-1 transition-transform duration-300">
+          <CardComponent className="md:col-start-3 md:row-start-1 md:row-span-2 md:col-span-1 p-0 overflow-hidden group relative min-h-[28rem] hover:-translate-y-1 transition-transform duration-300 rounded-3xl shadow-sm bg-surface">
             <img
               src={
                 homeContent?.location?.background_image ??
@@ -217,7 +218,7 @@ const Home: React.FC = () => {
             </div>
           </CardComponent>
 
-          <CardComponent className="p-8 space-y-6 transition-transform duration-300 md:col-span-1 hover:-translate-y-1">
+          <CardComponent className="p-8 space-y-6 transition-transform duration-300 md:col-span-1 md:col-start-1 md:row-start-2 hover:-translate-y-1 rounded-3xl shadow-sm bg-surface">
             <h3 className="flex items-center gap-2 text-xl font-bold text-on-surface">
               <Terminal size={20} className="text-primary" />
               {homeContent?.stack?.title}
@@ -241,7 +242,38 @@ const Home: React.FC = () => {
             </div>
           </CardComponent>
 
-          <GithubProfileCard profileUrl={homeContent?.social?.github} />
+          <CardComponent className="p-6 md:col-span-1 md:col-start-2 md:row-start-2 flex flex-col justify-between gap-4 transition-transform duration-300 hover:-translate-y-1 rounded-3xl shadow-sm bg-surface">
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold text-on-surface">Redes</h3>
+              <p className="text-sm text-on-surface-variant">Conectemos</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3">
+              {homeContent?.social?.linkedin && (
+                <a
+                  href={homeContent.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-semibold flex items-center justify-center gap-2 hover:brightness-105 transition-all"
+                >
+                  <Linkedin size={18} />
+                  LinkedIn
+                </a>
+              )}
+
+              {homeContent?.social?.github && (
+                <a
+                  href={homeContent.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-semibold flex items-center justify-center gap-2 hover:brightness-105 transition-all"
+                >
+                  <Github size={18} />
+                  GitHub
+                </a>
+              )}
+            </div>
+          </CardComponent>
         </div>
       </section>
     </div>

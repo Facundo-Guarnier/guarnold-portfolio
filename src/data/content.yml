@@ -5,7 +5,7 @@ identity:
   name: Facundo Guarnier
   nickname: Guarnold
   professional_title: Ingeniero en Informática | Fullstack Developer
-  avatar_url: /assets/guarnold_firma.png
+  avatar_url: /assets/profile.jpg
 
 hero:
   title: "Hola, soy Facundo Guarnier."
@@ -35,8 +35,8 @@ stack:
     - { name: Docker, icon: box }
 
 social:
-  github: https://github.com/faguarnier
-  linkedin: https://linkedin.com/in/faguarnier
+  github: https://github.com/Facundo-Guarnier
+  linkedin: https://www.linkedin.com/in/facundo-guarnier/
 
 experience:
   - id: work-tinkin

@@ -3,11 +3,15 @@ import { Link, NavLink } from "react-router-dom";
 import { Github, Linkedin, Menu, X } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { cn } from "../utils";
+import { getHomeContent } from "../services/dataService";
 
 const Navbar: React.FC = () => {
   const { isDark } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [social, setSocial] = useState<{ github?: string; linkedin?: string }>(
+    {},
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +20,15 @@ const Navbar: React.FC = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchSocial = async () => {
+      const homeContent = await getHomeContent();
+      setSocial(homeContent?.social ?? {});
+    };
+
+    fetchSocial();
   }, []);
 
   const navLinks = [
@@ -79,22 +92,28 @@ const Navbar: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 pr-2 mr-1">
-            <a
-              href="https://github.com/faguarnier"
-              target="_blank"
-              rel="noreferrer"
-              className="p-2 transition-all rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30"
-            >
-              <Github size={20} />
-            </a>
-            <a
-              href="https://linkedin.com/in/faguarnier"
-              target="_blank"
-              rel="noreferrer"
-              className="p-2 transition-all rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30"
-            >
-              <Linkedin size={20} />
-            </a>
+            {social.github && (
+              <a
+                href={social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 transition-all rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30"
+                aria-label="GitHub"
+              >
+                <Github size={20} />
+              </a>
+            )}
+            {social.linkedin && (
+              <a
+                href={social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 transition-all rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-variant/30"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={20} />
+              </a>
+            )}
           </div>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
