@@ -15,7 +15,7 @@ hero:
 about_card:
   title: Facundo Guarnier
   role: Ingeniero en Informática
-  description: "Disfruto transformar ideas complejas en soluciones claras, mantenibles y listas para producción."
+  description: "Mi enfoque es transformar ideas complejas en soluciones claras, fáciles de mantener y que están listas para la acción. \nSoy informático de formación, pero también tengo un lado 'maker/DIY': me encanta la electricidad y la electrónica. Es algo que heredé de mi viejo; él me enseñó gran parte de lo que sé. \n¿Mi sueño? Construir una herramienta que realmente le facilite la vida a las personas comunes. Creo que la tecnología no debería ser solo para expertos, sino para todos."
 
 location:
   city: Mendoza
@@ -33,6 +33,8 @@ stack:
     - { name: TypeScript, icon: code }
     - { name: FastAPI, icon: cpu }
     - { name: Docker, icon: box }
+    - { name: Git, icon: git_branch }
+    - { name: Kubernetes, icon: cloud }
 
 social:
   github: https://github.com/Facundo-Guarnier

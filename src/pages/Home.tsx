@@ -11,6 +11,8 @@ import {
   LayoutGrid,
   Smartphone,
   Database,
+  Cloud,
+  GitBranch,
   ArrowDown,
   Download,
 } from "lucide-react";
@@ -53,6 +55,8 @@ const Home: React.FC = () => {
     terminal: Terminal,
     cpu: Cpu,
     box: Box,
+    cloud: Cloud,
+    git_branch: GitBranch,
   };
 
   const technologies = useMemo(() => {
@@ -255,7 +259,10 @@ const Home: React.FC = () => {
           >
             <div className="space-y-1">
               <h3 className="text-xl font-bold text-on-surface">Redes</h3>
-              <p className="text-sm text-on-surface-variant">Conectemos</p>
+              <p className="pt-6 text-sm text-on-surface-variant">
+                Hablemos de tecnología, proyectos o cualquier cosa que tengas en
+                mente. ¡Estoy abierto a nuevas conexiones y oportunidades!
+              </p>
             </div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-1">
