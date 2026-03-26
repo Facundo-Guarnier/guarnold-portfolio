@@ -15,10 +15,13 @@ import {
   Download,
 } from "lucide-react";
 import { CardComponent } from "../components/CardComponent";
+import { useTheme } from "../context/ThemeContext";
+import { cn } from "../utils";
 import { getHomeContent } from "../services/dataService";
 import type { HomeContent } from "../types";
 
 const Home: React.FC = () => {
+  const { isDark } = useTheme();
   const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -62,6 +65,13 @@ const Home: React.FC = () => {
       };
     });
   }, [homeContent?.stack?.technologies]);
+
+  const homeCardBaseClasses = cn(
+    "rounded-3xl border shadow-md transition-transform duration-300",
+    isDark
+      ? "bg-surface border-outline/40"
+      : "bg-surface-variant border-outline/25",
+  );
 
   if (loading) {
     return (
@@ -155,7 +165,12 @@ const Home: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
-          <CardComponent className="flex flex-col justify-center p-8 transition-transform duration-300 md:col-span-2 hover:-translate-y-1 rounded-3xl shadow-sm bg-surface">
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "flex flex-col justify-center p-8 md:col-span-2 hover:-translate-y-1",
+            )}
+          >
             <div className="flex flex-col items-center gap-8 md:flex-row">
               <div className="flex items-center justify-center w-40 h-40 overflow-hidden border-2 rounded-3xl bg-primary/20 shrink-0 border-primary/30">
                 {homeContent?.identity?.avatar_url ? (
@@ -191,7 +206,12 @@ const Home: React.FC = () => {
             </div>
           </CardComponent>
 
-          <CardComponent className="md:col-start-3 md:row-start-1 md:row-span-2 md:col-span-1 p-0 overflow-hidden group relative min-h-[28rem] hover:-translate-y-1 transition-transform duration-300 rounded-3xl shadow-sm bg-surface">
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "md:col-start-3 md:row-start-1 md:row-span-2 md:col-span-1 p-0 overflow-hidden group relative min-h-[28rem] hover:-translate-y-1",
+            )}
+          >
             <img
               src={
                 homeContent?.location?.background_image ??
@@ -218,7 +238,12 @@ const Home: React.FC = () => {
             </div>
           </CardComponent>
 
-          <CardComponent className="p-8 space-y-6 transition-transform duration-300 md:col-span-1 md:col-start-1 md:row-start-2 hover:-translate-y-1 rounded-3xl shadow-sm bg-surface">
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-8 space-y-6 md:col-span-1 md:col-start-1 md:row-start-2 hover:-translate-y-1",
+            )}
+          >
             <h3 className="flex items-center gap-2 text-xl font-bold text-on-surface">
               <Terminal size={20} className="text-primary" />
               {homeContent?.stack?.title}
@@ -242,7 +267,12 @@ const Home: React.FC = () => {
             </div>
           </CardComponent>
 
-          <CardComponent className="p-6 md:col-span-1 md:col-start-2 md:row-start-2 flex flex-col justify-between gap-4 transition-transform duration-300 hover:-translate-y-1 rounded-3xl shadow-sm bg-surface">
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-6 md:col-span-1 md:col-start-2 md:row-start-2 flex flex-col justify-between gap-4 hover:-translate-y-1",
+            )}
+          >
             <div className="space-y-1">
               <h3 className="text-xl font-bold text-on-surface">Redes</h3>
               <p className="text-sm text-on-surface-variant">Conectemos</p>

@@ -8,6 +8,7 @@ import {
   ArrowUpRight,
   Github,
 } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 // Icon mapper for dynamic icons
 const IconMap: Record<
@@ -25,6 +26,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  const { isDark } = useTheme();
   const iconName = project.icon ?? "Sparkles";
   const Icon = IconMap[iconName] || Sparkles;
   const safeTitle = project.title ?? "Proyecto sin título";
@@ -51,8 +53,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   };
 
   // Base transition and style classes for consistency
-  const cardBaseClasses =
-    "group relative flex flex-col h-full rounded-3xl bg-surface-variant transition-all duration-300 border border-outline/50 hover:border-primary no-underline overflow-hidden hover:shadow-xl hover:-translate-y-1";
+  const cardBaseClasses = `group relative flex flex-col h-full rounded-3xl transition-all duration-300 border border-outline/50 hover:border-primary no-underline overflow-hidden hover:shadow-xl hover:-translate-y-1 ${
+    isDark ? "bg-surface" : "bg-surface-variant"
+  }`;
 
   const imageHeightClass = isTall
     ? "h-56"
@@ -94,8 +97,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   const StatusChip = () =>
     project.status ? (
-      <div className="absolute top-3 right-3 z-20 px-2.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-sm">
-        <span className="text-[13px] uppercase font-bold tracking-wider">
+      <div className="absolute top-3 right-3 z-20 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-sm">
+        <span className="text-[10px] uppercase font-bold tracking-wider">
           {project.status}
         </span>
       </div>
@@ -191,7 +194,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent opacity-60" />
       </div>
 
-      <div className="flex flex-col justify-between flex-1 p-6 bg-surface-variant">
+      <div
+        className={`flex flex-col justify-between flex-1 p-6 ${
+          isDark ? "bg-surface" : "bg-surface-variant"
+        }`}
+      >
         <div className="flex-1 min-h-0">
           <div className="flex items-start justify-between gap-3 mb-2">
             <h3 className="text-xl font-bold transition-colors text-on-surface group-hover:text-primary">
