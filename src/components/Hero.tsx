@@ -15,13 +15,13 @@ const Hero: React.FC<HeroProps> = ({ profile }) => {
   };
 
   return (
-    <section className="relative flex flex-col items-center justify-center text-center py-24 md:py-32 overflow-hidden">
+    <section className="relative flex flex-col items-center justify-center py-24 overflow-hidden text-center md:py-32">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 to-background" />
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-tertiary/10 rounded-full blur-3xl" />
+      <div className="absolute w-64 h-64 rounded-full top-1/4 left-1/4 bg-secondary/10 blur-3xl" />
+      <div className="absolute w-64 h-64 rounded-full bottom-1/4 right-1/4 bg-tertiary/10 blur-3xl" />
 
-      <div className="space-y-6 max-w-4xl px-4 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="max-w-4xl px-4 space-y-6 duration-700 animate-in fade-in slide-in-from-bottom-8">
         {/* Top Badge */}
         <span className="inline-block px-4 py-1.5 rounded-full bg-surface-variant border border-outline/20 text-sm font-medium text-primary tracking-wide uppercase">
           Developer & Maker
@@ -29,13 +29,13 @@ const Hero: React.FC<HeroProps> = ({ profile }) => {
 
         <div className="space-y-2">
           {/* Main Headline */}
-          <h1 className="text-5xl md:text-6xl font-extrabold text-on-surface tracking-tight leading-tight">
+          <h1 className="text-5xl font-extrabold leading-tight tracking-tight md:text-6xl text-on-surface">
             Hola, soy {profile?.name ?? "Facundo Guarnier"}.
           </h1>
 
           {/* Sub-Headline / Nickname */}
           {profile?.role && (
-            <p className="text-xl md:text-2xl text-on-surface-variant font-medium italic opacity-80">
+            <p className="text-xl italic font-medium md:text-2xl text-on-surface-variant opacity-80">
               {profile.role}
             </p>
           )}
@@ -43,13 +43,13 @@ const Hero: React.FC<HeroProps> = ({ profile }) => {
 
         {/* Description */}
         {profile?.bio && (
-          <p className="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto leading-relaxed pt-2">
+          <p className="max-w-2xl pt-2 mx-auto text-lg leading-relaxed md:text-xl text-on-surface-variant">
             {profile.bio}
           </p>
         )}
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
+        <div className="flex flex-col items-center justify-center gap-4 pt-8 sm:flex-row">
           <button
             onClick={scrollToProjects}
             className="px-8 py-3.5 rounded-full bg-primary text-on-primary font-bold hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all flex items-center gap-2"

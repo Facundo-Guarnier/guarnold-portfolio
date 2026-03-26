@@ -163,9 +163,9 @@ const Trajectory: React.FC = () => {
 
   return (
     <div className="w-full duration-700 animate-in fade-in">
-      <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-24">
+      <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8 ">
         {/* Header - Fixed height so subtitle position is consistent */}
-        <header className="h-28 max-w-3xl mb-6 md:h-32">
+        <header className="max-w-3xl mb-6 h-28 md:h-32">
           <h1 className="mb-4 text-4xl font-extrabold tracking-tight md:text-5xl text-on-surface">
             Trayectoria
           </h1>

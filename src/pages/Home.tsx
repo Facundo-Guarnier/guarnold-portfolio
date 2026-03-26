@@ -76,7 +76,7 @@ const Home: React.FC = () => {
   if (loading) {
     return (
       <div className="w-full duration-300 animate-in fade-in">
-        <section className="relative flex flex-col items-center justify-center pt-20 pb-14 overflow-hidden text-center md:pt-24 md:pb-16">
+        <section className="relative flex flex-col items-center justify-center pt-20 overflow-hidden text-center pb-14 md:pt-24 md:pb-16">
           <div className="w-full max-w-4xl px-4 space-y-6">
             <div className="w-40 h-8 mx-auto rounded-full bg-surface-variant animate-pulse" />
             <div className="w-full max-w-2xl mx-auto h-14 rounded-2xl bg-surface-variant animate-pulse" />
@@ -100,7 +100,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full duration-500 animate-in fade-in">
-      <section className="relative flex flex-col items-center justify-center pt-20 pb-14 overflow-hidden text-center md:pt-24 md:pb-16">
+      <section className="relative flex flex-col items-center justify-center pt-20 overflow-hidden text-center pb-14 md:pt-24 md:pb-16">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 to-background" />
         <div className="absolute w-64 h-64 rounded-full top-1/4 left-1/4 bg-secondary/10 blur-3xl" />
         <div className="absolute w-64 h-64 rounded-full bottom-1/4 right-1/4 bg-tertiary/10 blur-3xl" />
@@ -133,26 +133,6 @@ const Home: React.FC = () => {
               {homeContent.hero.description}
             </p>
           )}
-
-          <div className="flex flex-col items-center justify-center gap-4 pt-8 sm:flex-row">
-            <button
-              onClick={scrollToProjects}
-              className="px-8 py-3.5 rounded-full bg-primary text-on-primary font-bold hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5 transition-all flex items-center gap-2"
-            >
-              Ver Proyectos
-              <ArrowDown size={18} />
-            </button>
-
-            <a
-              href="https://cv.guarnold.com.ar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-full border border-outline text-on-surface font-medium hover:bg-surface-variant/50 transition-all flex items-center gap-2"
-            >
-              <Download size={18} />
-              Descargar CV
-            </a>
-          </div>
         </div>
       </section>
 
@@ -223,7 +203,7 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-background/60 to-transparent" />
             <div className="relative z-20 flex flex-col justify-end h-full p-6">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 shadow-lg rounded-xl bg-primary text-on-primary group-hover:animate-bounce">
+                <div className="flex items-center justify-center w-10 h-10 shadow-lg rounded-xl bg-primary text-on-primary group-hover:animate-[mapPinLift_420ms_cubic-bezier(0.22,1,0.36,1)]">
                   <MapPin size={20} />
                 </div>
                 <div>
@@ -278,13 +258,13 @@ const Home: React.FC = () => {
               <p className="text-sm text-on-surface-variant">Conectemos</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-1">
               {homeContent?.social?.linkedin && (
                 <a
                   href={homeContent.social.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-semibold flex items-center justify-center gap-2 hover:brightness-105 transition-all"
+                  className="flex items-center justify-center w-full gap-2 px-4 py-3 font-semibold transition-all rounded-xl bg-primary text-on-primary hover:brightness-105"
                 >
                   <Linkedin size={18} />
                   LinkedIn
@@ -296,7 +276,7 @@ const Home: React.FC = () => {
                   href={homeContent.social.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-semibold flex items-center justify-center gap-2 hover:brightness-105 transition-all"
+                  className="flex items-center justify-center w-full gap-2 px-4 py-3 font-semibold transition-all rounded-xl bg-primary text-on-primary hover:brightness-105"
                 >
                   <Github size={18} />
                   GitHub
@@ -306,6 +286,20 @@ const Home: React.FC = () => {
           </CardComponent>
         </div>
       </section>
+
+      <style>{`
+        @keyframes mapPinLift {
+          0% {
+            transform: translateY(3px) scale(1);
+          }
+          45% {
+            transform: translateY(-5px) scale(1.03);
+          }
+          100% {
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 };
