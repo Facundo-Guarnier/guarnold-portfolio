@@ -60,6 +60,16 @@ languages:
     - Español (Nativo)
     - Inglés (B2)
 
+interests:
+  title: Más allá del código
+  items:
+    - { name: Domótica, icon: House }
+    - { name: Videojuegos, icon: Gamepad2 }
+    - { name: Economía, icon: TrendingUp }
+    - { name: Electrónica, icon: Cpu }
+    - { name: Electricidad, icon: Zap }
+    - { name: DIY, icon: Hammer }
+
 social:
   github: https://github.com/Facundo-Guarnier
   linkedin: https://www.linkedin.com/in/facundo-guarnier/

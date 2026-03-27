@@ -15,6 +15,7 @@ import {
   Download,
 } from "lucide-react";
 import { CardComponent } from "../components/CardComponent";
+import InterestsCard from "../components/InterestsCard";
 import { useTheme } from "../context/ThemeContext";
 import { cn } from "../utils";
 import { getHomeContent } from "../services/dataService";
@@ -344,6 +345,15 @@ const Home: React.FC = () => {
               ))}
             </div>
           </CardComponent>
+
+          <InterestsCard
+            title={homeContent?.interests?.title ?? "Más allá del código"}
+            items={homeContent?.interests?.items}
+            className={cn(
+              homeCardBaseClasses,
+              "md:col-span-1 md:col-start-3 md:row-start-3",
+            )}
+          />
         </div>
       </section>
 
