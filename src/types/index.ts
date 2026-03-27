@@ -41,10 +41,21 @@ export interface StackTechnology {
   icon?: string;
 }
 
+export interface StackGroup {
+  category?: string;
+  technologies?: StackTechnology[];
+}
+
 export interface StackSection {
   title?: string;
   description?: string;
   technologies?: StackTechnology[];
+  groups?: StackGroup[];
+}
+
+export interface ListSection {
+  title?: string;
+  items?: string[];
 }
 
 export interface SocialSection {
@@ -58,6 +69,8 @@ export interface HomeContent {
   about_card?: AboutCardSection;
   location?: LocationSection;
   stack?: StackSection;
+  strengths?: ListSection;
+  languages?: ListSection;
   social?: SocialSection;
 }
 

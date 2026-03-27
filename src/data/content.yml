@@ -4,18 +4,18 @@
 identity:
   name: Facundo Guarnier
   nickname: Guarnold
-  professional_title: Ingeniero en Informática | Fullstack Developer
+  professional_title: Ingeniero en Informática | Desarrollador Fullstack
   avatar_url: /assets/profile.jpg
 
 hero:
   title: "Hola, soy Facundo Guarnier."
   subtitle: "También me dicen Guarnold."
-  description: "Construyo productos digitales con foco en rendimiento, experiencia de usuario y arquitectura escalable."
+  description: "Ingeniero en Informática con foco en el ciclo de vida completo del desarrollo. Me motiva crear tecnología con propósito para mejorar la calidad de vida de las personas."
 
 about_card:
   title: Facundo Guarnier
   role: Ingeniero en Informática
-  description: "Mi enfoque es transformar ideas complejas en soluciones claras, fáciles de mantener y que están listas para la acción. \nSoy informático de formación, pero también tengo un lado 'maker/DIY': me encanta la electricidad y la electrónica. Es algo que heredé de mi viejo; él me enseñó gran parte de lo que sé. \n¿Mi sueño? Construir una herramienta que realmente le facilite la vida a las personas comunes. Creo que la tecnología no debería ser solo para expertos, sino para todos."
+  description: "Disfruto transformar ideas complejas en soluciones claras. Apasionado por la electrónica, la IA y la cultura de aprendizaje (Dojos técnicos)."
 
 location:
   city: Mendoza
@@ -24,52 +24,93 @@ location:
 
 stack:
   title: Arsenal
-  description: "Mi stack principal se enfoca en rendimiento, tipado fuerte y escalabilidad."
-  technologies:
-    - { name: Python, icon: code }
-    - { name: React, icon: layout }
-    - { name: Flutter, icon: smartphone }
-    - { name: SQL, icon: database }
-    - { name: TypeScript, icon: code }
-    - { name: FastAPI, icon: cpu }
-    - { name: Docker, icon: box }
-    - { name: Git, icon: git_branch }
-    - { name: Kubernetes, icon: cloud }
+  description: "Stack orientado a construir productos robustos de punta a punta."
+  groups:
+    - category: Lenguajes
+      technologies:
+        - { name: Python, icon: code }
+        - { name: TypeScript, icon: code }
+        - { name: Dart, icon: code }
+        - { name: SQL, icon: database }
+    - category: Frameworks
+      technologies:
+        - { name: Flutter, icon: smartphone }
+        - { name: React, icon: layout }
+        - { name: FastAPI, icon: cpu }
+        - { name: SpringBoot, icon: cpu }
+        - { name: TensorFlow, icon: cpu }
+    - category: DevOps
+      technologies:
+        - { name: Docker, icon: box }
+        - { name: K8s, icon: cloud }
+        - { name: Git Flow, icon: git_branch }
+
+strengths:
+  title: Fortalezas
+  items:
+    - Prudencia
+    - Perseverancia
+    - Curiosidad
+    - Adaptabilidad
+    - Trabajo en equipo
+
+languages:
+  title: Idiomas
+  items:
+    - Español (Nativo)
+    - Inglés (B2)
 
 social:
   github: https://github.com/Facundo-Guarnier
   linkedin: https://www.linkedin.com/in/facundo-guarnier/
 
 experience:
-  - id: work-tinkin
+  - id: work-mero
     type: work
-    company: Tinkin (Remoto)
+    company: Merovingian Data (Híbrido)
     role: Software Developer
-    start_date: "2024-08"
+    start_date: "2025-09"
     end_date: null
     status: "En curso"
     is_completed: false
-    description: Desarrollo full-stack en entorno Scrum. Participación en Fideval App (Flutter), Mercately (React/TypeScript) y Kamina Academy (FastAPI), además de sesiones técnicas internas.
+    description: Desarrollo fullstack en entorno Scrum. Participación en Fideval (Flutter), migración de Mercately a React moderno y Kamina Academy (FastAPI). Dictado de sesiones técnicas internas (Dojos) para compartir buenas prácticas de desarrollo.
     technologies:
-      - Flutter
-      - React
-      - TypeScript
-      - FastAPI
-      - Scrum
+      - Azure
+      - Habilidades blandas
+      - Supabase
+      - Netlify
+      - AI
 
   - id: work-freelance
     type: work
     company: Autónomo
     role: Freelance Developer
-    start_date: "2021-01"
+    start_date: "2022-06"
     end_date: null
-    # status: "En curso"
+    status: "En curso"
     is_completed: false
     description: Desarrollo de soluciones web a medida y automatizaciones con Python y Computer Vision para clientes independientes.
     technologies:
       - React
       - Python
       - Computer Vision
+      - Shopify
+
+  - id: work-tinkin
+    type: work
+    company: Tinkin (Remoto)
+    role: Software Developer
+    start_date: "2024-08"
+    end_date: "2025-08"
+    status: null
+    is_completed: true
+    description: Desarrollo fullstack en entorno Scrum. Participación en Fideval (Flutter), migración de Mercately a React moderno y Kamina Academy (FastAPI). Dictado de sesiones técnicas internas (Dojos) para compartir buenas prácticas de desarrollo.
+    technologies:
+      - Flutter
+      - React
+      - TypeScript
+      - FastAPI
+      - Scrum
 
   - id: edu-um
     type: education
@@ -79,7 +120,7 @@ experience:
     end_date: "2025-12"
     status: "Graduado"
     is_completed: true
-    description: "Formación integral en ingeniería de software, arquitectura y sistemas distribuidos. Proyecto de tesis: SemaforIA."
+    description: "Graduado en Ingeniería en Informática. Proyecto final SemaforIA orientado a optimización de tránsito con IA."
     technologies:
       - Ingeniería de Software
       - Arquitectura
@@ -87,8 +128,8 @@ experience:
 
   - id: edu-english
     type: education
-    institution: Clases Particulares
-    title: Formación en Idioma Inglés (B1)
+    institution: Formación Continua
+    title: Inglés Técnico (B2)
     start_date: "2021-01"
     end_date: null
     status: "En curso"
@@ -96,7 +137,61 @@ experience:
     description: Entrenamiento continuo para lectura técnica, comunicación profesional y colaboración internacional.
 
 projects:
-  # size: 'small' | 'medium' | 'large' | 'tall';
+  - id: semaforia
+    title: SemaforIA (Tesis)
+    description: Sistema inteligente de semáforos basado en IA con reducción de hasta 58% en tiempos de espera en simulaciones controladas.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier
+    tags:
+      - IA
+      - TensorFlow
+      - Python
+      - Tesis
+    size: large
+    status: live
+    icon: Sparkles
+
+  - id: reconocimiento-facial
+    title: Reconocimiento Facial
+    description: Proyecto de visión por computadora con InceptionV3, MobileNetV2 y OpenCV para clasificación y reconocimiento robusto en tiempo real.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier
+    tags:
+      - Computer Vision
+      - OpenCV
+      - InceptionV3
+      - MobileNetV2
+    size: medium
+    status: demo
+    icon: Crosshair
+
+  - id: fideval
+    title: Fideval (Tinkin)
+    description: Desarrollo de funcionalidades mobile en Flutter para producto fintech, enfocadas en rendimiento y experiencia de usuario.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier
+    tags:
+      - Flutter
+      - Fintech
+      - Mobile
+      - Scrum
+    size: medium
+    status: live
+    icon: FileText
+
+  - id: mercately
+    title: Mercately (Tinkin)
+    description: Participación en migración de front-end a React + TypeScript, mejorando mantenibilidad y base para escalado del producto.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier
+    tags:
+      - React
+      - TypeScript
+      - Migración
+      - Producto
+    size: medium
+    status: live
+    icon: FileText
 
   - id: buckshot-tracker
     title: Buckshot Tracker Pro

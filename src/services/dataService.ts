@@ -7,6 +7,8 @@ interface ContentDatabase {
   about_card?: HomeContent["about_card"];
   location?: HomeContent["location"];
   stack?: HomeContent["stack"];
+  strengths?: HomeContent["strengths"];
+  languages?: HomeContent["languages"];
   social?: HomeContent["social"];
   experience?: Experience[];
   projects?: Project[];
@@ -21,6 +23,8 @@ export const getHomeContent = async (): Promise<HomeContent | null> => {
     about_card: db.about_card,
     location: db.location,
     stack: db.stack,
+    strengths: db.strengths,
+    languages: db.languages,
     social: db.social,
   };
 };

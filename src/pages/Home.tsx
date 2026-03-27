@@ -4,15 +4,13 @@ import {
   MapPin,
   Linkedin,
   Github,
-  Terminal,
+  Languages,
   Code2,
-  Box,
-  Cpu,
-  LayoutGrid,
-  Smartphone,
-  Database,
-  Cloud,
-  GitBranch,
+  Sparkles,
+  ShieldCheck,
+  Lightbulb,
+  RefreshCw,
+  Handshake,
   ArrowDown,
   Download,
 } from "lucide-react";
@@ -44,31 +42,33 @@ const Home: React.FC = () => {
     }
   };
 
-  const stackIconMap: Record<
+  const stackGroups = useMemo(() => {
+    if (homeContent?.stack?.groups?.length) {
+      return homeContent.stack.groups;
+    }
+
+    if (homeContent?.stack?.technologies?.length) {
+      return [
+        {
+          category: "Tecnologías",
+          technologies: homeContent.stack.technologies,
+        },
+      ];
+    }
+
+    return [];
+  }, [homeContent?.stack?.groups, homeContent?.stack?.technologies]);
+
+  const strengthsIconMap: Record<
     string,
     React.FC<{ size?: number; className?: string }>
   > = {
-    code: Code2,
-    layout: LayoutGrid,
-    smartphone: Smartphone,
-    database: Database,
-    terminal: Terminal,
-    cpu: Cpu,
-    box: Box,
-    cloud: Cloud,
-    git_branch: GitBranch,
+    Prudencia: ShieldCheck,
+    Perseverancia: Sparkles,
+    Curiosidad: Lightbulb,
+    Adaptabilidad: RefreshCw,
+    "Trabajo en equipo": Handshake,
   };
-
-  const technologies = useMemo(() => {
-    return (homeContent?.stack?.technologies ?? []).map((tech) => {
-      const iconKey = (tech.icon ?? "terminal").toLowerCase();
-      const Icon = stackIconMap[iconKey] ?? Terminal;
-      return {
-        name: tech.name,
-        Icon,
-      };
-    });
-  }, [homeContent?.stack?.technologies]);
 
   const homeCardBaseClasses = cn(
     "rounded-3xl border shadow-md transition-transform duration-300",
@@ -95,7 +95,9 @@ const Home: React.FC = () => {
             <div className="md:col-span-2 h-80 rounded-3xl bg-surface-variant animate-pulse" />
             <div className="md:col-start-3 md:row-start-1 md:row-span-2 h-[28rem] rounded-3xl bg-surface-variant animate-pulse" />
             <div className="h-56 rounded-3xl bg-surface-variant animate-pulse" />
-            <div className="h-48 md:col-span-2 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-48 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-40 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-32 rounded-3xl bg-surface-variant animate-pulse" />
           </div>
         </section>
       </div>
@@ -229,7 +231,7 @@ const Home: React.FC = () => {
             )}
           >
             <h3 className="flex items-center gap-2 text-xl font-bold text-on-surface">
-              <Terminal size={20} className="text-primary" />
+              <Code2 size={20} className="text-primary" />
               {homeContent?.stack?.title}
             </h3>
             {homeContent?.stack?.description && (
@@ -238,15 +240,19 @@ const Home: React.FC = () => {
               </p>
             )}
 
-            <div className="flex flex-wrap gap-2">
-              {technologies.map((tech) => (
-                <span
-                  key={tech.name}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container text-xs font-bold border border-primary/10 transition-transform hover:scale-105"
-                >
-                  <tech.Icon size={14} />
-                  {tech.name}
-                </span>
+            <div className="space-y-3">
+              {stackGroups.map((group) => (
+                <div key={group.category} className="space-y-1.5">
+                  <h4 className="text-xs font-bold tracking-wide uppercase text-primary">
+                    {group.category}
+                  </h4>
+                  <p className="text-sm text-on-surface-variant leading-relaxed">
+                    {(group.technologies ?? [])
+                      .map((technology) => technology.name)
+                      .filter(Boolean)
+                      .join(" • ")}
+                  </p>
+                </div>
               ))}
             </div>
           </CardComponent>
@@ -289,6 +295,53 @@ const Home: React.FC = () => {
                   GitHub
                 </a>
               )}
+            </div>
+          </CardComponent>
+
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-6 md:col-span-1 md:col-start-1 md:row-start-3 hover:-translate-y-1",
+            )}
+          >
+            <h3 className="text-lg font-bold text-on-surface mb-4">
+              {homeContent?.strengths?.title ?? "Fortalezas"}
+            </h3>
+            <ul className="space-y-2">
+              {(homeContent?.strengths?.items ?? []).map((strength) => {
+                const Icon = strengthsIconMap[strength] ?? Sparkles;
+                return (
+                  <li
+                    key={strength}
+                    className="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <Icon size={14} className="text-primary" />
+                    <span>{strength}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </CardComponent>
+
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-6 md:col-span-1 md:col-start-2 md:row-start-3 hover:-translate-y-1",
+            )}
+          >
+            <h3 className="text-lg font-bold text-on-surface mb-4">Idiomas</h3>
+            <div className="space-y-2 text-sm text-on-surface-variant">
+              {(
+                homeContent?.languages?.items ?? [
+                  "Español (Nativo)",
+                  "Inglés (B1)",
+                ]
+              ).map((language) => (
+                <p key={language} className="flex items-center gap-2">
+                  <Languages size={14} className="text-primary" />
+                  <span>{language}</span>
+                </p>
+              ))}
             </div>
           </CardComponent>
         </div>
