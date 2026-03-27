@@ -58,6 +58,16 @@ export interface ListSection {
   items?: string[];
 }
 
+export interface InterestItem {
+  name?: string;
+  icon?: string;
+}
+
+export interface InterestsSection {
+  title?: string;
+  items?: InterestItem[];
+}
+
 export interface SocialSection {
   github?: string;
   linkedin?: string;
@@ -71,6 +81,7 @@ export interface HomeContent {
   stack?: StackSection;
   strengths?: ListSection;
   languages?: ListSection;
+  interests?: InterestsSection;
   social?: SocialSection;
 }
 

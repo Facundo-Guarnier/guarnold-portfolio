@@ -60,6 +60,16 @@ languages:
     - Español (Nativo)
     - Inglés (B2)
 
+interests:
+  title: Más allá del código
+  items:
+    - { name: Domótica, icon: House }
+    - { name: Videojuegos, icon: Gamepad2 }
+    - { name: Economía, icon: TrendingUp }
+    - { name: Electrónica, icon: Cpu }
+    - { name: Electricidad, icon: Zap }
+    - { name: DIY, icon: Hammer }
+
 social:
   github: https://github.com/Facundo-Guarnier
   linkedin: https://www.linkedin.com/in/facundo-guarnier/
@@ -137,62 +147,7 @@ experience:
     description: Entrenamiento continuo para lectura técnica, comunicación profesional y colaboración internacional.
 
 projects:
-  - id: semaforia
-    title: SemaforIA (Tesis)
-    description: Sistema inteligente de semáforos basado en IA con reducción de hasta 58% en tiempos de espera en simulaciones controladas.
-    link: "#"
-    github_url: https://github.com/Facundo-Guarnier
-    tags:
-      - IA
-      - TensorFlow
-      - Python
-      - Tesis
-    size: large
-    status: live
-    icon: Sparkles
-
-  - id: reconocimiento-facial
-    title: Reconocimiento Facial
-    description: Proyecto de visión por computadora con InceptionV3, MobileNetV2 y OpenCV para clasificación y reconocimiento robusto en tiempo real.
-    link: "#"
-    github_url: https://github.com/Facundo-Guarnier
-    tags:
-      - Computer Vision
-      - OpenCV
-      - InceptionV3
-      - MobileNetV2
-    size: medium
-    status: demo
-    icon: Crosshair
-
-  - id: fideval
-    title: Fideval (Tinkin)
-    description: Desarrollo de funcionalidades mobile en Flutter para producto fintech, enfocadas en rendimiento y experiencia de usuario.
-    link: "#"
-    github_url: https://github.com/Facundo-Guarnier
-    tags:
-      - Flutter
-      - Fintech
-      - Mobile
-      - Scrum
-    size: medium
-    status: live
-    icon: FileText
-
-  - id: mercately
-    title: Mercately (Tinkin)
-    description: Participación en migración de front-end a React + TypeScript, mejorando mantenibilidad y base para escalado del producto.
-    link: "#"
-    github_url: https://github.com/Facundo-Guarnier
-    tags:
-      - React
-      - TypeScript
-      - Migración
-      - Producto
-    size: medium
-    status: live
-    icon: FileText
-
+  # size: small < medium < large < tall
   - id: buckshot-tracker
     title: Buckshot Tracker Pro
     description: Calculadora de probabilidades para Buckshot Roulette con conteo de balas, historial y marcado visual en tiempo real.
@@ -256,7 +211,7 @@ projects:
   - id: guarnold-portfolio
     title: Guarnold Portfolio
     description: Portfolio personal con contenido gestionado en YAML, navegación SPA y presentación de experiencia, stack y proyectos.
-    link: "#"
+    link: "https://guarnold.com.ar/"
     github_url: https://github.com/Facundo-Guarnier/guarnold-portfolio
     tags:
       - React
@@ -270,7 +225,7 @@ projects:
   - id: trilex-store
     title: Trilex Store
     description: E-commerce headless de relojes de lujo con Shopify Storefront API, arquitectura mobile-first y foco en SEO.
-    link: "#"
+    link: "https://trilexstore.com.ar/"
     github_url: https://github.com/Facundo-Guarnier/trilex-store
     tags:
       - E-commerce
@@ -281,52 +236,10 @@ projects:
     status: wip
     icon: Sparkles
 
-  - id: admin-trilex-store
-    title: Admin Trilex Store
-    description: Panel administrativo para operación de tienda con stack React + Supabase y componentes shadcn/ui.
-    link: "#"
-    github_url: https://github.com/Facundo-Guarnier/admin-trilex-store
-    tags:
-      - Admin Panel
-      - React
-      - TypeScript
-      - Supabase
-    size: medium
-    status: wip
-    icon: Crosshair
-
-  - id: dafre-operations-center
-    title: DAFRE Operations Center
-    description: Centro de operaciones para gestión logística y operativa con calendario, reportes y pruebas E2E con Cypress.
-    link: "#"
-    github_url: https://github.com/tomimunozmero/dafre-operations-center
-    tags:
-      - Operations
-      - React
-      - TypeScript
-      - Supabase
-    size: large
-    status: wip
-    icon: Sparkles
-
-  - id: docgen-portal
-    title: Guarnold Initializr
-    description: Generador de bases de proyecto React con Vite, Tailwind y componentes Radix para acelerar nuevos desarrollos.
-    link: https://ai.studio/apps/drive/1wwOsww0R-o5tJLKxkEURO56QCHU97yND
-    github_url: https://github.com/Facundo-Guarnier/docgen-portal
-    tags:
-      - Developer Tool
-      - React
-      - TypeScript
-      - Vite
-    size: medium
-    status: demo
-    icon: FlaskConical
-
   - id: love-suite-inventory
     title: Love Suite Inventory
     description: Sistema de inventario hotelero con roles, transacciones, control de stock y backend en Supabase.
-    link: "#"
+    link: "https://love-suite.netlify.app/"
     github_url: https://github.com/Facundo-Guarnier/love-web-app
     tags:
       - Inventory
@@ -340,7 +253,7 @@ projects:
   - id: nono-enrique-erp
     title: Panadería ERP
     description: ERP para panadería con gestión de ventas, soporte de importación CSV/Excel y flujo operativo centralizado.
-    link: https://ai.studio/apps/drive/1T4FMxUO06IPV3Du96UwGkjomQGZ9hFSI
+    link: https://nono-enrique.netlify.app/
     github_url: https://github.com/Facundo-Guarnier/nono-enrique-erp
     tags:
       - ERP
@@ -354,7 +267,7 @@ projects:
   - id: nono-enrique-website
     title: El Nono Enrique Website
     description: Landing web para panadería artesanal con enfoque mobile-first, Tailwind v4 y animaciones con Framer Motion.
-    link: "#"
+    link: "https://nono-enrique-website.netlify.app/"
     github_url: https://github.com/Facundo-Guarnier/nono-enrique-website
     tags:
       - Landing Page
@@ -364,6 +277,20 @@ projects:
     size: medium
     status: wip
     icon: FileText
+
+  - id: docgen-portal
+    title: Guarnold Initializr
+    description: Generador de bases de proyecto React con Vite, Tailwind y componentes Radix para acelerar nuevos desarrollos.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier/docgen-portal
+    tags:
+      - Developer Tool
+      - React
+      - TypeScript
+      - Vite
+    size: medium
+    status: demo
+    icon: FlaskConical
 
   - id: pivot
     title: Pivot
@@ -407,6 +334,20 @@ projects:
     status: wip
     icon: Sparkles
 
+  - id: semaforia
+    title: SemaforIA (Tesis)
+    description: Sistema inteligente de semáforos basado en IA con reducción de hasta 58% en tiempos de espera en simulaciones controladas.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier
+    tags:
+      - IA
+      - TensorFlow
+      - Python
+      - Tesis
+    size: large
+    status: live
+    icon: Sparkles
+
   - id: skal-nutricion
     title: SKAL Nutrición
     description: Automatización de planes alimentarios con Google Sheets API y generación de documentos Word/PDF.
@@ -420,3 +361,59 @@ projects:
     size: medium
     status: demo
     icon: Sparkles
+
+  - id: reconocimiento-facial
+    title: Reconocimiento Facial
+    description: Proyecto de visión por computadora con InceptionV3, MobileNetV2 y OpenCV para clasificación y reconocimiento robusto en tiempo real.
+    link: "#"
+    github_url: https://github.com/Facundo-Guarnier
+    tags:
+      - Computer Vision
+      - OpenCV
+      - InceptionV3
+      - MobileNetV2
+    size: medium
+    status: demo
+    icon: Crosshair
+
+  # - id: fideval
+  #   title: Fideval (Tinkin)
+  #   description: Desarrollo de funcionalidades mobile en Flutter para producto fintech, enfocadas en rendimiento y experiencia de usuario.
+  #   link: "#"
+  #   github_url: https://github.com/Facundo-Guarnier
+  #   tags:
+  #     - Flutter
+  #     - Fintech
+  #     - Mobile
+  #     - Scrum
+  #   size: medium
+  #   status: live
+  #   icon: FileText
+
+  # - id: mercately
+  #   title: Mercately (Tinkin)
+  #   description: Participación en migración de front-end a React + TypeScript, mejorando mantenibilidad y base para escalado del producto.
+  #   link: "#"
+  #   github_url: https://github.com/Facundo-Guarnier
+  #   tags:
+  #     - React
+  #     - TypeScript
+  #     - Migración
+  #     - Producto
+  #   size: medium
+  #   status: live
+  #   icon: FileText
+
+  # - id: dafre-operations-center
+  #   title: DAFRE Operations Center
+  #   description: Centro de operaciones para gestión logística y operativa con calendario, reportes y pruebas E2E con Cypress.
+  #   link: "#"
+  #   github_url: https://github.com/tomimunozmero/dafre-operations-center
+  #   tags:
+  #     - Operations
+  #     - React
+  #     - TypeScript
+  #     - Supabase
+  #   size: large
+  #   status: wip
+  #   icon: Sparkles
