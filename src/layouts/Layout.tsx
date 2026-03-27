@@ -1,17 +1,21 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import BrandFooter from "../components/BrandFooter";
+import FloatingThemeToggle from "../components/FloatingThemeToggle";
+import ParticleBackground from "../components/ParticleBackground";
 
 const Layout: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-background transition-colors duration-300">
+    <div className="relative flex flex-col min-h-screen transition-colors duration-300 bg-background">
+      <ParticleBackground />
       <Navbar />
       {/* Main content area - flex-1 pushes footer down, w-full allows full-width sections like Hero */}
-      <main className="flex-1 w-full flex flex-col relative">
+      <main className="relative flex flex-col flex-1 w-full z-10">
         <Outlet />
       </main>
-      <Footer />
+      <BrandFooter compact />
+      <FloatingThemeToggle />
     </div>
   );
 };

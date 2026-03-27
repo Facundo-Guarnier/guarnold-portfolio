@@ -1,27 +1,32 @@
 {
   "name": "guarnold-portfolio",
+  "screenName": "Guarnold Portfolio",
+  "description": "Personal portfolio website showcasing my projects and skills as a software developer.",
   "private": true,
-  "version": "0.0.0",
+  "version": "2026.03.27-b4",
   "type": "module",
+  "gitURL": "https://github.com/Facundo-Guarnier/guarnold-portfolio",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
     "@material/material-color-utilities": "^0.3.0",
-    "react-router-dom": "^7.11.0",
-    "lucide-react": "^0.562.0",
-    "tailwind-merge": "^3.4.0",
+    "@supabase/supabase-js": "^2.89.0",
     "@tanstack/react-query": "^5.90.12",
     "clsx": "^2.1.1",
-    "@supabase/supabase-js": "^2.89.0"
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-router-dom": "^7.11.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@rollup/plugin-yaml": "^4.1.2",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "lovable-tagger": "^1.1.10",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

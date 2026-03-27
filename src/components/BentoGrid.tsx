@@ -1,32 +1,56 @@
-import React from 'react';
-import { projects } from '../data/projects';
-import ProjectCard from './ProjectCard';
+import React from "react";
+import type { Project } from "../types";
+import ProjectCard from "./ProjectCard";
 
-const BentoGrid: React.FC = () => {
-  
-  const getSizeClasses = (size: string) => {
-    switch (size) {
-      case 'tall':
-        return 'md:row-span-2 md:col-span-1';
-      case 'large':
-        return 'md:col-span-2 md:row-span-2';
-      case 'medium':
-        // Spanning 2 columns makes medium items wide
-        return 'md:col-span-2 md:row-span-1';
-      case 'small':
+interface BentoGridProps {
+  projects?: Project[];
+}
+
+const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
+  const normalizeSize = (size?: string) => {
+    const normalized = (size ?? "small").toLowerCase();
+
+    if (!["small", "medium", "large", "tall"].includes(normalized)) {
+      return "small";
+    }
+
+    return normalized;
+  };
+
+  const getSizeClasses = (size?: string) => {
+    const resolvedSize = normalizeSize(size);
+
+    switch (resolvedSize) {
+      case "tall":
+        return "min-h-[20rem]";
+      case "large":
+        return "min-h-[17.5rem]";
+      case "medium":
+        return "min-h-[15.5rem]";
+      case "small":
       default:
-        return 'md:col-span-1 md:row-span-1';
+        return "min-h-[14rem]";
     }
   };
 
+  if (!projects.length) {
+    return (
+      <div className="rounded-3xl border border-outline/30 bg-surface-variant/60 p-8 text-center text-on-surface-variant">
+        Próximamente más proyectos...
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[minmax(180px,auto)] pb-12">
-      {projects.map((project) => (
-        <div 
-          key={project.id} 
-          className={getSizeClasses(project.size)}
+    <div className="columns-1 md:columns-2 xl:columns-3 [column-gap:1.5rem] pb-10">
+      {projects.map((project, index) => (
+        <div
+          key={project.id ?? `${project.title ?? "project"}-${index}`}
+          className={`mb-6 break-inside-avoid ${getSizeClasses(project.size)}`}
         >
-          <ProjectCard project={project} />
+          <ProjectCard
+            project={{ ...project, size: normalizeSize(project.size) }}
+          />
         </div>
       ))}
     </div>

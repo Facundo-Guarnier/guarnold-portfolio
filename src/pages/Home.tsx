@@ -1,167 +1,365 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
   User,
   MapPin,
-  Mail,
-  Github,
   Linkedin,
-  Copy,
-  Check,
-  Terminal,
+  Github,
+  Languages,
   Code2,
-  Box,
-  Cpu
-} from 'lucide-react';
-import Hero from '../components/Hero';
-import { CardComponent } from '../components/CardComponent';
-import { cn } from '../utils';
+  Sparkles,
+  ShieldCheck,
+  Lightbulb,
+  RefreshCw,
+  Handshake,
+  ArrowDown,
+  Download,
+} from "lucide-react";
+import { CardComponent } from "../components/CardComponent";
+import { useTheme } from "../context/ThemeContext";
+import { cn } from "../utils";
+import { getHomeContent } from "../services/dataService";
+import type { HomeContent } from "../types";
 
 const Home: React.FC = () => {
-  const [copied, setCopied] = useState(false);
-  const email = "facundoguarnier@gmail.com";
+  const { isDark } = useTheme();
+  const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  useEffect(() => {
+    const fetchHomeContent = async () => {
+      const data = await getHomeContent();
+      setHomeContent(data);
+      setLoading(false);
+    };
+
+    fetchHomeContent();
+  }, []);
+
+  const scrollToProjects = () => {
+    const grid = document.getElementById("projects-grid");
+    if (grid) {
+      grid.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-  const skills = [
-    { name: 'Python', icon: <Terminal size={14} /> },
-    { name: 'FastAPI', icon: <Cpu size={14} /> },
-    { name: 'React', icon: <Code2 size={14} /> },
-    { name: 'TypeScript', icon: <Code2 size={14} /> },
-    { name: 'Flutter', icon: <Box size={14} /> },
-    { name: 'Dart', icon: <Box size={14} /> },
-    { name: 'Docker', icon: <Box size={14} /> },
-    { name: 'K8s', icon: <Box size={14} /> },
-    { name: 'SQL', icon: <Terminal size={14} /> },
-  ];
+  const stackGroups = useMemo(() => {
+    if (homeContent?.stack?.groups?.length) {
+      return homeContent.stack.groups;
+    }
+
+    if (homeContent?.stack?.technologies?.length) {
+      return [
+        {
+          category: "Tecnologías",
+          technologies: homeContent.stack.technologies,
+        },
+      ];
+    }
+
+    return [];
+  }, [homeContent?.stack?.groups, homeContent?.stack?.technologies]);
+
+  const strengthsIconMap: Record<
+    string,
+    React.FC<{ size?: number; className?: string }>
+  > = {
+    Prudencia: ShieldCheck,
+    Perseverancia: Sparkles,
+    Curiosidad: Lightbulb,
+    Adaptabilidad: RefreshCw,
+    "Trabajo en equipo": Handshake,
+  };
+
+  const homeCardBaseClasses = cn(
+    "rounded-3xl border shadow-md transition-transform duration-300",
+    isDark
+      ? "bg-surface border-outline/40"
+      : "bg-surface-variant border-outline/25",
+  );
+
+  if (loading) {
+    return (
+      <div className="w-full duration-300 animate-in fade-in">
+        <section className="relative flex flex-col items-center justify-center pt-20 overflow-hidden text-center pb-14 md:pt-24 md:pb-16">
+          <div className="w-full max-w-4xl px-4 space-y-6">
+            <div className="w-40 h-8 mx-auto rounded-full bg-surface-variant animate-pulse" />
+            <div className="w-full max-w-2xl mx-auto h-14 rounded-2xl bg-surface-variant animate-pulse" />
+            <div className="w-full max-w-xl mx-auto h-7 rounded-xl bg-surface-variant animate-pulse" />
+            <div className="w-full h-5 max-w-2xl mx-auto rounded-xl bg-surface-variant animate-pulse" />
+          </div>
+        </section>
+
+        <section className="px-4 pt-8 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:pt-10 md:pb-14 scroll-mt-20">
+          <div className="w-56 h-10 mb-10 rounded-xl bg-surface-variant animate-pulse" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
+            <div className="md:col-span-2 h-80 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="md:col-start-3 md:row-start-1 md:row-span-2 h-[28rem] rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-56 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-48 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-40 rounded-3xl bg-surface-variant animate-pulse" />
+            <div className="h-32 rounded-3xl bg-surface-variant animate-pulse" />
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full animate-in fade-in duration-500">
-      {/* Hero Section */}
-      <Hero />
+    <div className="w-full duration-500 animate-in fade-in">
+      <section className="relative flex flex-col items-center justify-center pt-20 overflow-hidden text-center pb-14 md:pt-24 md:pb-16">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 to-background" />
+        <div className="absolute w-64 h-64 rounded-full top-1/4 left-1/4 bg-secondary/10 blur-3xl" />
+        <div className="absolute w-64 h-64 rounded-full bottom-1/4 right-1/4 bg-tertiary/10 blur-3xl" />
 
-      {/* Personal Bento Grid Section */}
-      <section className="max-w-7xl mx-auto px-4 py-16 scroll-mt-20">
-        <div className="flex items-center justify-between mb-10 border-b border-outline/10 pb-4">
-          <h2 className="text-3xl font-bold text-on-surface flex items-center gap-3">
-            <span className="w-2 h-8 bg-primary rounded-full"></span>
+        <div className="max-w-4xl px-4 space-y-6 duration-700 animate-in fade-in slide-in-from-bottom-8">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-surface-variant border border-outline/20 text-sm font-medium text-primary tracking-wide uppercase">
+            Developer & Maker
+          </span>
+
+          <div className="space-y-2">
+            {homeContent?.hero?.title && (
+              <h1 className="text-5xl font-extrabold leading-tight tracking-tighter md:text-6xl text-on-surface text-balance">
+                {homeContent.hero.title}
+              </h1>
+            )}
+
+            {homeContent?.hero?.subtitle && (
+              <p className="text-lg italic font-medium md:text-xl text-on-surface-variant opacity-85">
+                {homeContent.hero.subtitle.split("Guarnold")[0]}
+                {homeContent.hero.subtitle.includes("Guarnold") && (
+                  <span className="font-bold text-primary">Guarnold</span>
+                )}
+                {homeContent.hero.subtitle.split("Guarnold")[1]}
+              </p>
+            )}
+          </div>
+
+          {homeContent?.hero?.description && (
+            <p className="max-w-2xl pt-2 mx-auto text-lg leading-relaxed md:text-xl text-on-surface-variant">
+              {homeContent.hero.description}
+            </p>
+          )}
+        </div>
+      </section>
+
+      <section className="px-4 pt-8 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8 md:pt-10 md:pb-14 scroll-mt-20">
+        <div className="flex items-center justify-between pb-4 mb-10 border-b border-outline/10">
+          <h2 className="flex items-center gap-3 text-3xl font-bold text-on-surface">
+            <span className="w-2 h-8 rounded-full bg-primary"></span>
             Sobre Mí
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto">
-
-          {/* Profile Card (Large) */}
-          <CardComponent className="md:col-span-2 md:row-span-2 p-8 flex flex-col justify-center">
-            <div className="flex flex-col md:flex-row gap-8 items-center">
-              <div className="w-40 h-40 rounded-3xl bg-primary/20 flex items-center justify-center shrink-0 overflow-hidden border-2 border-primary/30">
-                <User size={80} className="text-primary opacity-50" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "flex flex-col justify-center p-8 md:col-span-2 hover:-translate-y-1",
+            )}
+          >
+            <div className="flex flex-col items-center gap-8 md:flex-row">
+              <div className="flex items-center justify-center w-40 h-40 overflow-hidden border-2 rounded-3xl bg-primary/20 shrink-0 border-primary/30">
+                {homeContent?.identity?.avatar_url ? (
+                  <img
+                    src={homeContent.identity.avatar_url}
+                    alt={homeContent.identity?.name ?? "Avatar"}
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <User size={80} className="opacity-50 text-primary" />
+                )}
               </div>
+
               <div className="space-y-4 text-center md:text-left">
                 <div>
-                  <h2 className="text-3xl font-bold text-on-surface">Facundo Guarnier</h2>
-                  <p className="text-primary font-medium">Software Engineer | Fullstack Developer</p>
+                  {homeContent?.about_card?.title && (
+                    <h3 className="text-3xl font-bold text-on-surface">
+                      {homeContent.about_card.title}
+                    </h3>
+                  )}
+                  {homeContent?.about_card?.role && (
+                    <p className="font-medium text-primary">
+                      {homeContent.about_card.role}
+                    </p>
+                  )}
                 </div>
-                <p className="text-on-surface-variant leading-relaxed">
-                  Ingeniero en Informática especializado en el ciclo de vida completo del desarrollo.
-                  Me motiva crear tecnología con propósito, optimizando procesos y construyendo
-                  soluciones escalables que generen un impacto real.
-                </p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
-                  <div className="flex items-center gap-2 text-sm text-on-surface-variant bg-surface-variant/50 px-3 py-1 rounded-full border border-outline/10">
-                    <MapPin size={16} className="text-primary" />
-                    Mendoza, Argentina
-                  </div>
+                {homeContent?.about_card?.description && (
+                  <p className="leading-relaxed text-on-surface-variant">
+                    {homeContent.about_card.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardComponent>
+
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "md:col-start-3 md:row-start-1 md:row-span-2 md:col-span-1 p-0 overflow-hidden group relative min-h-[28rem] hover:-translate-y-1",
+            )}
+          >
+            <img
+              src={
+                homeContent?.location?.background_image ??
+                "/assets/mapa_argentina.png"
+              }
+              alt="Mapa de Argentina"
+              className="absolute inset-0 object-cover w-full h-full"
+            />
+            <div className="absolute inset-0 z-10 bg-gradient-to-t from-background via-background/60 to-transparent" />
+            <div className="relative z-20 flex flex-col justify-end h-full p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 shadow-lg rounded-xl bg-primary text-on-primary group-hover:animate-[mapPinLift_420ms_cubic-bezier(0.22,1,0.36,1)]">
+                  <MapPin size={20} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-on-surface">
+                    {homeContent?.location?.city}
+                  </h4>
+                  <p className="text-xs text-on-surface-variant">
+                    {homeContent?.location?.country}
+                  </p>
                 </div>
               </div>
             </div>
           </CardComponent>
 
-          {/* Tech Stack Card (Medium/Tall) */}
-          <CardComponent className="md:col-span-1 md:row-span-2 p-8 space-y-6">
-            <h3 className="text-xl font-bold text-on-surface flex items-center gap-2">
-              <Terminal size={20} className="text-primary" />
-              Arsenal
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-8 space-y-6 md:col-span-1 md:col-start-1 md:row-start-2 hover:-translate-y-1",
+            )}
+          >
+            <h3 className="flex items-center gap-2 text-xl font-bold text-on-surface">
+              <Code2 size={20} className="text-primary" />
+              {homeContent?.stack?.title}
             </h3>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <span
-                  key={skill.name}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container text-xs font-bold border border-primary/10 transition-transform hover:scale-105"
-                >
-                  {skill.icon}
-                  {skill.name}
-                </span>
+            {homeContent?.stack?.description && (
+              <p className="text-sm leading-relaxed text-on-surface-variant">
+                {homeContent.stack.description}
+              </p>
+            )}
+
+            <div className="space-y-3">
+              {stackGroups.map((group) => (
+                <div key={group.category} className="space-y-1.5">
+                  <h4 className="text-xs font-bold tracking-wide uppercase text-primary">
+                    {group.category}
+                  </h4>
+                  <p className="text-sm text-on-surface-variant leading-relaxed">
+                    {(group.technologies ?? [])
+                      .map((technology) => technology.name)
+                      .filter(Boolean)
+                      .join(" • ")}
+                  </p>
+                </div>
               ))}
             </div>
           </CardComponent>
 
-          {/* Contact Card (Small) */}
-          <CardComponent className="p-6 flex flex-col justify-between group">
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                <Mail size={20} />
-              </div>
-              <div>
-                <h4 className="font-bold text-on-surface">Contacto Directo</h4>
-                <p className="text-xs text-on-surface-variant truncate">{email}</p>
-              </div>
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-6 md:col-span-1 md:col-start-2 md:row-start-2 flex flex-col justify-between gap-4 hover:-translate-y-1",
+            )}
+          >
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold text-on-surface">Redes</h3>
+              <p className="pt-6 text-sm text-on-surface-variant">
+                Hablemos de tecnología, proyectos o cualquier cosa que tengas en
+                mente. ¡Estoy abierto a nuevas conexiones y oportunidades!
+              </p>
             </div>
-            <button
-              onClick={copyToClipboard}
-              className={cn(
-                "mt-4 w-full py-2 rounded-xl flex items-center justify-center gap-2 text-sm font-bold transition-all",
-                copied
-                  ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                  : "bg-surface-variant text-on-surface-variant hover:bg-primary/10 hover:text-primary border border-outline/10"
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-1">
+              {homeContent?.social?.linkedin && (
+                <a
+                  href={homeContent.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-full gap-2 px-4 py-3 font-semibold transition-all rounded-xl bg-primary text-on-primary hover:brightness-105"
+                >
+                  <Linkedin size={18} />
+                  LinkedIn
+                </a>
               )}
-            >
-              {copied ? <Check size={16} /> : <Copy size={16} />}
-              {copied ? 'Copiado' : 'Copiar Email'}
-            </button>
-          </CardComponent>
 
-          {/* Social Card (Small) */}
-          <CardComponent className="p-6 flex flex-col justify-between">
-            <div className="space-y-2">
-              <h4 className="font-bold text-on-surface">Redes</h4>
-              <p className="text-xs text-on-surface-variant">Conectemos en línea.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-3 mt-4">
-              <a href="https://linkedin.com/in/faguarnier" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 p-2 rounded-xl bg-[#0077B5]/10 text-[#0077B5] border border-[#0077B5]/20 hover:scale-105 transition-transform">
-                <Linkedin size={18} />
-                <span className="text-xs font-bold">LinkedIn</span>
-              </a>
-              <a href="https://github.com/faguarnier" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 p-2 rounded-xl bg-on-surface/10 text-on-surface border border-outline/20 hover:scale-105 transition-transform">
-                <Github size={18} />
-                <span className="text-xs font-bold">GitHub</span>
-              </a>
+              {homeContent?.social?.github && (
+                <a
+                  href={homeContent.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-full gap-2 px-4 py-3 font-semibold transition-all rounded-xl bg-primary text-on-primary hover:brightness-105"
+                >
+                  <Github size={18} />
+                  GitHub
+                </a>
+              )}
             </div>
           </CardComponent>
 
-          {/* Location Card (Small) */}
-          <CardComponent className="p-0 overflow-hidden group relative">
-            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent z-10" />
-            <div className="absolute inset-0 bg-surface-variant/30 flex items-center justify-center">
-              <div className="w-full h-full opacity-20 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]" />
-            </div>
-            <div className="relative z-20 p-6 h-full flex flex-col justify-end">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-lg group-hover:animate-bounce">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-on-surface">Mendoza</h4>
-                  <p className="text-xs text-on-surface-variant">Argentina</p>
-                </div>
-              </div>
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-6 md:col-span-1 md:col-start-1 md:row-start-3 hover:-translate-y-1",
+            )}
+          >
+            <h3 className="text-lg font-bold text-on-surface mb-4">
+              {homeContent?.strengths?.title ?? "Fortalezas"}
+            </h3>
+            <ul className="space-y-2">
+              {(homeContent?.strengths?.items ?? []).map((strength) => {
+                const Icon = strengthsIconMap[strength] ?? Sparkles;
+                return (
+                  <li
+                    key={strength}
+                    className="flex items-center gap-2 text-sm text-on-surface-variant"
+                  >
+                    <Icon size={14} className="text-primary" />
+                    <span>{strength}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </CardComponent>
+
+          <CardComponent
+            className={cn(
+              homeCardBaseClasses,
+              "p-6 md:col-span-1 md:col-start-2 md:row-start-3 hover:-translate-y-1",
+            )}
+          >
+            <h3 className="text-lg font-bold text-on-surface mb-4">Idiomas</h3>
+            <div className="space-y-2 text-sm text-on-surface-variant">
+              {(
+                homeContent?.languages?.items ?? [
+                  "Español (Nativo)",
+                  "Inglés (B1)",
+                ]
+              ).map((language) => (
+                <p key={language} className="flex items-center gap-2">
+                  <Languages size={14} className="text-primary" />
+                  <span>{language}</span>
+                </p>
+              ))}
             </div>
           </CardComponent>
         </div>
       </section>
+
+      <style>{`
+        @keyframes mapPinLift {
+          0% {
+            transform: translateY(3px) scale(1);
+          }
+          45% {
+            transform: translateY(-5px) scale(1.03);
+          }
+          100% {
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
 };

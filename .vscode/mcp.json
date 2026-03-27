@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "supabase-guarnold-main": {
+      "command": "node",
+      "args": [
+        "d:\\Repositorios_GitHub\\guarnold-portfolio\\.vscode\\supabase-mcp-wrapper.cjs"
+      ],
+      "cwd": "d:\\Repositorios_GitHub\\guarnold-portfolio",
+      "env": {}
+    }
+  }
+}

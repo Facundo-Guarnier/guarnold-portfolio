@@ -1,0 +1,53 @@
+name: Update Metadata on Branch
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths-ignore:
+      - "package.json"
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Update package.json fields
+        run: |
+          # Generamos versión: AAAA.MM.DD-b(numero_de_build)
+          # Ejemplo: 2024.01.18-b125
+          NEW_VERSION="$(date +'%Y.%m.%d')-b${{ github.run_number }}"
+          REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+
+          # Exportar la variable para el siguiente paso
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+          node -e "
+            const fs = require('fs');
+            const fileName = './package.json';
+            const pkg = JSON.parse(fs.readFileSync(fileName, 'utf8'));
+
+            pkg.version = '$NEW_VERSION';
+            pkg.gitURL = '$REPO_URL';
+
+            fs.writeFileSync(fileName, JSON.stringify(pkg, null, 2) + '\n');
+            console.log('Versión generada: ' + pkg.version);
+          "
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add package.json
+
+          # Hacemos commit del cambio en TU rama (usa la variable desde GITHUB_ENV)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update metadata to ${{ env.NEW_VERSION }} [skip ci]" && git push)
