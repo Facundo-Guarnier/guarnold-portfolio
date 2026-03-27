@@ -3,7 +3,7 @@
   "screenName": "Guarnold Portfolio",
   "description": "Personal portfolio website showcasing my projects and skills as a software developer.",
   "private": true,
-  "version": "2026.03.26-b3",
+  "version": "2026.03.27-b4",
   "type": "module",
   "gitURL": "https://github.com/Facundo-Guarnier/guarnold-portfolio",
   "scripts": {
