@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { Project } from "../types";
 import ProjectCard from "./ProjectCard";
 
@@ -7,6 +7,8 @@ interface BentoGridProps {
 }
 
 const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
+  const [columnCount, setColumnCount] = useState(1);
+
   const normalizeSize = (size?: string) => {
     const normalized = (size ?? "small").toLowerCase();
 
@@ -33,6 +35,44 @@ const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
     }
   };
 
+  useEffect(() => {
+    const resolveColumns = () => {
+      const width = window.innerWidth;
+
+      if (width < 768) {
+        setColumnCount(1);
+        return;
+      }
+
+      if (width < 1024) {
+        setColumnCount(2);
+        return;
+      }
+
+      setColumnCount(3);
+    };
+
+    resolveColumns();
+    window.addEventListener("resize", resolveColumns);
+
+    return () => {
+      window.removeEventListener("resize", resolveColumns);
+    };
+  }, []);
+
+  const columns = useMemo(() => {
+    const distributedColumns = Array.from(
+      { length: columnCount },
+      () => [] as Project[],
+    );
+
+    projects.forEach((project, index) => {
+      distributedColumns[index % columnCount].push(project);
+    });
+
+    return distributedColumns;
+  }, [projects, columnCount]);
+
   if (!projects.length) {
     return (
       <div className="rounded-3xl border border-outline/30 bg-surface-variant/60 p-8 text-center text-on-surface-variant">
@@ -42,15 +82,24 @@ const BentoGrid: React.FC<BentoGridProps> = ({ projects = [] }) => {
   }
 
   return (
-    <div className="columns-1 md:columns-2 xl:columns-3 [column-gap:1.5rem] pb-10">
-      {projects.map((project, index) => (
+    <div className="flex w-full gap-6 items-start pb-10">
+      {columns.map((column, columnIndex) => (
         <div
-          key={project.id ?? `${project.title ?? "project"}-${index}`}
-          className={`mb-6 break-inside-avoid ${getSizeClasses(project.size)}`}
+          key={`column-${columnIndex}`}
+          className="flex flex-col gap-6 flex-1"
         >
-          <ProjectCard
-            project={{ ...project, size: normalizeSize(project.size) }}
-          />
+          {column.map((project, projectIndex) => (
+            <div
+              key={
+                project.id ?? `${project.title ?? "project"}-${projectIndex}`
+              }
+              className={getSizeClasses(project.size)}
+            >
+              <ProjectCard
+                project={{ ...project, size: normalizeSize(project.size) }}
+              />
+            </div>
+          ))}
         </div>
       ))}
     </div>
