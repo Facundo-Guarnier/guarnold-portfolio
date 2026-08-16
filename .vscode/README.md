@@ -7,7 +7,7 @@
 ```env
 SUPABASE_PROJECT_ID="tu-project-id"
 SUPABASE_ACCESS_TOKEN="sbp_tu_token"  # Obtener en: supabase.com/dashboard/account/tokens
-MCP_PROJECT_DIR="D:\Repositorios_GitHub\guarnold-portfolio\.vscode"
+MCP_PROJECT_DIR="D:\Repositorios_GitHub\personal\guarnold-portfolio\.vscode"
 ```
 
 2. **Agregar al `mcp.json` del sistema:**
@@ -27,9 +27,9 @@ Ubicación para hacerlo a nivel proyecto (en el proyecto):
     "supabase-guarnold-portfolio": {
       "command": "node",
       "args": [
-        "d:\\Repositorios_GitHub\\guarnold-portfolio\\.vscode\\supabase-mcp-wrapper.cjs"
+        "d:\\Repositorios_GitHub\\personal\\guarnold-portfolio\\.vscode\\supabase-mcp-wrapper.cjs"
       ],
-      "cwd": "d:\\Repositorios_GitHub\\guarnold-portfolio",
+      "cwd": "d:\\Repositorios_GitHub\\personal\\guarnold-portfolio",
       "disabled": false
     }
     ...
