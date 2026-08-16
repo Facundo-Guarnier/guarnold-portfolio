@@ -1,15 +1,19 @@
 {
+  // Formateo al guardar: DESACTIVADO por defecto (estándar del hub).
+  // Descomentar solo en un repo que tenga .prettierrc y quiera formato automático.
   // "editor.defaultFormatter": "esbenp.prettier-vscode",
   // "editor.formatOnSave": true,
   // "editor.codeActionsOnSave": {
   //   "source.fixAll.eslint": "explicit"
   // },
+
   "tailwindCSS.experimental.classRegex": [
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
   "headwind.runOnSave": true,
   "tailwind-fold.unfoldIfLineSelected": true,
+
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
@@ -21,8 +25,8 @@
     "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
     "vite.config.*": "vite.config.*, vitest.config.*, .env, .env.*",
     "tailwind.config.*": "tailwind.config.*, postcss.config.*"
-  },
-  "cSpell.words": [
-    "TRILEX"
-  ]
+  }
+
+  // [FILL PER PROJECT] Config propia del repo (SonarLint, cSpell.words, etc.) va acá.
+  // ⚠️ cSpell.words: SOLO términos de ESTE proyecto. Nunca nombres de otros clientes.
 }

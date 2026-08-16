@@ -10,7 +10,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Directorio del proyecto (ruta absoluta)
-const PROJECT_DIR = "d:\\Repositorios_GitHub\\cv-formatter";
+const PROJECT_DIR = "d:\\Repositorios_GitHub\\personal\\cv-formatter";
 
 console.log(`[Supabase MCP - Guarnold CV System] ✓ Proyecto: ${PROJECT_DIR}`);
 
