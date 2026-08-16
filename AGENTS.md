@@ -12,7 +12,7 @@ Personal portfolio site.
 
 - **🚫 ⊥ `git push`. EVER.** Agent commits; the user pushes.
 - Branches: `main` = stable/prod · `dev` = daily work (default). ⊥ commit straight to `main`.
-- **Done = all 3, actually run (⊥ assumed):** build clean · lint clean · tests green (where they exist).
+- **Done = all 3, actually run (⊥ assumed):** build clean · lint clean (where configured) · tests green (where they exist).
   Fails → report the real output. ⊥ `--no-verify` to dodge a hook.
 - Non-trivial change → plan first. Touches DB, permissions, several files, or changes behavior → always.
 - Verification agents (gap/contradiction hunting) are token-expensive → **ASK THE USER FIRST**.
