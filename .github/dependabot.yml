@@ -1,0 +1,27 @@
+# Dependabot — SOLO parches de seguridad, ⊥ actualizaciones de rutina.
+#
+# Por que asi: con 22 repos, activar las actualizaciones de rutina genera una
+# lluvia de PRs que se termina ignorando -- y un Dependabot ignorado es peor que
+# no tenerlo, porque tapa las alertas que si importan.
+#
+# `open-pull-requests-limit: 0` desactiva los PRs de version programados.
+# Los PRs de SEGURIDAD (Dependabot security updates) NO dependen de este archivo
+# y se siguen creando igual: se activan en
+#   Settings -> Code security -> Dependabot security updates
+#
+# Ver guarnold-hub/TODO.md, Fase 1.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 0
+
+  # Las GitHub Actions pineadas por SHA no reciben parches solas:
+  # Dependabot avisa cuando hay version nueva.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
