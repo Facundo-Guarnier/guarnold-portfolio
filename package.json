@@ -3,7 +3,7 @@
   "screenName": "Guarnold Portfolio",
   "description": "Personal portfolio website showcasing my projects and skills as a software developer.",
   "private": true,
-  "version": "2026.09.11-b14",
+  "version": "2026.09.11-b15",
   "type": "module",
   "gitURL": "https://github.com/Facundo-Guarnier/guarnold-portfolio",
   "scripts": {
@@ -19,7 +19,7 @@
     "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^7.11.0",
+    "react-router-dom": "^7.18.3",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
