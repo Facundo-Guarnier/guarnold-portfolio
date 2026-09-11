@@ -3,7 +3,7 @@
   "screenName": "Guarnold Portfolio",
   "description": "Personal portfolio website showcasing my projects and skills as a software developer.",
   "private": true,
-  "version": "2026.09.11-b15",
+  "version": "2026.09.11-b18",
   "type": "module",
   "gitURL": "https://github.com/Facundo-Guarnier/guarnold-portfolio",
   "scripts": {
@@ -28,6 +28,6 @@
     "@vitejs/plugin-react": "^5.0.0",
     "lovable-tagger": "^1.1.10",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.4.3"
   }
 }
