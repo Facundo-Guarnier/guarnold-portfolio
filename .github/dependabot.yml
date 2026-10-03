@@ -24,10 +24,11 @@ updates:
         applies-to: "security-updates"
         patterns: ["*"]
 
-  # Las GitHub Actions pineadas por SHA no reciben parches solas:
-  # Dependabot avisa cuando hay version nueva.
+  # GitHub Actions: SOLO seguridad, igual que npm (limit 0).
+  # Los bumps de rutina (checkout v3 -> v7, etc.) ⊥ son de seguridad, y cada
+  # merge a main es un build pago. Las alertas de seguridad llegan igual.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
-    open-pull-requests-limit: 2
+    open-pull-requests-limit: 0
