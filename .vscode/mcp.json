@@ -7,9 +7,9 @@
     "supabase-guarnold-main": {
       "command": "node",
       "args": [
-        "d:\\Repositorios_GitHub\\guarnold-portfolio\\.vscode\\supabase-mcp-wrapper.cjs"
+        "d:\\Repositorios_GitHub\\personal\\guarnold-portfolio\\.vscode\\supabase-mcp-wrapper.cjs"
       ],
-      "cwd": "d:\\Repositorios_GitHub\\guarnold-portfolio",
+      "cwd": "d:\\Repositorios_GitHub\\personal\\guarnold-portfolio",
       "env": {}
     }
   }
