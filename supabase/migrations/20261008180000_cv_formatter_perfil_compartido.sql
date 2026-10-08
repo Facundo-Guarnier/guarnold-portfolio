@@ -12,9 +12,12 @@
 -- 1. Columnas nuevas (todas NULL o con default ∴ ⊥ rompen las filas ni el editor actual):
 --    fechas estructuradas `YYYY-MM`, `en_curso`, `tecnologias`, textos cortos para el portfolio y
 --    banderas `en_cv` / `en_portfolio` que deciden DÓNDE aparece cada ítem.
--- 2. `profiles.portfolio jsonb`: lo que es SOLO del portfolio (hero, stack, idiomas, fortalezas,
---    intereses). ⊥ merece tablas: el CV ⊥ lo usa y el editor lo trata como un bloque.
--- 3. `"cv-formatter".portfolio_publico()`: arma el jsonb que consume el portfolio.
+-- 2. `profiles.portfolio jsonb`: los TEXTOS propios del portfolio (hero, about_card, títulos de
+--    sección). El editor los muestra en un formulario ⊥ en JSON crudo.
+-- 3. `profiles.mostrar jsonb`: qué datos del perfil se ven en cada lado (teléfono, email, foto...).
+-- 4. `perfil_items`: idiomas, fortalezas e intereses. Una tabla, ⊥ tres: los dos lados pueden
+--    mostrarlos o no. `skills` gana categoría e ícono: el «stack» del portfolio sale de ahí.
+-- 5. `"cv-formatter".portfolio_publico()`: arma el jsonb que consume el portfolio.
 --
 -- ## Lo que ⊥ cambia (a propósito)
 --
@@ -24,6 +27,7 @@
 -- tabla — ⊥ alcanza con una bandera.
 --
 -- `en_portfolio` nace en false: nada aparece en el portfolio hasta que el owner lo marque.
+-- `en_cv` nace en true en lo que el CV ya mostraba, y en false en `perfil_items` (nuevo para el CV).
 -- ============================================================
 
 -- 1. COLUMNAS ------------------------------------------------
@@ -32,7 +36,13 @@ ALTER TABLE "cv-formatter".profiles
   ADD COLUMN IF NOT EXISTS apodo text,
   ADD COLUMN IF NOT EXISTS ciudad text,
   ADD COLUMN IF NOT EXISTS pais text,
-  ADD COLUMN IF NOT EXISTS portfolio jsonb NOT NULL DEFAULT '{}'::jsonb;
+  ADD COLUMN IF NOT EXISTS portfolio jsonb NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS mostrar jsonb NOT NULL DEFAULT '{}'::jsonb;
+
+COMMENT ON COLUMN "cv-formatter".profiles.mostrar IS
+  'Visibilidad de datos del perfil por lado: {"cv": {"email": true, ...}, "portfolio": {"foto": true, ...}}. Claves: email, telefono, foto, ubicacion. Ausente = default (CV: se muestra; portfolio: foto y ubicacion sí, email y telefono no).';
+COMMENT ON COLUMN "cv-formatter".profiles.portfolio IS
+  'Textos propios del portfolio: hero{title,subtitle,description}, about_card{title,role,description}, stack{title,description}, strengths{title}, languages{title}, interests{title}.';
 
 ALTER TABLE "cv-formatter".experiences
   ADD COLUMN IF NOT EXISTS fecha_inicio text,
@@ -67,7 +77,46 @@ ALTER TABLE "cv-formatter".projects
   ADD COLUMN IF NOT EXISTS en_portfolio boolean NOT NULL DEFAULT false;
 
 ALTER TABLE "cv-formatter".social_links
+  ADD COLUMN IF NOT EXISTS en_cv boolean NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS en_portfolio boolean NOT NULL DEFAULT false;
+
+-- Skills: el CV las muestra con nivel; el portfolio las agrupa por categoría (su «stack»).
+ALTER TABLE "cv-formatter".skills
+  ADD COLUMN IF NOT EXISTS categoria text,
+  ADD COLUMN IF NOT EXISTS icono text,
+  ADD COLUMN IF NOT EXISTS en_cv boolean NOT NULL DEFAULT true,
+  ADD COLUMN IF NOT EXISTS en_portfolio boolean NOT NULL DEFAULT false;
+
+-- Idiomas, fortalezas e intereses.
+CREATE TABLE IF NOT EXISTS "cv-formatter".perfil_items (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  profile_id uuid NOT NULL REFERENCES "cv-formatter".profiles(id) ON DELETE CASCADE,
+  tipo text NOT NULL,
+  texto text NOT NULL,
+  icono text,
+  display_order integer NOT NULL DEFAULT 0,
+  en_cv boolean NOT NULL DEFAULT false,
+  en_portfolio boolean NOT NULL DEFAULT false,
+  CONSTRAINT perfil_items_pkey PRIMARY KEY (id),
+  CONSTRAINT perfil_items_tipo_check CHECK (tipo IN ('idioma', 'fortaleza', 'interes'))
+);
+
+ALTER TABLE "cv-formatter".perfil_items ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public Read PerfilItems" ON "cv-formatter".perfil_items;
+CREATE POLICY "Public Read PerfilItems" ON "cv-formatter".perfil_items
+  FOR SELECT USING (true);
+
+-- Escritura = acceso a la app, igual que las otras 6 (ver 20261002235100). ⊥ auth.role().
+DROP POLICY IF EXISTS "Admin Manage PerfilItems" ON "cv-formatter".perfil_items;
+CREATE POLICY "Admin Manage PerfilItems" ON "cv-formatter".perfil_items
+  FOR ALL TO authenticated
+  USING (plataforma.has_app_access('cv-formatter'))
+  WITH CHECK (plataforma.has_app_access('cv-formatter'));
+
+REVOKE ALL ON "cv-formatter".perfil_items FROM PUBLIC, anon, authenticated;
+GRANT SELECT ON "cv-formatter".perfil_items TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON "cv-formatter".perfil_items TO authenticated;
 
 -- Fechas: `YYYY-MM` o NULL. Un texto libre acá es justo el desvío que esta migración quiere cortar.
 DO $$
@@ -99,6 +148,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS projects_slug_key
 -- privilegio propio, y una función DEFINER sería una superficie de más.
 -- La forma del jsonb es la de `guarnold-portfolio/src/data/content.yml` (identity, hero, ...,
 -- experience, projects) para que el portfolio cambie de origen sin tocar sus componentes.
+--
+-- Visibilidad de datos del perfil: `mostrar->'portfolio'->>clave`; ausente ⇒ default
+-- (foto y ubicación sí; email y teléfono no).
 
 CREATE OR REPLACE FUNCTION "cv-formatter".portfolio_publico()
 RETURNS jsonb
@@ -108,7 +160,39 @@ SECURITY INVOKER
 SET search_path = ''
 AS $$
   WITH p AS (
-    SELECT * FROM "cv-formatter".profiles ORDER BY created_at, id LIMIT 1
+    SELECT
+      pr.*,
+      coalesce((pr.mostrar -> 'portfolio' ->> 'foto')::boolean, true)      AS ver_foto,
+      coalesce((pr.mostrar -> 'portfolio' ->> 'ubicacion')::boolean, true) AS ver_ubicacion,
+      coalesce((pr.mostrar -> 'portfolio' ->> 'email')::boolean, false)    AS ver_email,
+      coalesce((pr.mostrar -> 'portfolio' ->> 'telefono')::boolean, false) AS ver_telefono
+    FROM "cv-formatter".profiles pr
+    ORDER BY pr.created_at, pr.id
+    LIMIT 1
+  ),
+  -- Una lista por tipo de perfil_items; los títulos de sección vienen de `portfolio`.
+  items AS (
+    SELECT i.tipo,
+           jsonb_agg(CASE WHEN i.tipo = 'interes'
+                          THEN jsonb_build_object('name', i.texto, 'icon', i.icono)
+                          ELSE to_jsonb(i.texto) END
+                     ORDER BY i.display_order) AS lista
+    FROM "cv-formatter".perfil_items i
+    JOIN p ON p.id = i.profile_id
+    WHERE i.en_portfolio
+    GROUP BY i.tipo
+  ),
+  grupos AS (
+    SELECT jsonb_agg(jsonb_build_object('category', g.categoria, 'technologies', g.tecnologias) ORDER BY g.orden) AS lista
+    FROM (
+      SELECT coalesce(s.categoria, 'Otros') AS categoria,
+             min(s.display_order) AS orden,
+             jsonb_agg(jsonb_build_object('name', s.nombre, 'icon', s.icono) ORDER BY s.display_order) AS tecnologias
+      FROM "cv-formatter".skills s
+      JOIN p ON p.id = s.profile_id
+      WHERE s.en_portfolio
+      GROUP BY coalesce(s.categoria, 'Otros')
+    ) g
   )
   SELECT jsonb_strip_nulls(
     jsonb_build_object(
@@ -116,14 +200,27 @@ AS $$
         'name', p.nombre,
         'nickname', p.apodo,
         'professional_title', p.titulo,
-        'avatar_url', p.foto_url
+        'avatar_url', CASE WHEN p.ver_foto THEN p.foto_url END,
+        'email', CASE WHEN p.ver_email THEN p.email END,
+        'phone', CASE WHEN p.ver_telefono THEN p.telefono END
       ),
-      'location', jsonb_build_object('city', p.ciudad, 'country', p.pais),
+      'location', CASE WHEN p.ver_ubicacion THEN jsonb_build_object(
+        'city', coalesce(p.ciudad, p.ubicacion),
+        'country', p.pais
+      ) END,
       'social', coalesce((
         SELECT jsonb_object_agg(lower(s.platform), s.url)
         FROM "cv-formatter".social_links s
         WHERE s.profile_id = p.id AND s.en_portfolio AND s.platform IS NOT NULL
       ), '{}'::jsonb),
+      'stack', coalesce(p.portfolio -> 'stack', '{}'::jsonb)
+               || jsonb_build_object('groups', coalesce((SELECT lista FROM grupos), '[]'::jsonb)),
+      'strengths', coalesce(p.portfolio -> 'strengths', '{}'::jsonb)
+               || jsonb_build_object('items', coalesce((SELECT lista FROM items WHERE tipo = 'fortaleza'), '[]'::jsonb)),
+      'languages', coalesce(p.portfolio -> 'languages', '{}'::jsonb)
+               || jsonb_build_object('items', coalesce((SELECT lista FROM items WHERE tipo = 'idioma'), '[]'::jsonb)),
+      'interests', coalesce(p.portfolio -> 'interests', '{}'::jsonb)
+               || jsonb_build_object('items', coalesce((SELECT lista FROM items WHERE tipo = 'interes'), '[]'::jsonb)),
       'experience', coalesce((
         SELECT jsonb_agg(x.fila ORDER BY x.orden DESC, x.inicio DESC)
         FROM (
@@ -175,14 +272,14 @@ AS $$
         WHERE j.profile_id = p.id AND j.en_portfolio
       ), '[]'::jsonb)
     )
-    -- hero / about_card / stack / strengths / languages / interests: bloque del portfolio, tal cual.
-    || p.portfolio
+    -- hero y about_card: textos del portfolio, tal cual (los títulos de sección ya se fusionaron arriba).
+    || (p.portfolio - 'stack' - 'strengths' - 'languages' - 'interests')
   )
   FROM p;
 $$;
 
 COMMENT ON FUNCTION "cv-formatter".portfolio_publico() IS
-  'jsonb público para guarnold-portfolio (forma de content.yml). Sin teléfono ni email. Solo ítems con en_portfolio. Editorial, ⊥ seguridad: el CV ya es público.';
+  'jsonb público para guarnold-portfolio (forma de content.yml). Respeta profiles.mostrar y las banderas en_portfolio. Editorial, ⊥ seguridad: el CV ya es público.';
 
 REVOKE ALL ON FUNCTION "cv-formatter".portfolio_publico() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION "cv-formatter".portfolio_publico() TO anon, authenticated;
