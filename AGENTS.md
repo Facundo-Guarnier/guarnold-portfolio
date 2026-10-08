@@ -43,3 +43,51 @@ Online CV editor — create, edit and share a professional résumé.
 
 Learning specific to THIS repo → document it HERE, versioned with the code.
 Useful in ANY project → belongs in the hub, ⊥ here.
+
+## Desarrollo local (stack Docker propio)
+
+Stack de Supabase **solo para este repo**, en Docker. ⊥ la nube: el script se niega a escribir
+config que apunte a otro lado.
+
+| Qué | Dónde / cómo |
+|---|---|
+| Puertos (bloque 54380-54389, el próximo libre de `guarnold-hub/PUERTOS.md`) | API **54381** · DB **54382** · shadow **54380** · Studio **54383** · SMTP (inbucket) **54384** · pooler **54389** (apagado) · analytics **54387** (apagado) |
+| App en local | `npm run dev:docker` → `vite --mode docker` en **5177** (el de `vite.config.ts`) |
+| Levantar + migrar | `npm run db:local` (idempotente). Con base limpia: `npm run db:local:reset` |
+| Parar | `npm run db:local:parar` |
+| Config de la app | `.env.docker.local`, **generado** por `db:local` (gitignoreado). Plantilla: `.env.docker.local.example` |
+| Cuenta CON acceso | `con-acceso@ejemplo.com` / `cv-local-1234` (`tools/local/entorno.mjs`) |
+| Cuenta SIN acceso | `sin-acceso@ejemplo.com` / `cv-local-1234` |
+| Pruebas SQL | `npm run test:sql` (`supabase/tests/*.sql`, cada una en su transacción con ROLLBACK) |
+| Integración (PostgREST + RLS real) | `npm run test:integracion` |
+| E2E (Playwright, levanta el dev server en modo `docker`) | `npm run test:e2e` |
+| Unitarios | `npm test` (⊥ necesita Docker) |
+
+Notas:
+
+- **`--mode local` ⊥ existe**: Vite lo rechaza (choca con el postfijo `.local` de los `.env`). El modo
+  es `docker` (la convención de `tools/scripts/db-local.mjs`).
+- **`db.migrations` está apagado** en `supabase/config.toml`: `plataforma` (`has_app_access`) vive en el
+  repo de GuarNote y tiene que existir **antes** de las migraciones de acá. `preparar-stack.mjs` lee
+  `../guarnote/supabase/migrations/20261002234342_plataforma_acceso_por_app.sql` (⊥ copia: dos copias
+  divergen). Otro lugar: `GUARNOTE_REPO=/ruta`.
+- **`supabase/roles.sql`** crea el esquema `cv-formatter` vacío al arrancar: PostgREST ⊥ arranca si
+  un esquema de `api.schemas` ⊥ existe (503), y las migraciones corren después de la API.
+- Las migraciones se registran en `supabase_migrations.schema_migrations` (la tabla del CLI), así que
+  `db:local` aplica solo las nuevas. Una migración que ⊥ es idempotente sobre una base ya migrada
+  (ej. `CREATE POLICY` sin `DROP`) ⊥ se puede reaplicar: por eso el registro.
+- Las pruebas SQL vacían `profiles` dentro de su transacción (la RPC toma el primer perfil); el ROLLBACK
+  devuelve el perfil del `db:local`.
+
+### Importar el portfolio al editor
+
+«Importar desde portfolio» (`components/editor/ImportarPortfolio.tsx`) toma el `content.yml` de
+`guarnold-portfolio` y lo **mezcla en el estado sin guardar**: el owner revisa el resumen y aprieta
+«Guardar». La lógica es pura (`lib/importarPortfolio.ts`, con tests en `lib/__tests__/`). Fixture:
+`tests/fixtures/content.yml` (copia @ `f700f03`).
+
+- Lo que trae el YAML pisa; lo que ⊥ existe se agrega con `enCv: false`. Los ítems se emparejan por
+  nombre normalizado (sin paréntesis, sin tildes) o por `slug` en proyectos.
+- **Foto**: `identity.avatar_url` es `/assets/profile.jpg`, un archivo del portfolio. Se guarda la ruta
+  tal cual y el resumen avisa: en el CV ⊥ se ve hasta que la foto esté en una URL pública.
+- `location.background_image` ⊥ tiene destino en la base: se omite con aviso.
