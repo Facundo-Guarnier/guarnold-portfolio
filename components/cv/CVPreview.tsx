@@ -3,6 +3,10 @@ import React, { useRef } from 'react';
 import { CVData } from '../../types/cv';
 import { MapPin, Mail, Phone, Github, Linkedin, ExternalLink, Globe, User, Twitter, Link as LinkIcon, Gitlab, Youtube, Instagram, MessageCircle, Send, Code2, BookOpen, Palette } from 'lucide-react';
 import { usePDFScale } from '../../hooks/usePDFScale';
+import { visibleEnCv } from '../../lib/visibilidad';
+import type { TipoPerfilItem } from '../../types/cv';
+
+const TITULO_PERFIL_ITEMS: Record<TipoPerfilItem, string> = { idioma: 'Idiomas', fortaleza: 'Fortalezas', interes: 'Intereses' };
 
 // Dimensiones A4 a 96 DPI
 const A4_WIDTH = 794; // 210mm
@@ -156,7 +160,9 @@ const CircuitWatermark = ({ isDark }: { isDark: boolean }) => (
 );
 
 export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '', disableInternalScaling = false }) => {
-  const { personal, experiencia, educacion, skills, proyectos, settings } = data;
+  // El CV dibuja SOLO lo marcado «en CV» (y los datos del perfil que `mostrar.cv` deja ver):
+  // la vista previa del editor es el CV real.
+  const { personal, experiencia, educacion, skills, proyectos, perfilItems, settings } = visibleEnCv(data);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scale, scaledHeight } = usePDFScale(containerRef, { horizontalPadding: 32 });
   
@@ -398,6 +404,25 @@ export const CVPreview: React.FC<CVPreviewProps> = ({ data, className = '', disa
                   </div>
                 </section>
               )}
+
+              {/* Idiomas / Fortalezas / Intereses */}
+              {(Object.keys(TITULO_PERFIL_ITEMS) as TipoPerfilItem[]).map((tipo) => {
+                const items = perfilItems.filter((i) => i.tipo === tipo);
+                return items.length > 0 && (
+                  <section key={tipo}>
+                    <h3 className={`text-sm font-bold uppercase tracking-widest mb-3 print:break-after-avoid ${theme.primary}`}>
+                      {TITULO_PERFIL_ITEMS[tipo]}
+                    </h3>
+                    <ul className="space-y-1">
+                      {items.map((item) => (
+                        <li key={item.id} className="text-xs font-medium text-neutral-700 dark:text-neutral-300 print:text-neutral-700">
+                          {item.texto}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })}
             </aside>
           </div>
 

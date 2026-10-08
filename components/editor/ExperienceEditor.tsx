@@ -1,13 +1,16 @@
 
 import React from 'react';
 import { Briefcase, Plus, Trash2, ChevronDown, ChevronUp, ArrowUp, ArrowDown } from 'lucide-react';
-import { Experiencia } from '../../types/cv';
+import { Experiencia, Nuevo } from '../../types/cv';
+import { DondeSeVe } from '../ui/DondeSeVe';
+import { FechasFields } from '../ui/FechasFields';
+import { ListaInput } from '../ui/ListaInput';
 import { Input, Label, TextArea, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
 
 interface ExperienceEditorProps {
   experiences: Experiencia[];
-  onAdd: (exp: Omit<Experiencia, 'id'>) => void;
+  onAdd: (exp: Nuevo<Experiencia>) => void;
   onUpdate: (id: string, exp: Partial<Experiencia>) => void;
   onRemove: (id: string) => void;
   onMove: (index: number, direction: 'up' | 'down') => void;
@@ -21,7 +24,9 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({ experiences,
     onAdd({
       puesto: 'Nuevo Puesto',
       empresa: 'Empresa',
-      periodo: '2024 - Presente',
+      periodo: '',
+      fechaInicio: new Date().toISOString().slice(0, 7),
+      enCurso: true,
       descripcion: 'Descripción de tareas...'
     });
   };
@@ -51,6 +56,8 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({ experiences,
                 {exp.puesto} <span className="text-neutral-400 dark:text-gray-500 font-normal">en {exp.empresa}</span>
               </div>
               <div className="flex items-center gap-1">
+                <DondeSeVe compacto enCv={exp.enCv} enPortfolio={exp.enPortfolio} onChange={(c) => onUpdate(exp.id, c)} />
+                <div className="w-px h-4 bg-neutral-300 dark:bg-gray-600 mx-1"></div>
                 <button 
                   onClick={(e) => { e.stopPropagation(); onMove(index, 'up'); }}
                   disabled={index === 0}
@@ -90,13 +97,25 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({ experiences,
                     <Input value={exp.empresa} onChange={(e) => onUpdate(exp.id, { empresa: e.target.value })} />
                   </div>
                 </div>
-                <div>
-                  <Label>Periodo</Label>
-                  <Input value={exp.periodo} onChange={(e) => onUpdate(exp.id, { periodo: e.target.value })} />
-                </div>
+                <FechasFields value={exp} onChange={(c) => onUpdate(exp.id, c)} />
                 <div>
                   <Label>Descripción (Usa Enter para saltos de línea)</Label>
                   <TextArea value={exp.descripcion} onChange={(e) => onUpdate(exp.id, { descripcion: e.target.value })} rows={6} />
+                </div>
+                <div className="pt-3 border-t border-neutral-100 dark:border-gray-700 space-y-4">
+                  <p className="text-xs text-neutral-400">Para el portfolio (opcional: si lo dejás vacío usa la descripción de arriba)</p>
+                  <div>
+                    <Label>Descripción corta</Label>
+                    <TextArea value={exp.descripcionCorta || ''} onChange={(e) => onUpdate(exp.id, { descripcionCorta: e.target.value })} rows={3} />
+                  </div>
+                  <div>
+                    <Label>Tecnologías (separadas por coma)</Label>
+                    <ListaInput value={exp.tecnologias || []} onChange={(tecnologias) => onUpdate(exp.id, { tecnologias })} placeholder="React, Supabase, Netlify" />
+                  </div>
+                  <div>
+                    <Label>Estado (opcional)</Label>
+                    <Input value={exp.estado || ''} onChange={(e) => onUpdate(exp.id, { estado: e.target.value })} placeholder="En curso" />
+                  </div>
                 </div>
               </div>
             )}

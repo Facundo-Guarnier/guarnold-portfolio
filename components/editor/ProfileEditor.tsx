@@ -1,13 +1,17 @@
 
 import React, { useRef } from 'react';
 import { User, Upload, X, Plus, Trash2, Globe, Linkedin, Github, Twitter, Mail, Phone, Link as LinkIcon, Gitlab, Youtube, Instagram, MessageCircle, Send, Code2, BookOpen, Palette } from 'lucide-react';
-import { Personal, LinkObj } from '../../types/cv';
+import { Personal, LinkObj, Mostrar, DatoPerfil } from '../../types/cv';
+import { datoVisible } from '../../lib/visibilidad';
+import { DondeSeVe } from '../ui/DondeSeVe';
 import { Input, Label, TextArea, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
 
 interface ProfileEditorProps {
   data: Personal;
+  mostrar: Mostrar;
   onChange: (data: Partial<Personal>) => void;
+  onMostrar: (lado: 'cv' | 'portfolio', dato: DatoPerfil, valor: boolean) => void;
   accentColor?: string;
 }
 
@@ -29,7 +33,20 @@ const SOCIAL_PLATFORMS = [
   { id: 'other', label: 'Otro', icon: LinkIcon }
 ];
 
-export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange, accentColor }) => {
+export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, mostrar, onChange, onMostrar, accentColor }) => {
+  // Interruptores CV / Portfolio de un dato del perfil (email, teléfono, foto, ubicación).
+  const donde = (dato: DatoPerfil) => (
+    <DondeSeVe
+      compacto
+      enCv={datoVisible(mostrar, 'cv', dato)}
+      enPortfolio={datoVisible(mostrar, 'portfolio', dato)}
+      onChange={(c) => {
+        if (c.enCv !== undefined) onMostrar('cv', dato, c.enCv);
+        if (c.enPortfolio !== undefined) onMostrar('portfolio', dato, c.enPortfolio);
+      }}
+    />
+  );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -64,7 +81,9 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange, ac
       id: `lnk-${Date.now()}`,
       label: 'LinkedIn',
       url: '',
-      platform: 'linkedin'
+      platform: 'linkedin',
+      enCv: true,
+      enPortfolio: false
     };
     onChange({ links: [...(data.links || []), newLink] });
   };
@@ -86,7 +105,7 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange, ac
       
       {/* Profile Image Uploader */}
       <div className="mb-6">
-        <Label>Foto de Perfil</Label>
+        <div className="flex items-center justify-between gap-2"><Label>Foto de Perfil</Label>{donde('foto')}</div>
         <div className="flex items-center gap-4 mt-2">
           {data.foto ? (
             <div className="relative group">
@@ -136,6 +155,11 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange, ac
         </div>
         
         <div>
+          <Label htmlFor="apodo">Apodo (lo muestra el portfolio)</Label>
+          <Input name="apodo" value={data.apodo || ''} onChange={handleChange} placeholder="Guarnold" />
+        </div>
+
+        <div>
           <Label htmlFor="titulo">Título Profesional</Label>
           <Input name="titulo" value={data.titulo} onChange={handleChange} placeholder="Ingeniero en Informática" />
         </div>
@@ -147,18 +171,22 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange, ac
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="email">Email</Label>
+            <div className="flex items-center justify-between gap-2"><Label htmlFor="email">Email</Label>{donde('email')}</div>
             <Input name="email" value={data.email} onChange={handleChange} placeholder="email@example.com" />
           </div>
           <div>
-            <Label htmlFor="telefono">Teléfono</Label>
+            <div className="flex items-center justify-between gap-2"><Label htmlFor="telefono">Teléfono</Label>{donde('telefono')}</div>
             <Input name="telefono" value={data.telefono} onChange={handleChange} placeholder="+54 9..." />
           </div>
         </div>
 
         <div>
-           <Label htmlFor="ubicacion">Ubicación</Label>
+           <div className="flex items-center justify-between gap-2"><Label htmlFor="ubicacion">Ubicación</Label>{donde('ubicacion')}</div>
            <Input name="ubicacion" value={data.ubicacion} onChange={handleChange} placeholder="Mendoza, Argentina" />
+           <div className="grid grid-cols-2 gap-2 mt-2">
+             <Input name="ciudad" value={data.ciudad || ''} onChange={handleChange} placeholder="Ciudad (portfolio, opcional)" />
+             <Input name="pais" value={data.pais || ''} onChange={handleChange} placeholder="País (portfolio, opcional)" />
+           </div>
         </div>
 
         {/* Dynamic Links Section */}
@@ -172,7 +200,8 @@ export const ProfileEditor: React.FC<ProfileEditorProps> = ({ data, onChange, ac
            
            <div className="space-y-3">
              {(data.links || []).map((link) => (
-               <div key={link.id} className="flex gap-2 items-start bg-neutral-50 dark:bg-gray-800 p-2 rounded-lg border border-neutral-200 dark:border-gray-700">
+               <div key={link.id} className="flex flex-wrap gap-2 items-start bg-neutral-50 dark:bg-gray-800 p-2 rounded-lg border border-neutral-200 dark:border-gray-700">
+                 <div className="w-full"><DondeSeVe enCv={link.enCv} enPortfolio={link.enPortfolio} onChange={(c) => updateLink(link.id, c)} /></div>
                  <div className="flex-1 grid grid-cols-3 gap-2">
                    <div className="col-span-1">
                       <select 

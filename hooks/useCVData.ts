@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, LinkObj } from '@/types/cv';
+import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, PerfilItem, Mostrar, PortfolioTextos, Nuevo } from '@/types/cv';
+import { calcularPeriodo } from '@/lib/visibilidad';
 import { supabase } from '@/lib/supabase';
 
 // Clave para preferencias de tema del visitante (persistente en localStorage)
@@ -108,8 +109,16 @@ const emptyData: CVData = {
   experiencia: [],
   educacion: [],
   skills: [],
-  proyectos: []
+  proyectos: [],
+  perfilItems: [],
+  mostrar: {},
+  portfolio: {}
 };
+
+// Ítems nuevos: el CV los muestra desde el primer momento; el portfolio solo si el owner lo marca.
+const VISIBLE_SOLO_CV = { enCv: true, enPortfolio: false };
+
+const nuevoTempId = () => `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
 export const useCVData = () => {
   // Estado original de Supabase (fuente de verdad para comparar)
@@ -126,7 +135,8 @@ export const useCVData = () => {
     education: string[];
     skills: string[];
     projects: string[];
-  }>({ experiences: [], education: [], skills: [], projects: [] });
+    perfilItems: string[];
+  }>({ experiences: [], education: [], skills: [], projects: [], perfilItems: [] });
 
   // Visitor Settings (preferencias locales para usuarios no autenticados)
   const [visitorSettings, setVisitorSettings] = useState<CVSettings | null>(() => {
@@ -148,7 +158,10 @@ export const useCVData = () => {
       experiencia: data.experiencia,
       educacion: data.educacion,
       skills: data.skills,
-      proyectos: data.proyectos
+      proyectos: data.proyectos,
+      perfilItems: data.perfilItems,
+      mostrar: data.mostrar,
+      portfolio: data.portfolio
     });
     const originalStr = JSON.stringify({
       settings: originalData.settings,
@@ -156,14 +169,18 @@ export const useCVData = () => {
       experiencia: originalData.experiencia,
       educacion: originalData.educacion,
       skills: originalData.skills,
-      proyectos: originalData.proyectos
+      proyectos: originalData.proyectos,
+      perfilItems: originalData.perfilItems,
+      mostrar: originalData.mostrar,
+      portfolio: originalData.portfolio
     });
     
     const hasDeletes = 
       pendingDeletes.experiences.length > 0 ||
       pendingDeletes.education.length > 0 ||
       pendingDeletes.skills.length > 0 ||
-      pendingDeletes.projects.length > 0;
+      pendingDeletes.projects.length > 0 ||
+      pendingDeletes.perfilItems.length > 0;
 
     return dataStr !== originalStr || hasDeletes;
   }, [data, originalData, pendingDeletes]);
@@ -192,12 +209,13 @@ export const useCVData = () => {
       PROFILE_ID = profile.id;
 
       // 2. Fetch todas las relaciones en paralelo
-      const [linksRes, expRes, eduRes, skillsRes, projRes] = await Promise.all([
+      const [linksRes, expRes, eduRes, skillsRes, projRes, itemsRes] = await Promise.all([
         supabase.from('social_links').select('*').eq('profile_id', profile.id).order('display_order'),
         supabase.from('experiences').select('*').eq('profile_id', profile.id).order('display_order'),
         supabase.from('education').select('*').eq('profile_id', profile.id).order('display_order'),
         supabase.from('skills').select('*').eq('profile_id', profile.id).order('display_order'),
         supabase.from('projects').select('*').eq('profile_id', profile.id).order('display_order'),
+        supabase.from('perfil_items').select('*').eq('profile_id', profile.id).order('display_order'),
       ]);
 
       // Verificar errores
@@ -206,23 +224,29 @@ export const useCVData = () => {
       if (eduRes.error) throw eduRes.error;
       if (skillsRes.error) throw skillsRes.error;
       if (projRes.error) throw projRes.error;
+      if (itemsRes.error) throw itemsRes.error;
 
       // 3. Mapear a estructura CVData
       const cvData: CVData = {
         settings: (profile.settings as CVSettings) || defaultSettings,
         personal: {
           nombre: profile.nombre || '',
+          apodo: profile.apodo || '',
           titulo: profile.titulo || '',
           email: profile.email || '',
           telefono: profile.telefono || '',
           ubicacion: profile.ubicacion || '',
+          ciudad: profile.ciudad || '',
+          pais: profile.pais || '',
           resumen: profile.resumen || '',
           foto: profile.foto_url || '',
           links: (linksRes.data || []).map(link => ({
             id: link.id,
             label: link.label || '',
             url: link.url || '',
-            platform: link.platform || undefined
+            platform: link.platform || undefined,
+            enCv: link.en_cv ?? true,
+            enPortfolio: link.en_portfolio ?? false
           }))
         },
         experiencia: (expRes.data || []).map(exp => ({
@@ -230,33 +254,73 @@ export const useCVData = () => {
           puesto: exp.puesto || '',
           empresa: exp.empresa || '',
           periodo: exp.periodo || '',
-          descripcion: exp.descripcion || ''
+          descripcion: exp.descripcion || '',
+          descripcionCorta: exp.descripcion_corta || '',
+          fechaInicio: exp.fecha_inicio || '',
+          fechaFin: exp.fecha_fin || '',
+          enCurso: exp.en_curso ?? false,
+          estado: exp.estado || '',
+          tecnologias: exp.tecnologias || [],
+          enCv: exp.en_cv ?? true,
+          enPortfolio: exp.en_portfolio ?? false
         })),
         educacion: (eduRes.data || []).map(edu => ({
           id: edu.id,
           institucion: edu.institucion || '',
           titulo: edu.titulo || '',
           periodo: edu.periodo || '',
-          descripcion: edu.descripcion || ''
+          descripcion: edu.descripcion || '',
+          descripcionCorta: edu.descripcion_corta || '',
+          fechaInicio: edu.fecha_inicio || '',
+          fechaFin: edu.fecha_fin || '',
+          enCurso: edu.en_curso ?? false,
+          estado: edu.estado || '',
+          tecnologias: edu.tecnologias || [],
+          enCv: edu.en_cv ?? true,
+          enPortfolio: edu.en_portfolio ?? false
         })),
         skills: (skillsRes.data || []).map(skill => ({
           id: skill.id,
           nombre: skill.nombre || '',
-          nivel: skill.nivel || 0
+          nivel: skill.nivel || 0,
+          categoria: skill.categoria || '',
+          icono: skill.icono || '',
+          enCv: skill.en_cv ?? true,
+          enPortfolio: skill.en_portfolio ?? false
         })),
         proyectos: (projRes.data || []).map(proj => ({
           id: proj.id,
           nombre: proj.nombre || '',
           descripcion: proj.descripcion || '',
           tecnologias: proj.tecnologias || '',
-          url: proj.url || undefined
-        }))
+          url: proj.url || undefined,
+          slug: proj.slug || '',
+          descripcionCorta: proj.descripcion_corta || '',
+          githubUrl: proj.github_url || '',
+          tags: proj.tags || [],
+          tamano: proj.tamano || '',
+          estado: proj.estado || '',
+          icono: proj.icono || '',
+          imagenUrl: proj.imagen_url || '',
+          enCv: proj.en_cv ?? true,
+          enPortfolio: proj.en_portfolio ?? false
+        })),
+        perfilItems: (itemsRes.data || []).map(item => ({
+          id: item.id,
+          tipo: item.tipo,
+          texto: item.texto || '',
+          icono: item.icono || '',
+          enCv: item.en_cv ?? false,
+          enPortfolio: item.en_portfolio ?? false
+        })),
+        mostrar: (profile.mostrar as Mostrar) || {},
+        portfolio: (profile.portfolio as PortfolioTextos) || {}
       };
 
       setData(cvData);
       setOriginalData(cvData);
       // Limpiar pendientes de eliminar
-      setPendingDeletes({ experiences: [], education: [], skills: [], projects: [] });
+      setPendingDeletes({ experiences: [], education: [], skills: [], projects: [], perfilItems: [] });
     } catch (err) {
       console.error('Error fetching CV data:', err);
       setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -321,7 +385,7 @@ export const useCVData = () => {
   };
 
   // Generic Move Function (solo cambio local)
-  const moveItem = (section: 'experiencia' | 'educacion' | 'proyectos' | 'skills', index: number, direction: 'up' | 'down') => {
+  const moveItem = (section: 'experiencia' | 'educacion' | 'proyectos' | 'skills' | 'perfilItems', index: number, direction: 'up' | 'down') => {
     setData(prev => {
       const list = [...prev[section]];
       if (direction === 'up' && index > 0) {
@@ -342,11 +406,13 @@ export const useCVData = () => {
   };
 
   // Experiencia (solo cambios locales - IDs temporales para nuevos items)
-  const addExperiencia = (experiencia: Omit<Experiencia, 'id'>) => {
-    const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const addExperiencia = (experiencia: Nuevo<Experiencia>) => {
+    const tempId = nuevoTempId();
     setData(prev => ({
       ...prev,
       experiencia: [...prev.experiencia, {
+        ...VISIBLE_SOLO_CV,
+        ...experiencia,
         id: tempId,
         puesto: experiencia.puesto || '',
         empresa: experiencia.empresa || '',
@@ -378,11 +444,13 @@ export const useCVData = () => {
   };
 
   // Educacion (solo cambios locales)
-  const addEducacion = (educacion: Omit<Educacion, 'id'>) => {
-    const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const addEducacion = (educacion: Nuevo<Educacion>) => {
+    const tempId = nuevoTempId();
     setData(prev => ({
       ...prev,
       educacion: [...prev.educacion, {
+        ...VISIBLE_SOLO_CV,
+        ...educacion,
         id: tempId,
         institucion: educacion.institucion || '',
         titulo: educacion.titulo || '',
@@ -413,11 +481,13 @@ export const useCVData = () => {
   };
 
   // Skills (solo cambios locales)
-  const addSkill = (skill: Omit<Skill, 'id'>) => {
-    const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const addSkill = (skill: Nuevo<Skill>) => {
+    const tempId = nuevoTempId();
     setData(prev => ({
       ...prev,
       skills: [...prev.skills, {
+        ...VISIBLE_SOLO_CV,
+        ...skill,
         id: tempId,
         nombre: skill.nombre || '',
         nivel: skill.nivel || 0
@@ -446,11 +516,13 @@ export const useCVData = () => {
   };
 
   // Proyectos (solo cambios locales)
-  const addProyecto = (proyecto: Omit<Proyecto, 'id'>) => {
-    const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const addProyecto = (proyecto: Nuevo<Proyecto>) => {
+    const tempId = nuevoTempId();
     setData(prev => ({
       ...prev,
       proyectos: [...prev.proyectos, {
+        ...VISIBLE_SOLO_CV,
+        ...proyecto,
         id: tempId,
         nombre: proyecto.nombre || '',
         descripcion: proyecto.descripcion || '',
@@ -480,6 +552,49 @@ export const useCVData = () => {
     }));
   };
 
+  // Perfil: qué dato se ve en cada lado, y los textos propios del portfolio (solo cambios locales)
+  const updateMostrar = (lado: 'cv' | 'portfolio', dato: keyof NonNullable<Mostrar['cv']>, valor: boolean) => {
+    setData(prev => ({
+      ...prev,
+      mostrar: { ...prev.mostrar, [lado]: { ...prev.mostrar[lado], [dato]: valor } }
+    }));
+  };
+
+  const updatePortfolio = (updates: PortfolioTextos) => {
+    setData(prev => ({ ...prev, portfolio: { ...prev.portfolio, ...updates } }));
+  };
+
+  // Idiomas, fortalezas e intereses (solo cambios locales)
+  const addPerfilItem = (item: Pick<PerfilItem, 'tipo'> & Partial<PerfilItem>) => {
+    setData(prev => ({
+      ...prev,
+      perfilItems: [...prev.perfilItems, {
+        enCv: false,
+        enPortfolio: true,
+        texto: '',
+        ...item,
+        id: nuevoTempId()
+      }]
+    }));
+  };
+
+  const updatePerfilItem = (id: string, updates: Partial<PerfilItem>) => {
+    setData(prev => ({
+      ...prev,
+      perfilItems: prev.perfilItems.map(item => item.id === id ? { ...item, ...updates } : item)
+    }));
+  };
+
+  const removePerfilItem = (id: string) => {
+    if (!id.startsWith('temp_')) {
+      setPendingDeletes(prev => ({ ...prev, perfilItems: [...prev.perfilItems, id] }));
+    }
+    setData(prev => ({
+      ...prev,
+      perfilItems: prev.perfilItems.filter(item => item.id !== id)
+    }));
+  };
+
   // --- SAVE ALL CHANGES TO SUPABASE ---
   const saveAllChanges = async (): Promise<{ success: boolean; error?: string }> => {
     if (!PROFILE_ID) {
@@ -493,13 +608,18 @@ export const useCVData = () => {
       // 1. Guardar profile (personal + settings)
       const profileUpdate: Record<string, unknown> = {
         nombre: data.personal.nombre,
+        apodo: data.personal.apodo || null,
         titulo: data.personal.titulo,
         email: data.personal.email,
         telefono: data.personal.telefono,
         ubicacion: data.personal.ubicacion,
+        ciudad: data.personal.ciudad || null,
+        pais: data.personal.pais || null,
         resumen: data.personal.resumen,
         foto_url: data.personal.foto,
-        settings: data.settings
+        settings: data.settings,
+        mostrar: data.mostrar,
+        portfolio: data.portfolio
       };
 
       const { error: profileError } = await supabase
@@ -518,6 +638,8 @@ export const useCVData = () => {
           label: link.label,
           url: link.url,
           platform: link.platform || null,
+          en_cv: link.enCv,
+          en_portfolio: link.enPortfolio,
           display_order: idx
         }));
 
@@ -543,6 +665,11 @@ export const useCVData = () => {
         if (error) throw error;
       }
 
+      if (pendingDeletes.perfilItems.length > 0) {
+        const { error } = await supabase.from('perfil_items').delete().in('id', pendingDeletes.perfilItems);
+        if (error) throw error;
+      }
+
       // 4. Guardar experiencias (upsert para existentes, insert para nuevos)
       for (let idx = 0; idx < data.experiencia.length; idx++) {
         const exp = data.experiencia[idx];
@@ -552,8 +679,16 @@ export const useCVData = () => {
             profile_id: PROFILE_ID,
             puesto: exp.puesto,
             empresa: exp.empresa,
-            periodo: exp.periodo,
+            periodo: calcularPeriodo(exp),
             descripcion: exp.descripcion,
+            descripcion_corta: exp.descripcionCorta || null,
+            fecha_inicio: exp.fechaInicio || null,
+            fecha_fin: exp.enCurso ? null : exp.fechaFin || null,
+            en_curso: !!exp.enCurso,
+            estado: exp.estado || null,
+            tecnologias: exp.tecnologias || [],
+            en_cv: exp.enCv,
+            en_portfolio: exp.enPortfolio,
             display_order: idx
           });
           if (error) throw error;
@@ -562,8 +697,16 @@ export const useCVData = () => {
           const { error } = await supabase.from('experiences').update({
             puesto: exp.puesto,
             empresa: exp.empresa,
-            periodo: exp.periodo,
+            periodo: calcularPeriodo(exp),
             descripcion: exp.descripcion,
+            descripcion_corta: exp.descripcionCorta || null,
+            fecha_inicio: exp.fechaInicio || null,
+            fecha_fin: exp.enCurso ? null : exp.fechaFin || null,
+            en_curso: !!exp.enCurso,
+            estado: exp.estado || null,
+            tecnologias: exp.tecnologias || [],
+            en_cv: exp.enCv,
+            en_portfolio: exp.enPortfolio,
             display_order: idx
           }).eq('id', exp.id);
           if (error) throw error;
@@ -578,8 +721,16 @@ export const useCVData = () => {
             profile_id: PROFILE_ID,
             institucion: edu.institucion,
             titulo: edu.titulo,
-            periodo: edu.periodo,
+            periodo: calcularPeriodo(edu),
             descripcion: edu.descripcion,
+            descripcion_corta: edu.descripcionCorta || null,
+            fecha_inicio: edu.fechaInicio || null,
+            fecha_fin: edu.enCurso ? null : edu.fechaFin || null,
+            en_curso: !!edu.enCurso,
+            estado: edu.estado || null,
+            tecnologias: edu.tecnologias || [],
+            en_cv: edu.enCv,
+            en_portfolio: edu.enPortfolio,
             display_order: idx
           });
           if (error) throw error;
@@ -587,8 +738,16 @@ export const useCVData = () => {
           const { error } = await supabase.from('education').update({
             institucion: edu.institucion,
             titulo: edu.titulo,
-            periodo: edu.periodo,
+            periodo: calcularPeriodo(edu),
             descripcion: edu.descripcion,
+            descripcion_corta: edu.descripcionCorta || null,
+            fecha_inicio: edu.fechaInicio || null,
+            fecha_fin: edu.enCurso ? null : edu.fechaFin || null,
+            en_curso: !!edu.enCurso,
+            estado: edu.estado || null,
+            tecnologias: edu.tecnologias || [],
+            en_cv: edu.enCv,
+            en_portfolio: edu.enPortfolio,
             display_order: idx
           }).eq('id', edu.id);
           if (error) throw error;
@@ -603,6 +762,10 @@ export const useCVData = () => {
             profile_id: PROFILE_ID,
             nombre: skill.nombre,
             nivel: skill.nivel,
+            categoria: skill.categoria || null,
+            icono: skill.icono || null,
+            en_cv: skill.enCv,
+            en_portfolio: skill.enPortfolio,
             display_order: idx
           });
           if (error) throw error;
@@ -610,6 +773,10 @@ export const useCVData = () => {
           const { error } = await supabase.from('skills').update({
             nombre: skill.nombre,
             nivel: skill.nivel,
+            categoria: skill.categoria || null,
+            icono: skill.icono || null,
+            en_cv: skill.enCv,
+            en_portfolio: skill.enPortfolio,
             display_order: idx
           }).eq('id', skill.id);
           if (error) throw error;
@@ -624,8 +791,18 @@ export const useCVData = () => {
             profile_id: PROFILE_ID,
             nombre: proj.nombre,
             descripcion: proj.descripcion,
+            descripcion_corta: proj.descripcionCorta || null,
             tecnologias: proj.tecnologias,
             url: proj.url,
+            slug: proj.slug || null,
+            github_url: proj.githubUrl || null,
+            tags: proj.tags || [],
+            tamano: proj.tamano || null,
+            estado: proj.estado || null,
+            icono: proj.icono || null,
+            imagen_url: proj.imagenUrl || null,
+            en_cv: proj.enCv,
+            en_portfolio: proj.enPortfolio,
             display_order: idx
           });
           if (error) throw error;
@@ -633,15 +810,42 @@ export const useCVData = () => {
           const { error } = await supabase.from('projects').update({
             nombre: proj.nombre,
             descripcion: proj.descripcion,
+            descripcion_corta: proj.descripcionCorta || null,
             tecnologias: proj.tecnologias,
             url: proj.url,
+            slug: proj.slug || null,
+            github_url: proj.githubUrl || null,
+            tags: proj.tags || [],
+            tamano: proj.tamano || null,
+            estado: proj.estado || null,
+            icono: proj.icono || null,
+            imagen_url: proj.imagenUrl || null,
+            en_cv: proj.enCv,
+            en_portfolio: proj.enPortfolio,
             display_order: idx
           }).eq('id', proj.id);
           if (error) throw error;
         }
       }
 
-      // 8. Recargar datos para sincronizar IDs reales
+      // 8. Idiomas, fortalezas e intereses
+      for (let idx = 0; idx < data.perfilItems.length; idx++) {
+        const item = data.perfilItems[idx];
+        const fila = {
+          tipo: item.tipo,
+          texto: item.texto,
+          icono: item.icono || null,
+          en_cv: item.enCv,
+          en_portfolio: item.enPortfolio,
+          display_order: idx
+        };
+        const { error } = item.id.startsWith('temp_')
+          ? await supabase.from('perfil_items').insert({ profile_id: PROFILE_ID, ...fila })
+          : await supabase.from('perfil_items').update(fila).eq('id', item.id);
+        if (error) throw error;
+      }
+
+      // 9. Recargar datos para sincronizar IDs reales
       await fetchData();
       
       return { success: true };
@@ -658,7 +862,7 @@ export const useCVData = () => {
   // Descartar cambios locales y volver al estado original
   const discardChanges = () => {
     setData(originalData);
-    setPendingDeletes({ experiences: [], education: [], skills: [], projects: [] });
+    setPendingDeletes({ experiences: [], education: [], skills: [], projects: [], perfilItems: [] });
   };
 
   const resetData = async () => {
@@ -677,6 +881,11 @@ export const useCVData = () => {
     setTheme,
     resetVisitorTheme,
     updatePersonal,
+    updateMostrar,
+    updatePortfolio,
+    addPerfilItem,
+    updatePerfilItem,
+    removePerfilItem,
     moveItem,
     addExperiencia,
     updateExperiencia,

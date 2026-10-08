@@ -1,13 +1,15 @@
 
 import React from 'react';
 import { Zap, Plus, X, ArrowUp, ArrowDown } from 'lucide-react';
-import { Skill } from '../../types/cv';
+import { Skill, Nuevo } from '../../types/cv';
+import { DondeSeVe } from '../ui/DondeSeVe';
+
 import { Input, Label, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
 
 interface SkillsEditorProps {
   skills: Skill[];
-  onAdd: (skill: Omit<Skill, 'id'>) => void;
+  onAdd: (skill: Nuevo<Skill>) => void;
   onUpdate: (id: string, skill: Partial<Skill>) => void;
   onRemove: (id: string) => void;
   onMove: (index: number, direction: 'up' | 'down') => void;
@@ -39,6 +41,21 @@ export const SkillsEditor: React.FC<SkillsEditorProps> = ({ skills, onAdd, onUpd
                 className="mb-2"
                 placeholder="Nombre de la habilidad"
               />
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                <Input
+                  value={skill.categoria || ''}
+                  onChange={(e) => onUpdate(skill.id, { categoria: e.target.value })}
+                  placeholder="Categoría (portfolio): Lenguajes"
+                />
+                <Input
+                  value={skill.icono || ''}
+                  onChange={(e) => onUpdate(skill.id, { icono: e.target.value })}
+                  placeholder="Ícono (portfolio): code"
+                />
+              </div>
+              <div className="mb-2">
+                <DondeSeVe enCv={skill.enCv} enPortfolio={skill.enPortfolio} onChange={(c) => onUpdate(skill.id, c)} />
+              </div>
               <div className="flex items-center gap-2 px-1">
                 <input 
                   type="range" 

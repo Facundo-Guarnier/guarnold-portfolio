@@ -1,13 +1,15 @@
 
 import React from 'react';
 import { Rocket, Plus, Trash2, ChevronDown, ChevronUp, ArrowUp, ArrowDown } from 'lucide-react';
-import { Proyecto } from '../../types/cv';
+import { Proyecto, Nuevo } from '../../types/cv';
+import { DondeSeVe } from '../ui/DondeSeVe';
+import { ListaInput } from '../ui/ListaInput';
 import { Input, Label, TextArea, SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
 
 interface ProjectsEditorProps {
   proyectos: Proyecto[];
-  onAdd: (proj: Omit<Proyecto, 'id'>) => void;
+  onAdd: (proj: Nuevo<Proyecto>) => void;
   onUpdate: (id: string, proj: Partial<Proyecto>) => void;
   onRemove: (id: string) => void;
   onMove: (index: number, direction: 'up' | 'down') => void;
@@ -52,6 +54,8 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({ proyectos, onAdd
                 {proj.nombre}
               </div>
               <div className="flex items-center gap-1">
+                <DondeSeVe compacto enCv={proj.enCv} enPortfolio={proj.enPortfolio} onChange={(c) => onUpdate(proj.id, c)} />
+                <div className="w-px h-4 bg-neutral-300 dark:bg-gray-600 mx-1"></div>
                  <button 
                   onClick={(e) => { e.stopPropagation(); onMove(index, 'up'); }}
                   disabled={index === 0}
@@ -96,6 +100,64 @@ export const ProjectsEditor: React.FC<ProjectsEditorProps> = ({ proyectos, onAdd
                 <div>
                   <Label>URL (Opcional)</Label>
                   <Input value={proj.url || ''} onChange={(e) => onUpdate(proj.id, { url: e.target.value })} placeholder="https://..." />
+                </div>
+                <div className="pt-3 border-t border-neutral-100 dark:border-gray-700 space-y-4">
+                  <p className="text-xs text-neutral-400">Para el portfolio (opcional)</p>
+                  <div>
+                    <Label>Descripción corta</Label>
+                    <TextArea value={proj.descripcionCorta || ''} onChange={(e) => onUpdate(proj.id, { descripcionCorta: e.target.value })} rows={2} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Identificador</Label>
+                      <Input value={proj.slug || ''} onChange={(e) => onUpdate(proj.id, { slug: e.target.value.trim().toLowerCase().replace(/\s+/g, '-') })} placeholder="buckshot-tracker" />
+                    </div>
+                    <div>
+                      <Label>GitHub</Label>
+                      <Input value={proj.githubUrl || ''} onChange={(e) => onUpdate(proj.id, { githubUrl: e.target.value })} placeholder="https://github.com/..." />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Etiquetas (coma)</Label>
+                    <ListaInput value={proj.tags || []} onChange={(tags) => onUpdate(proj.id, { tags })} placeholder="Game Tool, TypeScript" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <Label>Tamaño</Label>
+                      <select
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 rounded-lg text-sm text-neutral-900 dark:text-white"
+                        value={proj.tamano || ''}
+                        onChange={(e) => onUpdate(proj.id, { tamano: e.target.value })}
+                      >
+                        <option value="">Automático</option>
+                        <option value="small">Chico</option>
+                        <option value="medium">Mediano</option>
+                        <option value="large">Grande</option>
+                        <option value="tall">Alto</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label>Estado</Label>
+                      <select
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-neutral-200 dark:border-gray-700 rounded-lg text-sm text-neutral-900 dark:text-white"
+                        value={proj.estado || ''}
+                        onChange={(e) => onUpdate(proj.id, { estado: e.target.value })}
+                      >
+                        <option value="">—</option>
+                        <option value="live">En vivo</option>
+                        <option value="demo">Demo</option>
+                        <option value="wip">En desarrollo</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label>Ícono</Label>
+                      <Input value={proj.icono || ''} onChange={(e) => onUpdate(proj.id, { icono: e.target.value })} placeholder="Crosshair" />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Imagen (URL)</Label>
+                    <Input value={proj.imagenUrl || ''} onChange={(e) => onUpdate(proj.id, { imagenUrl: e.target.value })} placeholder="https://..." />
+                  </div>
                 </div>
               </div>
             )}

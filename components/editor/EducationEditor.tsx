@@ -1,13 +1,16 @@
 
 import React from 'react';
 import { GraduationCap, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
-import { Educacion } from '../../types/cv';
+import { Educacion, Nuevo } from '../../types/cv';
+import { DondeSeVe } from '../ui/DondeSeVe';
+import { FechasFields } from '../ui/FechasFields';
+import { ListaInput } from '../ui/ListaInput';
 import { Input, Label, SectionTitle, TextArea } from '../ui/Form';
 import { Button } from '../ui/Button';
 
 interface EducationEditorProps {
   educations: Educacion[];
-  onAdd: (edu: Omit<Educacion, 'id'>) => void;
+  onAdd: (edu: Nuevo<Educacion>) => void;
   onUpdate: (id: string, edu: Partial<Educacion>) => void;
   onRemove: (id: string) => void;
   onMove: (index: number, direction: 'up' | 'down') => void;
@@ -22,7 +25,7 @@ export const EducationEditor: React.FC<EducationEditorProps> = ({ educations, on
         <Button 
           variant="primary" 
           size="sm" 
-          onClick={() => onAdd({ institucion: 'Institución', titulo: 'Título', periodo: 'Año' })} 
+          onClick={() => onAdd({ institucion: 'Institución', titulo: 'Título', periodo: '', fechaInicio: new Date().toISOString().slice(0, 7) })} 
           className={`gap-1 ${accentColor || ''}`}
         >
           <Plus className="w-3 h-3" /> Agregar
@@ -33,7 +36,9 @@ export const EducationEditor: React.FC<EducationEditorProps> = ({ educations, on
         {educations.map((edu, index) => (
           <div key={edu.id} className="relative p-4 border border-neutral-200 dark:border-gray-700 rounded-lg bg-neutral-50 dark:bg-gray-800 group">
              
-             <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+             <div className="absolute top-2 right-2 flex items-center gap-1">
+                <DondeSeVe compacto enCv={edu.enCv} enPortfolio={edu.enPortfolio} onChange={(c) => onUpdate(edu.id, c)} />
+                <div className="w-px h-3 bg-neutral-300 dark:bg-gray-600 mx-1"></div>
                 <button 
                   onClick={() => onMove(index, 'up')}
                   disabled={index === 0}
@@ -60,23 +65,35 @@ export const EducationEditor: React.FC<EducationEditorProps> = ({ educations, on
              </div>
 
             <div className="grid gap-3">
-              <div className="pr-20"> {/* Add padding to prevent text overlap with absolute buttons */}
+              <div className="pr-36"> {/* Add padding to prevent text overlap with absolute buttons */}
                 <Label>Institución</Label>
                 <Input value={edu.institucion} onChange={(e) => onUpdate(edu.id, { institucion: e.target.value })} />
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label>Título</Label>
-                  <Input value={edu.titulo} onChange={(e) => onUpdate(edu.id, { titulo: e.target.value })} />
-                </div>
-                <div>
-                  <Label>Periodo</Label>
-                  <Input value={edu.periodo} onChange={(e) => onUpdate(edu.id, { periodo: e.target.value })} />
-                </div>
+              <div>
+                <Label>Título</Label>
+                <Input value={edu.titulo} onChange={(e) => onUpdate(edu.id, { titulo: e.target.value })} />
               </div>
+              <FechasFields value={edu} onChange={(c) => onUpdate(edu.id, c)} />
               <div>
                   <Label>Detalle / Descripción (Opcional)</Label>
                   <Input value={edu.descripcion || ''} onChange={(e) => onUpdate(edu.id, { descripcion: e.target.value })} />
+              </div>
+              <div className="pt-3 border-t border-neutral-100 dark:border-gray-700 grid gap-3">
+                <p className="text-xs text-neutral-400">Para el portfolio (opcional)</p>
+                <div>
+                  <Label>Descripción corta</Label>
+                  <Input value={edu.descripcionCorta || ''} onChange={(e) => onUpdate(edu.id, { descripcionCorta: e.target.value })} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label>Estado</Label>
+                    <Input value={edu.estado || ''} onChange={(e) => onUpdate(edu.id, { estado: e.target.value })} placeholder="Graduado" />
+                  </div>
+                  <div>
+                    <Label>Temas (coma)</Label>
+                    <ListaInput value={edu.tecnologias || []} onChange={(tecnologias) => onUpdate(edu.id, { tecnologias })} placeholder="IA, Arquitectura" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

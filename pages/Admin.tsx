@@ -13,6 +13,7 @@ import { EducationEditor } from '@/components/editor/EducationEditor';
 import { SkillsEditor } from '@/components/editor/SkillsEditor';
 import { ProjectsEditor } from '@/components/editor/ProjectsEditor';
 import { SettingsEditor } from '@/components/editor/SettingsEditor';
+import { PortfolioEditor } from '@/components/editor/PortfolioEditor';
 import { Button } from '@/components/ui/Button';
 
 // Dimensiones A4 en píxeles
@@ -44,6 +45,11 @@ const Admin: React.FC = () => {
     addProyecto,
     updateProyecto,
     removeProyecto,
+    updateMostrar,
+    updatePortfolio,
+    addPerfilItem,
+    updatePerfilItem,
+    removePerfilItem,
     saveAllChanges,
     discardChanges
   } = useCVData();
@@ -245,8 +251,10 @@ const Admin: React.FC = () => {
             />
 
             <ProfileEditor 
-              data={data.personal} 
-              onChange={updatePersonal} 
+              data={data.personal}
+              mostrar={data.mostrar}
+              onChange={updatePersonal}
+              onMostrar={updateMostrar}
               accentColor={accentClass} 
             />
             <ExperienceEditor 
@@ -279,6 +287,15 @@ const Admin: React.FC = () => {
               onUpdate={updateSkill}
               onRemove={removeSkill}
               onMove={(idx, dir) => moveItem('skills', idx, dir)}
+              accentColor={accentClass}
+            />
+            <PortfolioEditor
+              textos={data.portfolio}
+              items={data.perfilItems}
+              onTextos={updatePortfolio}
+              onAdd={addPerfilItem}
+              onUpdate={updatePerfilItem}
+              onRemove={removePerfilItem}
               accentColor={accentClass}
             />
           </div>
