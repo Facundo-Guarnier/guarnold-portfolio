@@ -1,5 +1,5 @@
 import content from "../data/content.yml";
-import { supabase } from "../lib/supabase";
+import { supabase, supabaseConfigurado } from "../lib/supabase";
 import type { Experience, HomeContent, Profile, Project } from "../types";
 
 export interface ContentDatabase {
@@ -33,7 +33,7 @@ export const ARCHIVOS_LOCALES = [
 export const AVATAR_POR_DEFECTO = "/assets/profile.jpg";
 export const FONDO_MAPA_POR_DEFECTO = "/assets/mapa_argentina.png";
 
-/** Títulos de sección: el RPC los trae solo si el owner los escribió en cv-formatter. */
+/** Títulos de sección: el RPC los trae solo si el owner los escribió en /admin. */
 export const TITULOS_POR_DEFECTO = {
   stack: "Arsenal",
   strengths: "Fortalezas",
@@ -245,12 +245,12 @@ export const normalizarPerfilRemoto = (
 };
 
 /**
- * La fuente de verdad es Supabase (lo que se edita en cv-formatter, con el interruptor «Portfolio»
+ * La fuente de verdad es Supabase (lo que se edita en /admin, con el interruptor «Portfolio»
  * de cada ítem). `content.yml` queda de RESPALDO: se usa si no hay variables de entorno, si la
  * llamada falla, o si la base todavía ⊥ tiene el perfil cargado (⊥ se mezclan: o una o la otra).
  */
 const cargarRemoto = async (): Promise<ContentDatabase | null> => {
-  if (!supabase) return null;
+  if (!supabaseConfigurado) return null;
   try {
     const { data, error } = await supabase.rpc("portfolio_publico");
     if (error) throw error;

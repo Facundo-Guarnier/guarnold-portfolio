@@ -9,13 +9,13 @@ import {
 // Rutas con el elemento que aparece cuando la página ya cargó sus datos.
 const PAGINAS = [
   { ruta: "/", listo: "h1" },
-  { ruta: "/#/projects", listo: "article" },
-  { ruta: "/#/trajectory", listo: "h3" },
+  { ruta: "/projects", listo: "article" },
+  { ruta: "/trajectory", listo: "h3" },
 ];
 
 /**
  * Abre el sitio en un contexto NUEVO (el servicio cachea por documento) y recorre las páginas
- * por hash, como lo haría el usuario. Devuelve el texto visible de cada una.
+ * dentro de la app, como lo haría el usuario. Devuelve el texto visible de cada una.
  */
 const recorrer = async (
   browser: Browser,
@@ -26,9 +26,18 @@ const recorrer = async (
   const rpc = await simularRpc(page, respuesta);
   const errores = registrarErroresDePagina(page);
 
+  // Una sola carga del documento y el resto por navegación interna (como un usuario): el servicio
+  // cachea por documento, así que un `goto` por página contaría una llamada a la RPC por cada una.
   const lineas: Record<string, string[]> = {};
   for (const { ruta, listo } of PAGINAS) {
-    await page.goto(ruta);
+    if (ruta === PAGINAS[0].ruta) {
+      await page.goto(ruta);
+    } else {
+      await page.evaluate((destino) => {
+        window.history.pushState({}, "", destino);
+        window.dispatchEvent(new PopStateEvent("popstate"));
+      }, ruta);
+    }
     await expect(page.locator(listo).first()).toBeVisible();
     lineas[ruta] = await lineasVisibles(page);
   }
@@ -44,11 +53,11 @@ test("RPC con error 500: Home, Projects y Trajectory muestran content.yml", asyn
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hola, soy Facundo Guarnier.");
   await expect(page.getByRole("heading", { name: "Arsenal" })).toBeVisible();
 
-  await page.goto("/#/projects");
+  await page.goto("/projects");
   await expect(page.locator("article")).toHaveCount(FIXTURE_RPC.projects.length);
   await expect(page.getByRole("heading", { name: "Buckshot Tracker Pro" })).toBeVisible();
 
-  await page.goto("/#/trajectory");
+  await page.goto("/trajectory");
   await expect(page.getByText("Merovingian Data (Híbrido)")).toBeVisible();
   await expect(page.getByText("Universidad de Mendoza")).toBeVisible();
 

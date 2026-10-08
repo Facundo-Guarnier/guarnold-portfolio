@@ -49,7 +49,7 @@ test("Projects muestra las tarjetas remotas y el link de cada proyecto", async (
   await interceptarAperturas(page);
   const errores = registrarErroresDePagina(page);
 
-  await page.goto("/#/projects");
+  await page.goto("/projects");
 
   const tarjeta = page.locator("article", { hasText: "Proyecto remoto de prueba" });
   await expect(tarjeta).toBeVisible();
@@ -75,7 +75,7 @@ test("Trajectory muestra la experiencia y la educación remotas", async ({ page 
   await simularRpc(page, { body: remoto });
   const errores = registrarErroresDePagina(page);
 
-  await page.goto("/#/trajectory");
+  await page.goto("/trajectory");
 
   await expect(page.getByText("Empresa remota SRL")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Experiencia Profesional" })).toBeVisible();

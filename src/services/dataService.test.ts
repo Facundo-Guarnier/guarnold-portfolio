@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
@@ -28,7 +29,7 @@ const fixture = JSON.parse(
 
 const cargarServicio = async (cliente: unknown) => {
   vi.resetModules();
-  vi.doMock("../lib/supabase", () => ({ supabase: cliente }));
+  vi.doMock("../lib/supabase", () => ({ supabase: cliente, supabaseConfigurado: cliente !== null }));
   return import("./dataService");
 };
 
@@ -65,7 +66,7 @@ describe("normalizarPerfilRemoto", () => {
     const conAvatar = (avatar_url: unknown) =>
       normalizarPerfilRemoto({ identity: { name: "Ana", avatar_url } })?.identity?.avatar_url;
 
-    it("sin avatar (foto oculta en cv-formatter) queda sin foto: placeholder de la UI", () => {
+    it("sin avatar (foto oculta en /admin) queda sin foto: placeholder de la UI", () => {
       expect(conAvatar(undefined)).toBeUndefined();
       expect(conAvatar(null)).toBeUndefined();
       expect(conAvatar("   ")).toBeUndefined();
@@ -130,7 +131,7 @@ describe("normalizarPerfilRemoto", () => {
     });
   });
 
-  it("sin ubicación (oculta en cv-formatter) no inventa ciudad", () => {
+  it("sin ubicación (oculta en /admin) no inventa ciudad", () => {
     const perfil = normalizarPerfilRemoto({ identity: { name: "Ana" } });
 
     expect(perfil?.location?.city).toBeUndefined();
