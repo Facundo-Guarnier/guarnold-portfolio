@@ -29,3 +29,8 @@ service-account*.json
 
 # Estado local de la maquina
 .claude/settings.local.json
+
+# Stack local de Supabase y reportes de Playwright (artefactos de la máquina)
+supabase/.branches/
+test-results/
+playwright-report/

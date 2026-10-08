@@ -6,6 +6,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     include: ['**/*.test.{ts,tsx}'],
-    exclude: ['node_modules/**'],
+    // Integración (necesita el stack local de Docker) y E2E (Playwright) tienen su propio comando.
+    exclude: ['node_modules/**', 'tests/integracion/**', 'e2e/**'],
   },
 });

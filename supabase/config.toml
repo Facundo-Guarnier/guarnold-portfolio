@@ -1,0 +1,65 @@
+# Stack LOCAL de Supabase de cv-formatter (Docker). ⊥ es la nube, ⊥ se despliega desde acá.
+# 🔗 AGENTS.md (sección «Desarrollo local») y tools/local/preparar-stack.mjs.
+#
+# Puertos: bloque 54380-54389, el próximo libre de guarnold-hub/PUERTOS.md. ⊥ son los defaults del
+# CLI (54321-54324): guarnote los usa. Las URLs que usa la app salen de `supabase status`, ⊥ de
+# estos números a mano: cambiar un puerto acá ⊥ rompe nada más.
+
+project_id = "cv-formatter"
+
+[api]
+enabled = true
+port = 54381
+# `cv-formatter` ⊥ es opcional: el cliente (VITE_SUPABASE_SCHEMA) consulta ese esquema directo.
+schemas = ["public", "cv-formatter"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54382
+# El shadow usa el número más bajo del bloque (ver PUERTOS.md: `db.shadow_port` ⊥ puede quedar encima).
+shadow_port = 54380
+major_version = 17
+
+[db.pooler]
+enabled = false
+port = 54389
+
+# ⊥ Las migraciones las aplica `tools/local/preparar-stack.mjs`, ⊥ el CLI: hace falta que el esquema
+# `plataforma` (repo guarnote) entre ANTES que las de cv-formatter. Ver el script.
+[db.migrations]
+enabled = false
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = true
+port = 54383
+
+[local_smtp]
+enabled = true
+port = 54384
+
+[analytics]
+enabled = false
+port = 54387
+
+[edge_runtime]
+enabled = false
+
+[auth]
+enabled = true
+# Dónde corre la app en local (`npm run dev:docker` → vite --mode docker, puerto de vite.config.ts).
+site_url = "http://localhost:5177"
+additional_redirect_urls = ["http://localhost:5177", "http://127.0.0.1:5177"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+enable_anonymous_sign_ins = false
+minimum_password_length = 6
+
+[auth.mfa.totp]
+enroll_enabled = false
+verify_enabled = false
