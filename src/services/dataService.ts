@@ -1,4 +1,5 @@
 import content from "../data/content.yml";
+import { supabase } from "../lib/supabase";
 import type { Experience, HomeContent, Profile, Project } from "../types";
 
 interface ContentDatabase {
@@ -15,9 +16,42 @@ interface ContentDatabase {
   projects?: Project[];
 }
 
-const db = (content ?? {}) as ContentDatabase;
+const dbLocal = (content ?? {}) as ContentDatabase;
+
+/**
+ * La fuente de verdad es Supabase (lo que se edita en cv-formatter, con el interruptor «Portfolio»
+ * de cada ítem). `content.yml` queda de RESPALDO: se usa si no hay variables de entorno, si la
+ * llamada falla, o si la base todavía ⊥ tiene el perfil cargado (⊥ se mezclan: o una o la otra).
+ */
+const cargarRemoto = async (): Promise<ContentDatabase | null> => {
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase.rpc("portfolio_publico");
+    if (error) throw error;
+    const remoto = data as ContentDatabase | null;
+    if (!remoto?.identity?.name) return null;
+    // La imagen de fondo del mapa es un asset de ESTE sitio, ⊥ un dato del perfil.
+    return {
+      ...remoto,
+      location: {
+        background_image: dbLocal.location?.background_image,
+        ...remoto.location,
+      },
+    };
+  } catch (err) {
+    console.warn("[portfolio] ⊥ se pudo leer Supabase, uso content.yml:", err);
+    return null;
+  }
+};
+
+let enCurso: Promise<ContentDatabase> | null = null;
+const cargarDb = (): Promise<ContentDatabase> => {
+  enCurso ??= cargarRemoto().then((remoto) => remoto ?? dbLocal);
+  return enCurso;
+};
 
 export const getHomeContent = async (): Promise<HomeContent | null> => {
+  const db = await cargarDb();
   return {
     identity: db.identity,
     hero: db.hero,
@@ -32,6 +66,7 @@ export const getHomeContent = async (): Promise<HomeContent | null> => {
 };
 
 export const getProfile = async (): Promise<Profile | null> => {
+  const db = await cargarDb();
   return {
     name: db.identity?.name,
     role: db.about_card?.role ?? db.identity?.professional_title,
@@ -47,9 +82,11 @@ export const getProfile = async (): Promise<Profile | null> => {
 };
 
 export const getExperience = async (): Promise<Experience[]> => {
+  const db = await cargarDb();
   return (db.experience ?? []).filter(Boolean);
 };
 
 export const getProjects = async (): Promise<Project[]> => {
+  const db = await cargarDb();
   return (db.projects ?? []).filter(Boolean);
 };
