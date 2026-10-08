@@ -18,6 +18,15 @@ Online CV editor — create, edit and share a professional résumé.
   Account ≠ cv-formatter access. Write policies = `plataforma.has_app_access('cv-formatter')`.
   🔴 ⊥ `auth.role() = 'authenticated'` as a write gate: it means "any account of ANY app" — that bug
   let every account edit the public CV. Model + playbook: `guarnold-hub/docs/acceso-por-app.md`.
+- **Prod deploy = the CI** (`desplegar-supabase.yml`, on merge to `main`): ⊥ `supabase db push`, ⊥ by hand.
+  Config: `supabase/despliegue.json`. Plan locally: `SUPABASE_DEPLOY_DB=docker:supabase_db_guarnote node tools/deploy/desplegar-supabase.mjs --plan`.
+  Migrations = `<14 digits>_<name>.sql`. The first one is `20260115000436_…` (renamed from `20260114_…`: that is
+  the version prod has it registered under; ⊥ compared against prod's SQL — no access).
+- Access per app: `"cv-formatter".tengo_acceso()` + `SinAcceso` screen (UX only; policies are the rule).
+  SQL test: `(echo 'BEGIN;'; cat supabase/migrations/*.sql supabase/tests/tengo_acceso.sql) | docker exec -i supabase_db_guarnote psql -U postgres -q -v ON_ERROR_STOP=1`.
+- Session: Guarnold ID mode turns on by DOMAIN (`*.guarnold.com.ar`, `lib/sesionCentral.ts`); elsewhere own login.
+  ⊥ use `supabase.auth` outside `lib/auth.ts`.
+- Tailwind is COMPILED (⊥ CDN): the CSP in `public/_headers` forbids third-party scripts. `npm run verificar:headers`.
 - Non-trivial change → plan first. Touches DB, permissions, several files, or changes behavior → always.
 - Verification agents (gap/contradiction hunting) are token-expensive → **ASK THE USER FIRST**.
 
