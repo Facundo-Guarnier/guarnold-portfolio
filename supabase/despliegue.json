@@ -1,0 +1,6 @@
+{
+  "$comentario": "Config del despliegue a Supabase (tools/deploy/desplegar-supabase.mjs). 🔗 docs/guides/despliegue-supabase.md. Sin bloque `auth` (la Auth del proyecto la declara guarnote, dueño de `plataforma`) ni `secretos` (cv-formatter ⊥ tiene edge functions).",
+  "migraciones": {
+    "$comentario": "Sin `base`: el único archivo previo al flujo (el esquema inicial, 2026-01-14) está registrado en producción como 20260115000436 y se renombró a esa versión (2026-10-08) en vez de declarar historia irreconciliable."
+  }
+}
