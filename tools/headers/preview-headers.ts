@@ -1,6 +1,5 @@
 import type { Plugin } from "vite";
 import { resolve } from "node:path";
-// @ts-expect-error -- `.mjs` sin tipos: es el mismo parser que usa el verificador, a propósito.
 import { leerHeaders } from "./headers.mjs";
 
 /**
