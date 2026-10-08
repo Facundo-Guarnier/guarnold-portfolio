@@ -115,3 +115,14 @@ test('importar content.yml, guardar, recargar y los interruptores CV / Portfolio
   );
   await expect(page.getByTestId('vista-cv')).toContainText('Merovingian Data');
 });
+
+test('«Usar el portfolio de este sitio» importa el content.yml empaquetado, sin archivo', async ({ page }) => {
+  await entrar(page);
+
+  await page.getByRole('button', { name: 'Usar el portfolio de este sitio' }).click();
+  // El YAML del bundle es el mismo que sirve el portfolio: su resumen lo nombra y trae líneas.
+  await expect(page.getByRole('status')).toContainText('Importado content.yml de este sitio (sin guardar)');
+  await expect(page.getByRole('status').locator('li').first()).toBeVisible();
+  // La foto del portfolio (`/assets/profile.jpg`) ⊥ genera aviso: vive en este mismo sitio.
+  await expect(page.getByRole('status')).not.toContainText('profile.jpg');
+});

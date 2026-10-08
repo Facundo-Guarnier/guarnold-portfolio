@@ -1,4 +1,4 @@
-import type { CVData, DatoPerfil, Mostrar, Visibilidad, Fechas } from '@/types/cv';
+import type { CVData, DatoPerfil, Mostrar, Visibilidad, Fechas } from '@/cv/types/cv';
 
 /**
  * Defaults de «qué dato del perfil se ve en cada lado». Mismos que usa la RPC `portfolio_publico()`

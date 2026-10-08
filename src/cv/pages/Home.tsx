@@ -2,10 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Edit3, Download, Palette, X, Moon, Sun, RotateCcw, Loader2 } from 'lucide-react';
-import { useCVData } from '@/hooks/useCVData';
-import { CVPreview } from '@/components/cv/CVPreview';
-import { CVSettings } from '@/types/cv';
-import { useScreenScale } from '@/hooks/useScreenScale';
+import { useCVData } from '@/cv/hooks/useCVData';
+import { CVPreview } from '@/cv/components/cv/CVPreview';
+import { CVSettings } from '@/cv/types/cv';
+import { useScreenScale } from '@/cv/hooks/useScreenScale';
 
 const Home: React.FC = () => {
   const { data, loading, setTheme, resetVisitorTheme } = useCVData();

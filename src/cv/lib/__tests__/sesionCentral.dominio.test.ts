@@ -19,14 +19,18 @@ describe('modo central según el dominio', () => {
       value: new URL(`https://${host}/`),
       configurable: true,
     });
-    return (await import('../sesionCentral')).sesionCentral;
+    return (await import('@/lib/sesionCentral')).sesionCentral;
   };
 
   it('en producción (*.guarnold.com.ar) usa Guarnold ID', async () => {
     expect(await conHost('cv.guarnold.com.ar')).not.toBeNull();
   });
 
-  it.each(['localhost', 'cv-abc.netlify.app', 'guarnold.com.ar.evil.com', 'evilguarnold.com.ar'])(
+  it('el apex guarnold.com.ar (el portfolio) también usa Guarnold ID', async () => {
+    expect(await conHost('guarnold.com.ar')).not.toBeNull();
+  });
+
+  it.each(['localhost', 'cv-abc.netlify.app', 'guarnold.com.ar.evil.com', 'evilguarnold.com.ar', 'xguarnold.com.ar'])(
     'en %s ⊥ (login propio)',
     async (host) => {
       expect(await conHost(host)).toBeNull();
@@ -40,6 +44,6 @@ describe('modo central según el dominio', () => {
       value: new URL('https://cv.guarnold.com.ar/'),
       configurable: true,
     });
-    expect((await import('../sesionCentral')).sesionCentral).toBeNull();
+    expect((await import('@/lib/sesionCentral')).sesionCentral).toBeNull();
   });
 });

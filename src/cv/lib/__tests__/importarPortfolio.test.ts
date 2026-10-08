@@ -7,7 +7,7 @@ import { ErrorImportacion, importarPortfolio, lineasResumen, normalizarNombre } 
 import type { CVData } from '../../types/cv';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
-const FIXTURE = path.resolve(AQUI, '..', '..', 'tests', 'fixtures', 'content.yml');
+const FIXTURE = path.resolve(AQUI, '..', '..', '..', '..', 'tests', 'fixtures', 'content.yml');
 const yml = () => parse(readFileSync(FIXTURE, 'utf8')) as unknown;
 
 /** IDs temporales deterministas: el test ⊥ depende del reloj. */
@@ -83,9 +83,9 @@ describe('identidad y ubicación', () => {
     expect(data.personal.ciudad).toBe('Mendoza');
   });
 
-  it('avisa que la foto es un archivo del portfolio (ruta relativa) y que el fondo del mapa ⊥ tiene destino', () => {
+  it('la foto /assets/ ⊥ avisa (CV y portfolio son el mismo sitio) y el fondo del mapa sí', () => {
     const { resumen } = importar();
-    expect(resumen.avisos.some((a) => a.includes('/assets/profile.jpg') && a.includes('URL pública'))).toBe(true);
+    expect(resumen.avisos.some((a) => a.includes('/assets/profile.jpg'))).toBe(false);
     expect(resumen.avisos.some((a) => a.includes('background_image'))).toBe(true);
   });
 });

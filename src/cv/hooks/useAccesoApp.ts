@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { tengoAcceso } from '@/lib/acceso';
+import { tengoAcceso } from '@/cv/lib/acceso';
 
 export type EstadoAcceso = 'cargando' | 'si' | 'no' | 'error';
 

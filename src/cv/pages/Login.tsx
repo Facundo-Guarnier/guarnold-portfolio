@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { irAEntrar, modoCentral } from '@/lib/auth';
+import { useAuth } from '@/cv/hooks/useAuth';
+import { irAEntrar, modoCentral } from '@/cv/lib/auth';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -120,7 +120,7 @@ const Login: React.FC = () => {
         </form>
         
         <div className="mt-8 text-center">
-          <Link to="/" className="text-sm text-neutral-400 dark:text-gray-500 hover:text-neutral-600 dark:hover:text-gray-300 transition-colors">
+          <Link to="/cv" className="text-sm text-neutral-400 dark:text-gray-500 hover:text-neutral-600 dark:hover:text-gray-300 transition-colors">
             Volver al Inicio
           </Link>
         </div>

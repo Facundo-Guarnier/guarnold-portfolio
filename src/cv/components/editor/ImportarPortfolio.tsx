@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react';
 import { parse } from 'yaml';
 import { Upload, X, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { ErrorImportacion, lineasResumen, ResumenImportacion } from '../../lib/importarPortfolio';
+// El `content.yml` que el portfolio de ESTE sitio usa de respaldo (texto crudo, sin parsear en el bundle).
+import contenidoPortfolio from '@/data/content.yml?raw';
 import { SectionTitle } from '../ui/Form';
 import { Button } from '../ui/Button';
 
@@ -23,13 +25,9 @@ export const ImportarPortfolio: React.FC<ImportarPortfolioProps> = ({ onImportar
   const inputRef = useRef<HTMLInputElement>(null);
   const [estado, setEstado] = useState<Estado>({ tipo: 'vacio' });
 
-  const alElegir = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const archivo = e.target.files?.[0];
-    // Dejar el input vacío: elegir el mismo archivo dos veces tiene que volver a disparar el cambio.
-    e.target.value = '';
-    if (!archivo) return;
+  /** Parsea el texto YAML y lo aplica al editor. Los errores quedan en el estado del componente. */
+  const aplicarTexto = (texto: string, nombre: string) => {
     try {
-      const texto = await archivo.text();
       let yml: unknown;
       try {
         yml = parse(texto);
@@ -37,20 +35,35 @@ export const ImportarPortfolio: React.FC<ImportarPortfolioProps> = ({ onImportar
         throw new ErrorImportacion(`No se pudo leer el YAML: ${err instanceof Error ? err.message : String(err)}`);
       }
       const resumen = onImportar(yml);
-      setEstado({ tipo: 'ok', archivo: archivo.name, lineas: lineasResumen(resumen), avisos: resumen.avisos });
+      setEstado({ tipo: 'ok', archivo: nombre, lineas: lineasResumen(resumen), avisos: resumen.avisos });
     } catch (err) {
       const mensaje = err instanceof Error ? err.message : 'Error desconocido al importar.';
-      setEstado({ tipo: 'error', archivo: archivo.name, mensaje });
+      setEstado({ tipo: 'error', archivo: nombre, mensaje });
     }
   };
+
+  const alElegir = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const archivo = e.target.files?.[0];
+    // Dejar el input vacío: elegir el mismo archivo dos veces tiene que volver a disparar el cambio.
+    e.target.value = '';
+    if (!archivo) return;
+    aplicarTexto(await archivo.text(), archivo.name);
+  };
+
+  const usarEsteSitio = () => aplicarTexto(contenidoPortfolio, 'content.yml de este sitio');
 
   return (
     <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-neutral-200 dark:border-gray-800 shadow-sm space-y-4">
       <div className="flex items-center justify-between gap-2">
         <SectionTitle icon={<Upload className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />}>Importar desde portfolio</SectionTitle>
-        <Button variant="outline" size="sm" onClick={() => inputRef.current?.click()} className="gap-2">
-          <Upload className="w-4 h-4" /> Elegir content.yml
-        </Button>
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={usarEsteSitio} className="gap-2">
+            <Upload className="w-4 h-4" /> Usar el portfolio de este sitio
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => inputRef.current?.click()} className="gap-2">
+            <Upload className="w-4 h-4" /> Elegir content.yml
+          </Button>
+        </div>
         <input
           ref={inputRef}
           type="file"
@@ -62,8 +75,9 @@ export const ImportarPortfolio: React.FC<ImportarPortfolioProps> = ({ onImportar
       </div>
 
       <p className="text-xs text-neutral-500 dark:text-gray-400">
-        Mezcla el <code>content.yml</code> del portfolio con lo que ya cargaste: lo que trae pisa lo existente, y
-        lo que no existe se agrega <strong>fuera del CV</strong>. Nada se guarda hasta que apretes «Guardar».
+        Mezcla el <code>content.yml</code> del portfolio (el de este sitio, o un archivo que elijas) con lo que ya
+        cargaste: lo que trae pisa lo existente, y lo que no existe se agrega <strong>fuera del CV</strong>. Nada se
+        guarda hasta que apretes «Guardar».
       </p>
 
       {estado.tipo === 'ok' && (

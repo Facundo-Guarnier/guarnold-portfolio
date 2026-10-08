@@ -8,8 +8,8 @@ import type {
   Proyecto,
   Skill,
   TipoPerfilItem,
-} from '@/types/cv';
-import { calcularPeriodo } from '@/lib/visibilidad';
+} from '@/cv/types/cv';
+import { calcularPeriodo } from '@/cv/lib/visibilidad';
 
 /**
  * Importa el `content.yml` del portfolio (`guarnold-portfolio/src/data/content.yml`) al estado del
@@ -147,12 +147,7 @@ export function importarPortfolio(
       ['foto', aplicar(personal, { foto: siVino(avatar, personal.foto ?? '') })],
     ];
     resumen.identidad.push(...cambios.filter(([, c]) => c).map(([n]) => n));
-    if (avatar?.startsWith('/')) {
-      avisos.push(
-        `La foto «${avatar}» es un archivo del portfolio: se guardó la ruta tal cual. En el CV no se va a ver ` +
-          'hasta que la foto esté en una URL pública (o se suba desde «Perfil»).',
-      );
-    }
+    // La foto `/assets/…` vive en este mismo sitio (CV y portfolio son una app): se ve en el CV sin aviso.
   }
 
   const location = objeto(raiz.location);

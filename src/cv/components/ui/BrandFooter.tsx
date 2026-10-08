@@ -43,7 +43,7 @@ export const BrandFooter: React.FC<BrandFooterProps> = ({
   const appVersion = import.meta.env.VITE_APP_VERSION || "1.0.0";
   const brandName = "Guarnold";
   const brandUrl = import.meta.env.VITE_BRAND_URL || "https://guarnold.com.ar";
-  const brandSignature = "assets/guarnold_firma.png";
+  const brandSignature = "/assets/guarnold_firma.png";
   const repoUrl = import.meta.env.VITE_REPO_URL || "";
 
   // Base wrapper for forced dark mode

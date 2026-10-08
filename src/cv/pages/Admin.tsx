@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { ArrowLeft, Download, Loader2, LogOut, Save, RotateCcw } from 'lucide-react';
-import { useCVData } from '@/hooks/useCVData';
-import { useAuth } from '@/hooks/useAuth';
-import { useAccesoApp } from '@/hooks/useAccesoApp';
-import { SinAcceso } from '@/components/ui/SinAcceso';
-import { useScreenScale } from '@/hooks/useScreenScale';
-import { CVPreview } from '@/components/cv/CVPreview';
-import { ProfileEditor } from '@/components/editor/ProfileEditor';
-import { ExperienceEditor } from '@/components/editor/ExperienceEditor';
-import { EducationEditor } from '@/components/editor/EducationEditor';
-import { SkillsEditor } from '@/components/editor/SkillsEditor';
-import { ProjectsEditor } from '@/components/editor/ProjectsEditor';
-import { SettingsEditor } from '@/components/editor/SettingsEditor';
-import { PortfolioEditor } from '@/components/editor/PortfolioEditor';
-import { ImportarPortfolio } from '@/components/editor/ImportarPortfolio';
-import { Button } from '@/components/ui/Button';
+import { useCVData } from '@/cv/hooks/useCVData';
+import { useAuth } from '@/cv/hooks/useAuth';
+import { useAccesoApp } from '@/cv/hooks/useAccesoApp';
+import { SinAcceso } from '@/cv/components/ui/SinAcceso';
+import { useScreenScale } from '@/cv/hooks/useScreenScale';
+import { CVPreview } from '@/cv/components/cv/CVPreview';
+import { ProfileEditor } from '@/cv/components/editor/ProfileEditor';
+import { ExperienceEditor } from '@/cv/components/editor/ExperienceEditor';
+import { EducationEditor } from '@/cv/components/editor/EducationEditor';
+import { SkillsEditor } from '@/cv/components/editor/SkillsEditor';
+import { ProjectsEditor } from '@/cv/components/editor/ProjectsEditor';
+import { SettingsEditor } from '@/cv/components/editor/SettingsEditor';
+import { PortfolioEditor } from '@/cv/components/editor/PortfolioEditor';
+import { ImportarPortfolio } from '@/cv/components/editor/ImportarPortfolio';
+import { Button } from '@/cv/components/ui/Button';
 
 // Dimensiones A4 en píxeles
 const CV_WIDTH = 794;
@@ -173,7 +173,7 @@ const Admin: React.FC = () => {
       {/* Editor Header */}
       <header className="bg-white dark:bg-gray-900 border-b border-neutral-200 dark:border-gray-800 px-6 py-3 shrink-0 z-20 flex items-center justify-between shadow-sm print:hidden">
         <div className="flex items-center gap-4">
-          <Link to="/" className="p-2 hover:bg-neutral-100 dark:hover:bg-gray-800 rounded-full transition-colors text-neutral-500 dark:text-gray-400 hover:text-neutral-900 dark:hover:text-white">
+          <Link to="/cv" className="p-2 hover:bg-neutral-100 dark:hover:bg-gray-800 rounded-full transition-colors text-neutral-500 dark:text-gray-400 hover:text-neutral-900 dark:hover:text-white">
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex flex-col">

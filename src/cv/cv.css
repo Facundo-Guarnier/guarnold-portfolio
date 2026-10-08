@@ -1,17 +1,12 @@
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/public/assets/g_icon.png" />
-    <link rel="apple-touch-icon" href="/public/assets/g_icon.png" />
-    <title>CV - Facundo Guarnier</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      body {
+/*
+ * Estilos del CV (/cv y /admin). Vienen del `<style>` que tenía el index.html de cv-formatter.
+ *
+ * 🔴 Todo selector GLOBAL (body, html, #root, *, section) va acotado a `body.cv-activo`: esa clase la
+ * pone `CvShell` mientras se ve una ruta del CV. Sin eso, imprimir o mirar el portfolio heredaba la
+ * hoja de 210 mm y el fondo gris del CV. Las clases de utilidad propias del CV (`.print:*`, `.cv-sheet`,
+ * `.no-print`) son únicas del CV, así que quedan globales.
+ */
+body.cv-activo {
         font-family: 'Inter', sans-serif;
         background-color: #f9fafb;
         color: #111827;
@@ -22,7 +17,7 @@
           size: A4;
           margin: 0;
         }
-        html, body, #root {
+        body.cv-activo, body.cv-activo #root {
           height: auto !important;
           min-height: auto !important;
           overflow: visible !important;
@@ -30,12 +25,12 @@
           min-width: 210mm !important;
           width: 210mm !important;
         }
-        body {
+        body.cv-activo {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
         }
         /* Ensure no shadows on print */
-        * {
+        body.cv-activo * {
           box-shadow: none !important;
           text-shadow: none !important;
         }
@@ -134,7 +129,7 @@
         }
         
         /* Asegurar que secciones no empiecen muy cerca del fondo */
-        section {
+        body.cv-activo section {
           break-inside: avoid-column;
         }
         
@@ -150,10 +145,3 @@
           min-height: 0 !important;
         }
       }
-    </style>
-</head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
-</html>

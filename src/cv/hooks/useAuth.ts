@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { entrarConClave, escucharSesion, salir, usuarioActual, type Usuario } from '@/lib/auth';
+import { entrarConClave, escucharSesion, salir, usuarioActual, type Usuario } from '@/cv/lib/auth';
 
 interface AuthState {
   user: Usuario | null;

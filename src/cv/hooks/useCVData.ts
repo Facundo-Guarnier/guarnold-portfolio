@@ -1,8 +1,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, PerfilItem, Mostrar, PortfolioTextos, Nuevo } from '@/types/cv';
-import { calcularPeriodo } from '@/lib/visibilidad';
-import { importarPortfolio, ResumenImportacion } from '@/lib/importarPortfolio';
+import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, PerfilItem, Mostrar, PortfolioTextos, Nuevo } from '@/cv/types/cv';
+import { calcularPeriodo } from '@/cv/lib/visibilidad';
+import { importarPortfolio, ResumenImportacion } from '@/cv/lib/importarPortfolio';
 import { supabase } from '@/lib/supabase';
 
 // Clave para preferencias de tema del visitante (persistente en localStorage)

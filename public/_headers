@@ -4,12 +4,16 @@
 # repos ya tienen `netlify.toml` con sus redirects y su cacheo; esto ⊥ los pisa y ⊥ hay que fusionar
 # nada a mano al instalarlo.
 #
-# 🔴 El `connect-src` nombra el proyecto Supabase de ESTE repo ∴ ⊥ es copiable tal cual. Un
+# 🔴 El `connect-src` nombra el proyecto Supabase de ESTE repo (Guarnold Main) ∴ ⊥ es copiable tal cual. Un
 # placeholder sin reemplazar es PEOR que ⊥ tener la cabecera, porque parece puesta:
 # `verificar-headers.mjs` falla si lo encuentra.
 #
 # 🔗 Que decir en cada cabecera y como verificarlo despues del deploy: `tools/headers/README.md`.
 
+# Una sola app (portfolio + CV, `guarnold.com.ar`): `img-src` suma `images.unsplash.com`, de donde salen las
+# fotos de los proyectos del portfolio (`content.yml`). Cualquier otro host de imagen hay que agregarlo acá
+# a mano, con su motivo: es justo la lista que frena la exfiltración de abajo.
+#
 # `connect-src` incluye https://id.guarnold.com.ar: el modo cuenta central (`lib/sesion-compartida.mjs`)
 # hace `fetch(..., { credentials: "include" })` ahí para obtener el pase de acceso. Sin ese host la CSP
 # lo bloquea y el login central ⊥ anda.
@@ -21,7 +25,7 @@
 # mano dejan de renderizar: medilo antes (en este repo eran 0). 🔗 `verificar-headers.mjs`.
 #
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://brzuaxeuqqqipkaennre.supabase.co; connect-src 'self' https://id.guarnold.com.ar https://brzuaxeuqqqipkaennre.supabase.co wss://brzuaxeuqqqipkaennre.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://brzuaxeuqqqipkaennre.supabase.co; connect-src 'self' https://id.guarnold.com.ar https://brzuaxeuqqqipkaennre.supabase.co wss://brzuaxeuqqqipkaennre.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff

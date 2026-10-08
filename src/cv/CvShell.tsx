@@ -1,27 +1,28 @@
+import React, { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { BrandFooter } from '@/cv/components/ui/BrandFooter';
+import './cv.css';
 
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Admin from './pages/Admin';
-import Login from './pages/Login';
-import { BrandFooter } from './components/ui/BrandFooter';
+/**
+ * Envoltorio de todas las rutas del CV (`/cv`, `/admin`, `/editor`, `/login`).
+ *
+ * Marca `<body>` con `cv-activo` mientras se ve el CV: los estilos globales de impresión y de fondo
+ * de `cv.css` solo aplican ahí, así el portfolio ⊥ los hereda.
+ */
+const CvShell: React.FC = () => {
+  useEffect(() => {
+    document.body.classList.add('cv-activo');
+    return () => document.body.classList.remove('cv-activo');
+  }, []);
 
-const App: React.FC = () => {
   return (
-    <Router>
-      <div className="min-h-screen bg-neutral-50 flex flex-col">
-        <div className="flex-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/editor" element={<Admin />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </div>
-        <BrandFooter compact />
+    <div className="min-h-screen bg-neutral-50 flex flex-col">
+      <div className="flex-1">
+        <Outlet />
       </div>
-    </Router>
+      <BrandFooter compact />
+    </div>
   );
 };
 
-export default App;
+export default CvShell;
