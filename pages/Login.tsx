@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { irAEntrar, modoCentral } from '@/lib/auth';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -13,6 +14,19 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Modo central: el login es de Guarnold ID (id.guarnold.com.ar); se vuelve al editor al terminar.
+  useEffect(() => {
+    if (modoCentral) irAEntrar(`${window.location.origin}/admin`);
+  }, []);
+
+  if (modoCentral) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-6">
+        <Loader2 className="w-8 h-8 animate-spin text-neutral-500" />
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

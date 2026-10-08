@@ -3,6 +3,8 @@ import { Link, Navigate } from 'react-router-dom';
 import { ArrowLeft, Download, Loader2, LogOut, Save, RotateCcw } from 'lucide-react';
 import { useCVData } from '@/hooks/useCVData';
 import { useAuth } from '@/hooks/useAuth';
+import { useAccesoApp } from '@/hooks/useAccesoApp';
+import { SinAcceso } from '@/components/ui/SinAcceso';
 import { useScreenScale } from '@/hooks/useScreenScale';
 import { CVPreview } from '@/components/cv/CVPreview';
 import { ProfileEditor } from '@/components/editor/ProfileEditor';
@@ -19,6 +21,7 @@ const CV_HEIGHT = 1123;
 
 const Admin: React.FC = () => {
   const { user, loading: authLoading, signOut } = useAuth();
+  const acceso = useAccesoApp(user?.id);
   const scale = useScreenScale(30);
   
   const { 
@@ -110,6 +113,28 @@ const Admin: React.FC = () => {
   // Redirigir a login si no está autenticado
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Cuenta válida pero sin cv-formatter en `plataforma.app_access`: las policies ya le niegan toda
+  // escritura; esto solo evita mostrarle un editor que no puede guardar.
+  if (acceso === 'cargando') {
+    return (
+      <div className="min-h-screen bg-neutral-50 dark:bg-gray-900 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-neutral-500" />
+      </div>
+    );
+  }
+  if (acceso === 'error') {
+    return (
+      <div className="min-h-screen bg-neutral-50 dark:bg-gray-900 flex items-center justify-center p-6 text-center">
+        <p className="text-neutral-500 dark:text-gray-400">
+          No pudimos verificar tu acceso. Recargá la página para reintentar.
+        </p>
+      </div>
+    );
+  }
+  if (acceso === 'no') {
+    return <SinAcceso email={user.email} onSalir={signOut} />;
   }
 
   // Mostrar loading mientras se cargan los datos

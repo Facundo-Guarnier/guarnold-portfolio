@@ -1,82 +1,53 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User, Session, AuthError } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { entrarConClave, escucharSesion, salir, usuarioActual, type Usuario } from '@/lib/auth';
 
 interface AuthState {
-  user: User | null;
-  session: Session | null;
+  user: Usuario | null;
   loading: boolean;
 }
 
 interface AuthActions {
-  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: { message: string } | null }>;
   signOut: () => Promise<void>;
 }
 
 export type UseAuthReturn = AuthState & AuthActions;
 
+/**
+ * El usuario de la sesión, para la UI. Funciona igual en los dos modos (cuenta central o login
+ * propio): la diferencia vive en `lib/auth.ts`.
+ *
+ * Si la pregunta falla (red caída al renovar), se trata como «sin sesión» → ir a entrar: mostrar el
+ * editor con un usuario que ⊥ se pudo confirmar sería peor.
+ */
 export const useAuth = (): UseAuthReturn => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState<AuthState>({ user: null, loading: true });
 
   useEffect(() => {
-    // Obtener sesión inicial
-    const getInitialSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-        setUser(session?.user ?? null);
-      } catch (error) {
-        console.error('Error getting session:', error);
-      } finally {
-        setLoading(false);
-      }
+    let vivo = true;
+    const consultar = () => {
+      usuarioActual()
+        .then((user) => vivo && setState({ user, loading: false }))
+        .catch(() => vivo && setState({ user: null, loading: false }));
     };
-
-    getInitialSession();
-
-    // Escuchar cambios de autenticación
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
+    consultar();
+    const dejar = escucharSesion(consultar);
     return () => {
-      subscription.unsubscribe();
+      vivo = false;
+      dejar();
     };
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      return { error };
-    } finally {
-      setLoading(false);
-    }
+    const error = await entrarConClave(email, password);
+    return { error };
   }, []);
 
   const signOut = useCallback(async () => {
-    setLoading(true);
-    try {
-      await supabase.auth.signOut();
-    } finally {
-      setLoading(false);
-    }
+    await salir();
+    // Modo central ⊥ emite evento de sesión: se refleja a mano.
+    setState({ user: null, loading: false });
   }, []);
 
-  return {
-    user,
-    session,
-    loading,
-    signIn,
-    signOut,
-  };
+  return { ...state, signIn, signOut };
 };
