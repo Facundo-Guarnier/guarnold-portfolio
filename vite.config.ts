@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { componentTagger } from 'lovable-tagger';
+import { servirHeadersEnPreview } from './tools/headers/preview-headers';
 
 // https://vitejs.dev/config/
 /**
@@ -24,6 +25,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
+    servirHeadersEnPreview(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {

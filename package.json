@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "deploy:plan": "node tools/deploy/desplegar-supabase.mjs --plan"
+    "deploy:plan": "node tools/deploy/desplegar-supabase.mjs --plan",
+    "verificar:headers": "node tools/headers/verificar-headers.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.89.0",
