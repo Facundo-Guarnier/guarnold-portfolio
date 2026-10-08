@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { CVData, Personal, Experiencia, Educacion, Skill, Proyecto, CVSettings, PerfilItem, Mostrar, PortfolioTextos, Nuevo } from '@/types/cv';
 import { calcularPeriodo } from '@/lib/visibilidad';
+import { importarPortfolio, ResumenImportacion } from '@/lib/importarPortfolio';
 import { supabase } from '@/lib/supabase';
 
 // Clave para preferencias de tema del visitante (persistente en localStorage)
@@ -859,6 +860,14 @@ export const useCVData = () => {
     }
   };
 
+  // Importa el content.yml del portfolio al estado local (⊥ guarda: el owner revisa y guarda con «Guardar»).
+  // Lanza `ErrorImportacion` si el archivo ⊥ es un content.yml: quien llama lo muestra.
+  const importarDesdePortfolio = (yml: unknown): ResumenImportacion => {
+    const r = importarPortfolio(data, yml, { nuevoId: nuevoTempId });
+    setData(r.data);
+    return r.resumen;
+  };
+
   // Descartar cambios locales y volver al estado original
   const discardChanges = () => {
     setData(originalData);
@@ -883,6 +892,7 @@ export const useCVData = () => {
     updatePersonal,
     updateMostrar,
     updatePortfolio,
+    importarDesdePortfolio,
     addPerfilItem,
     updatePerfilItem,
     removePerfilItem,

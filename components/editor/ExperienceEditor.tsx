@@ -47,7 +47,7 @@ export const ExperienceEditor: React.FC<ExperienceEditorProps> = ({ experiences,
 
       <div className="space-y-3">
         {experiences.map((exp, index) => (
-          <div key={exp.id} className="border border-neutral-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <div key={exp.id} data-testid="item-experiencia" className="border border-neutral-200 dark:border-gray-700 rounded-lg overflow-hidden">
             <div 
               className="bg-neutral-50 dark:bg-gray-800 px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-neutral-100 dark:hover:bg-gray-700/80 transition-colors"
               onClick={() => setExpandedId(expandedId === exp.id ? null : exp.id)}

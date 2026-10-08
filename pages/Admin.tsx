@@ -14,6 +14,7 @@ import { SkillsEditor } from '@/components/editor/SkillsEditor';
 import { ProjectsEditor } from '@/components/editor/ProjectsEditor';
 import { SettingsEditor } from '@/components/editor/SettingsEditor';
 import { PortfolioEditor } from '@/components/editor/PortfolioEditor';
+import { ImportarPortfolio } from '@/components/editor/ImportarPortfolio';
 import { Button } from '@/components/ui/Button';
 
 // Dimensiones A4 en píxeles
@@ -47,6 +48,7 @@ const Admin: React.FC = () => {
     removeProyecto,
     updateMostrar,
     updatePortfolio,
+    importarDesdePortfolio,
     addPerfilItem,
     updatePerfilItem,
     removePerfilItem,
@@ -243,6 +245,8 @@ const Admin: React.FC = () => {
         <div className="w-full lg:w-5/12 overflow-y-auto border-r border-neutral-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 print:hidden">
           <div className="p-6 lg:p-8 space-y-8 pb-24">
             
+            <ImportarPortfolio onImportar={importarDesdePortfolio} />
+
             {/* Theme Settings */}
             <SettingsEditor 
               settings={data.settings} 
@@ -317,7 +321,9 @@ const Admin: React.FC = () => {
                }}
                className="print:!transform-none print:!w-[210mm] print:!min-h-0 print:!mb-0"
              >
-                <CVPreview data={data} disableInternalScaling={true} />
+                <div data-testid="vista-cv">
+                  <CVPreview data={data} disableInternalScaling={true} />
+                </div>
              </div>
           </div>
         </div>
