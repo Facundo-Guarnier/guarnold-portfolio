@@ -1,0 +1,24 @@
+{
+  "servers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "supabase-guarnold-main": {
+      "command": "node",
+      "args": [
+        "d:\\Repositorios_GitHub\\personal\\guarnold-portfolio\\.vscode\\supabase-mcp-wrapper.cjs"
+      ],
+      "cwd": "d:\\Repositorios_GitHub\\personal\\guarnold-portfolio",
+      "env": {}
+    },
+    "supabase-cv-formatter": {
+      "command": "node",
+      "args": [
+        "d:\\Repositorios_GitHub\\personal\\cv-formatter\\.vscode\\supabase-mcp-wrapper.cjs"
+      ],
+      "cwd": "d:\\Repositorios_GitHub\\personal\\cv-formatter",
+      "env": {}
+    }
+  }
+}
