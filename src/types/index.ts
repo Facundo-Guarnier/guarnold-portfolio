@@ -16,6 +16,9 @@ export interface IdentitySection {
   nickname?: string;
   professional_title?: string;
   avatar_url?: string;
+  /** Solo si el owner lo habilita en /admin (`mostrar.portfolio`). */
+  email?: string;
+  phone?: string;
 }
 
 export interface HeroSection {

@@ -1,91 +1,104 @@
-# Guarnold Portfolio
+# Guarnold — portfolio, CV y editor
 
-Portfolio personal profesional desarrollado con React + TypeScript + Vite, con enfoque Mobile-First y estética Material You.
+El sitio personal de Facundo Guarnier en una sola aplicación. Tiene tres partes:
 
-## Descripción
+- **Portfolio** (`/`): presentación, trayectoria y proyectos, con estética Material You y tema
+  de colores por semilla (claro y oscuro).
+- **CV público** (`/cv`): el currículum en formato A4, listo para imprimir o descargar en PDF.
+- **Editor del CV** (`/admin`): donde se edita el perfil. Se entra con la cuenta central de Guarnold ID
+  cuando el sitio se sirve desde `guarnold.com.ar`, o con un login propio en `/login` en cualquier otro lado.
 
-Este proyecto muestra trayectoria, proyectos y presentación profesional en un sitio web liviano y moderno.
+Los datos del portfolio salen de Supabase (lo que se marca como «Portfolio» en el editor). Si la base no
+responde o no está configurada, el portfolio usa `src/data/content.yml`, que es también el archivo que el
+editor puede importar.
 
-Características principales:
+## Stack
 
-- UI basada en Material Design 3 (Material You).
-- Theming dinámico (colores por semilla, modo claro/oscuro).
-- Datos gestionados desde YAML local con patrón de servicios.
-- Layouts tipo Bento Grid para home y portfolio.
-- Navegación SPA con React Router (HashRouter).
+- React 19, TypeScript y Vite
+- Tailwind CSS compilado en el build (sin CDN)
+- Supabase (base compartida, con acceso por aplicación)
+- React Router con rutas reales (`BrowserRouter`)
+- Vitest para unitarios, Playwright para E2E
 
-## Stack tecnológico
+## Requisitos
 
-- React 19
-- TypeScript
-- Vite
-- Tailwind CSS
-- Lucide React
-- Material Color Utilities
-
-## Requisitos previos
-
-- Node.js 18 o superior (recomendado Node.js 20+)
-- npm 9 o superior
+- Node.js 20 o superior
+- npm 10 o superior
+- Para el stack local de base de datos: Docker y el CLI de Supabase
 
 ## Instalación
 
-1. Clonar el repositorio:
+```bash
+npm install
+```
 
-   `git clone https://github.com/Facundo-Guarnier/guarnold-portfolio.git`
+## Desarrollo
 
-2. Entrar al proyecto:
+```bash
+npm run dev          # http://localhost:3001 (portfolio, CV y editor con la base de la nube)
+npm run dev:docker   # http://localhost:5177 (contra el stack local de Supabase)
+```
 
-   `cd guarnold-portfolio`
+Para trabajar contra una base local hace falta levantar el stack primero:
 
-3. Instalar dependencias:
+```bash
+npm run db:local          # levanta Supabase en Docker y aplica las migraciones
+npm run db:local:parar    # lo apaga
+```
 
-   `npm install`
+`db:local` escribe `.env.docker.local`, que es la configuración del modo `docker`. Las cuentas de
+prueba de la base local están en `AGENTS.md`.
 
-## Uso en desarrollo
+## Pruebas
 
-Iniciar el servidor local:
+```bash
+npm run typecheck          # TypeScript sin emitir archivos
+npm test                   # unitarios: portfolio, CV y herramientas (no necesita Docker)
+npm run test:sql           # pruebas SQL sobre el stack local
+npm run test:integracion   # PostgREST y RLS sobre el stack local
+npm run test:e2e           # Playwright: portfolio (puerto 3001) y CV (puerto 5177)
+npm run verificar:headers  # revisa la Content-Security-Policy de public/_headers
+```
 
-`npm run dev`
+Los E2E del CV necesitan el stack local (`npm run db:local`). Los del portfolio no: usan una base falsa.
 
-Por defecto Vite publica en `http://localhost:3000` o el siguiente puerto libre.
+## Build y publicación
 
-## Build de producción
+```bash
+npm run build      # genera dist/
+npm run preview    # sirve dist/ con las cabeceras de public/_headers
+```
 
-Generar build optimizada:
+El sitio se publica en Netlify. Las cabeceras de seguridad están en `public/_headers` y el SPA fallback en
+`public/_redirects`. Los cambios de base de datos viajan por la CI de Supabase (`.github/workflows/desplegar-supabase.yml`),
+al mergear a `main`. Ver `docs/guides/despliegue-supabase.md`.
 
-`npm run build`
+## Estructura
 
-Previsualizar build localmente:
+```
+src/                 portfolio (páginas, componentes, tema)
+src/cv/              CV: página pública, editor, hooks, lógica y tipos
+src/lib/             cliente Supabase único, sesión de Guarnold ID y enlaces viejos
+src/data/            content.yml, el respaldo del portfolio
+supabase/            migraciones, configuración del stack local y pruebas SQL
+tools/               despliegue, cabeceras, stack local y servidor MCP
+tests/               integración y fixtures
+e2e/                 pruebas de navegador
+```
 
-`npm run preview`
+## Rutas
 
-## Estructura del proyecto (resumen)
+| Ruta | Qué es |
+|---|---|
+| `/` | Portfolio |
+| `/trajectory`, `/projects` | Secciones del portfolio |
+| `/cv` | CV público |
+| `/admin` | Editor del CV (`/editor` es un alias) |
+| `/login` | Login propio del editor, fuera de `guarnold.com.ar` |
 
-- `src/pages`: páginas principales (`Home`, `Trajectory`, `Projects`).
-- `src/components`: componentes reutilizables (cards, grid, navbar, etc.).
-- `src/data/content.yml`: contenido principal del portfolio.
-- `src/services/dataService.ts`: capa de acceso a datos.
-- `src/context/ThemeContext.tsx`: lógica de tema dinámico.
+Los enlaces del portfolio con formato `#/projects` (la versión anterior, con hash) se redirigen solos a la
+ruta nueva.
 
-## Personalización rápida
+## Más detalle
 
-1. Editar contenido en `src/data/content.yml`.
-2. Reemplazar assets en `public/assets` (logo, imágenes, mapa, etc.).
-3. Ajustar estilos en componentes y tokens de tema según necesidad.
-
-## Estado actual de datos
-
-Actualmente el contenido se consume desde YAML local (modo desacoplado). La arquitectura está preparada para migrar a fuente remota (por ejemplo Supabase) sin reescribir la UI principal.
-
-## Scripts disponibles
-
-- `npm run dev`: entorno local con hot reload.
-- `npm run build`: compilación de producción.
-- `npm run preview`: preview local de la build.
-
-## Licencia
-
-Este proyecto se distribuye bajo licencia MIT.
-
-Consulta el texto completo en [LICENSE](LICENSE).
+`AGENTS.md` tiene las reglas del proyecto (acceso por aplicación, sesión central, CSP y el flujo de trabajo).
