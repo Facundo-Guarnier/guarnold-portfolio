@@ -8,6 +8,7 @@
   "gitURL": "https://github.com/Facundo-Guarnier/guarnold-portfolio",
   "scripts": {
     "dev": "vite",
+    "dev:cuenta": "vite --mode cuentalocal",
     "dev:docker": "vite --mode docker",
     "build": "vite build",
     "preview": "vite preview",

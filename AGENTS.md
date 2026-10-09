@@ -80,6 +80,8 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
 | Qué | Dónde / cómo |
 |---|---|
 | Puertos del portfolio (dev) | **3001** (`npm run dev`) — el default vive en `vite.config.ts` |
+| Base compartida (dev, lo local ⊥ apunta a prod) | `npm run dev` (3001) lee `.env.development`: base de guarnold-id (`127.0.0.1:54391`, esquema `cv-formatter`). Previo: `npm run db:compartido` en `../guarnold-id` |
+| Cuenta local (Guarnold ID en `localhost:5170`) | `npm run dev:cuenta` (modo `cuentalocal`, `.env.cuentalocal`) + `npm run dev` en `../guarnold-id` |
 | Puerto de la app con stack local | **5177** (`npm run dev:docker` → `vite --mode docker`) |
 | E2E del portfolio | **3001**, con Supabase falso por variables de entorno (sin Docker) |
 | E2E del CV | **5177**, `vite --mode docker` contra el stack local (necesita `db:local`) |
