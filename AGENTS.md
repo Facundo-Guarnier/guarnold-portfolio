@@ -100,9 +100,9 @@ Notas:
 - **`--mode local` ⊥ existe**: Vite lo rechaza (choca con el postfijo `.local` de los `.env`). El modo
   es `docker` (la convención de `tools/scripts/db-local.mjs`).
 - **`db.migrations` está apagado** en `supabase/config.toml`: `plataforma` (`has_app_access`) vive en el
-  repo de GuarNote y tiene que existir **antes** de las migraciones de acá. `tools/local/preparar-stack.mjs`
-  lee `../guarnote/supabase/migrations/20261002234342_plataforma_acceso_por_app.sql` (⊥ copia: dos copias
-  divergen). Otro lugar: `GUARNOTE_REPO=/ruta`.
+  repo de guarnold-id (cuenta central) y tiene que existir **antes** de las migraciones de acá.
+  `tools/local/preparar-stack.mjs` lee todas las `../guarnold-id/supabase/migrations/*_plataforma_*.sql`
+  en orden de versión (⊥ copia: dos copias divergen). Otro lugar: `GUARNOLD_ID_REPO=/ruta`.
 - **`supabase/roles.sql`** crea el esquema `cv-formatter` vacío al arrancar: PostgREST ⊥ arranca si
   un esquema de `api.schemas` ⊥ existe (503), y las migraciones corren después de la API.
 - Las migraciones se registran en `supabase_migrations.schema_migrations` (la tabla del CLI), así que

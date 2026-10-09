@@ -7,9 +7,10 @@
  *
  * Qué hace, en orden:
  *   1. `supabase start` (el stack de ESTE repo: `supabase_db_cv-formatter`, puertos 5438x).
- *   2. Prerrequisito de `plataforma` (`has_app_access`): el archivo vive en el repo de GuarNote y se
- *      LEE de ahí (⊥ se copia: dos copias divergen). Se aplica una sola vez.
- *   3. Las migraciones de `supabase/migrations/` que ⊥ estén aplicadas. Cada una en su transacción.
+ *   2. Las migraciones `*_plataforma_*` del repo guarnold-id (dueño de `plataforma`, la cuenta
+ *      central) se LEEN de ahí, en orden de versión (⊥ se copian: dos copias divergen). Van primero:
+ *      `has_app_access` las necesita.
+ *   3. Las migraciones de `supabase/migrations/` que ⊥ estén aplicadas, después de las de plataforma.
  *      El registro va a `supabase_migrations.schema_migrations`, la misma tabla que usa el CLI.
  *   4. Dos cuentas de prueba (GoTrue admin API, con la clave de servicio LOCAL): una CON acceso a
  *      cv-formatter y otra SIN acceso. Y una fila de perfil si ⊥ hay ninguna.
@@ -37,22 +38,11 @@ const MIGRACIONES = path.join(RAIZ, 'supabase', 'migrations');
 const RESET = process.argv.includes('--reset');
 
 /**
- * Migraciones de OTRO repo (GuarNote) que cv-formatter necesita, en orden. Solo las que
- * `plataforma.has_app_access()` usa: `app_access`, la función y el backfill. Las posteriores
- * (apps, administración, auditoría) ⊥ las usa cv-formatter; sumarlas es un cambio consciente.
+ * `plataforma` (cuenta central) es del repo guarnold-id: sus migraciones `*_plataforma_*` se leen
+ * de ahí, todas, en orden de versión. Otro lugar: `GUARNOLD_ID_REPO=/ruta`.
  */
-const PREREQUISITOS = [
-  { repo: 'guarnote', archivo: '20261002234342_plataforma_acceso_por_app.sql' },
-];
-
-/** Stub: el backfill de `plataforma_acceso_por_app` lee `guarnote.user_roles`. Base vacía ⇒ vacía. */
-const STUB_GUARNOTE = `
-CREATE SCHEMA IF NOT EXISTS guarnote;
-CREATE TABLE IF NOT EXISTS guarnote.user_roles (
-  user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  role_id uuid NOT NULL,
-  PRIMARY KEY (user_id, role_id)
-);`;
+const REPO_PLATAFORMA = 'guarnold-id';
+const PATRON_PLATAFORMA = /_plataforma_/;
 
 const REGISTRO = `
 CREATE SCHEMA IF NOT EXISTS supabase_migrations;
@@ -119,17 +109,28 @@ function levantar() {
   }
 }
 
-function leerPrerequisito({ repo, archivo }) {
-  const base = process.env.GUARNOTE_REPO || path.resolve(RAIZ, '..', repo);
-  const ruta = path.join(base, 'supabase', 'migrations', archivo);
-  if (!existsSync(ruta)) {
+/** Migraciones `*_plataforma_*` del repo dueño, en orden de versión (el prefijo es la versión). */
+function leerPlataforma() {
+  const base = process.env.GUARNOLD_ID_REPO || path.resolve(RAIZ, '..', REPO_PLATAFORMA);
+  const dir = path.join(base, 'supabase', 'migrations');
+  if (!existsSync(dir)) {
     salir(
-      `No encuentro ${ruta}.\n` +
-        '  Es el prerrequisito de `plataforma` (repo guarnote). Cloná el repo junto a cv-formatter o\n' +
-        '  apuntá GUARNOTE_REPO a su carpeta.',
+      `No encuentro ${dir}.\n` +
+        `  plataforma (cuenta central) es del repo ${REPO_PLATAFORMA}. Cloná el repo junto a cv-formatter o\n` +
+        '  apuntá GUARNOLD_ID_REPO a su carpeta.',
     );
   }
-  return { ruta, texto: readFileSync(ruta, 'utf8') };
+  const archivos = readdirSync(dir)
+    .filter((f) => f.endsWith('.sql') && PATRON_PLATAFORMA.test(f))
+    .sort();
+  if (archivos.length === 0) {
+    salir(`${dir} ⊥ tiene migraciones *_plataforma_*: ¿es el repo ${REPO_PLATAFORMA}?`);
+  }
+  return archivos.map((archivo) => ({
+    origen: REPO_PLATAFORMA,
+    archivo,
+    ruta: path.join(dir, archivo),
+  }));
 }
 
 function aplicarMigraciones() {
@@ -138,33 +139,23 @@ function aplicarMigraciones() {
     valor('SELECT version FROM supabase_migrations.schema_migrations').split('\n').filter(Boolean),
   );
 
-  // 1. Prerrequisitos de otro repo.
-  for (const p of PREREQUISITOS) {
-    const version = `${p.repo}-${p.archivo.slice(0, 14)}`;
-    if (aplicadas.has(version)) continue;
-    const { ruta, texto } = leerPrerequisito(p);
-    log(`prerrequisito ${p.repo}/${p.archivo}`);
+  // Las de plataforma van primero (dependencia), después las de este repo, en orden de versión.
+  // Registro previo: el prerrequisito único se anotaba como `guarnote-<version>`: cuenta como aplicado.
+  const yaAplicada = (version) => aplicadas.has(version) || aplicadas.has(`guarnote-${version}`);
+  const propias = readdirSync(MIGRACIONES)
+    .filter((f) => f.endsWith('.sql'))
+    .sort()
+    .map((archivo) => ({ origen: 'cv-formatter', archivo, ruta: path.join(MIGRACIONES, archivo) }));
+  let nuevas = 0;
+  for (const m of [...leerPlataforma(), ...propias]) {
+    const version = m.archivo.slice(0, m.archivo.indexOf('_'));
+    if (yaAplicada(version)) continue;
+    log(`migración ${m.origen}/${m.archivo}`);
+    const texto = readFileSync(m.ruta, 'utf8');
     sql(
-      `BEGIN;\n${STUB_GUARNOTE}\n${texto}\n` +
-        `INSERT INTO supabase_migrations.schema_migrations (version, name) VALUES ('${version}', '${escapar(p.archivo)}');\n` +
-        'COMMIT;\n',
-      { singleTransaction: false },
+      `${texto}\n;\nINSERT INTO supabase_migrations.schema_migrations (version, name) VALUES ('${version}', '${escapar(m.archivo)}');\n`,
     );
     aplicadas.add(version);
-    log(`  ✓ ${path.relative(RAIZ, ruta)}`);
-  }
-
-  // 2. Migraciones de este repo, en orden.
-  const archivos = readdirSync(MIGRACIONES).filter((f) => f.endsWith('.sql')).sort();
-  let nuevas = 0;
-  for (const f of archivos) {
-    const version = f.slice(0, f.indexOf('_'));
-    if (aplicadas.has(version)) continue;
-    log(`migración ${f}`);
-    const texto = readFileSync(path.join(MIGRACIONES, f), 'utf8');
-    sql(
-      `${texto}\n;\nINSERT INTO supabase_migrations.schema_migrations (version, name) VALUES ('${version}', '${escapar(f)}');\n`,
-    );
     nuevas++;
   }
   log(nuevas ? `✓ ${nuevas} migraciones aplicadas` : '✓ migraciones al día');
