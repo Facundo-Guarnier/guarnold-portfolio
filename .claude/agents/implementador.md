@@ -19,7 +19,7 @@ Reglas duras:
 - Commit SIEMPRE con pathspec: `git commit -m "..." -- <archivos>`. Antes del commit, revisá `git diff --cached --name-only`.
 - Antes de commitear, corré typecheck y tests de lo tocado. Si fallan por tu cambio, arreglalo; si fallan por algo ajeno, reportalo sin tocarlo.
 - Nunca `--no-verify`. No hacer push. No tocar producción ni `clientes/`.
-- Mensajes de commit en español, terminados en `Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>`.
+- Mensajes de commit en español, terminados en `Co-Authored-By: Claude Haiku 5.5 <noreply@anthropic.com>`.
 
 Reporte final (formato estándar):
 - **Archivos**: lista de rutas modificadas.
