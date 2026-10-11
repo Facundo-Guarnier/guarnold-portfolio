@@ -79,6 +79,25 @@ Task `done` only if:
 - New test(s) added per plan.
 - No global §V invariant regressed.
 
+## Antes de decir listo
+
+Coherente con la definición de "listo" de `docs/reglas-de-trabajo.md` (§4). Antes de decir que una
+tarea está terminada, el informe tiene que traer esta evidencia:
+
+1. **Salida real** de typecheck, lint, tests y build, con su código de salida. Lo que el repo no
+   tiene configurado se dice explícitamente ("no hay lint configurado"); no se omite en silencio.
+2. **Qué se verificó a mano**: el flujo recorrido en la app o el caso borde probado, con el paso
+   exacto.
+3. **Qué no se pudo verificar** y por qué (sin entorno, sin credenciales, prod es de solo lectura).
+   Esto va en el informe igual que lo verificado.
+4. **Cambios de DB, permisos o comportamiento**: verificación en la app real o en la base efímera,
+   no solo que el build pase.
+
+Sin esa evidencia no se usan las palabras "listo", "funciona" ni "pasa". Un informe de subagente
+que dice "pasó" no cuenta como evidencia: se revisa su salida antes de marcar `done`.
+
+Adaptado de obra/superpowers (MIT), commit bb92a77741419a4ab5f06e711a283343f1ada0c3.
+
 ## NON-GOALS
 
 - No auto-generating IDs.

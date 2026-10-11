@@ -4,62 +4,62 @@ description: "Detecta desvíos entre SPEC.md, las tareas y el código: invariant
 allowed-tools: Read Grep Glob Bash(git status *) Bash(git log *) Bash(git show *)
 ---
 
-# check — drift report
+# check: reporte de desvíos
 
-Pure diagnostic. Reports violations. Writes nothing.
+Es un diagnóstico puro: informa las violaciones y no escribe nada.
 
-## LOAD
+## Carga
 
-1. Read `SPEC.md`.
-2. Read all `.agents/tasks/YYYY-XXXX.md` files.
-3. Parse invocation args:
-   - `§V` → check global invariants (default)
-   - `§I` → check interfaces
-   - `tasks` → audit task files status vs code
-   - `--all` → all three
+1. Leé `SPEC.md`.
+2. Leé todos los archivos `.agents/tasks/YYYY-XXXX.md`.
+3. Interpretá los argumentos de la invocación:
+   - `§V`: revisa los invariantes globales (es el valor por defecto).
+   - `§I`: revisa las interfaces.
+   - `tasks`: audita el estado de las tareas contra el código.
+   - `--all`: hace los tres controles.
 
-## CHECK §V — invariants
+## Control de §V: invariantes
 
-For each V<n> in `SPEC.md` and task files:
+Para cada invariante V<n> de `SPEC.md` y de los archivos de tarea:
 
-1. Translate invariant into verifiable claim about code.
-2. Grep / read relevant files.
-3. Classify: **HOLD** / **VIOLATE** / **UNVERIFIABLE**.
-4. Record address + file:line evidence.
+1. Traducí el invariante a una afirmación verificable sobre el código.
+2. Buscá (grep) y leé los archivos relevantes.
+3. Clasificá el resultado como HOLD (se cumple), VIOLATE (no se cumple) o UNVERIFIABLE (no se puede verificar).
+4. Registrá la dirección y la evidencia en forma de archivo:línea.
 
-## CHECK §I — interfaces
+## Control de §I: interfaces
 
-For each I item in `SPEC.md`:
+Para cada elemento I de `SPEC.md`:
 
-1. Locate implementation.
-2. Classify: **MATCH** / **DRIFT** / **MISSING** / **EXTRA**.
+1. Ubicá la implementación.
+2. Clasificá el resultado como MATCH (coincide), DRIFT (cambió), MISSING (falta) o EXTRA (sobra).
 
-## CHECK tasks — .agents/tasks/
+## Control de tareas
 
-For each task file:
+Para cada archivo de tarea:
 
-1. If `done`: verify claimed work present.
-2. If `in_progress`: note status.
-3. Flag `done` tasks with no evidence as **STALE**.
+1. Si está en `done`, verificá que el trabajo declarado esté presente.
+2. Si está en `in_progress`, anotá su estado.
+3. Marcá como STALE las tareas `done` que no tengan evidencia.
 
-## REPORT
+## Reporte
 
-Caveman. Grouped by severity.
+Es un reporte terso, agrupado por severidad:
 
 ```
-## global §V drift (SPEC.md)
-V2 VIOLATE: auth/mw.go:47 uses `<` not `≤`.
+## desvíos de §V globales (SPEC.md)
+V2 VIOLATE: auth/mw.go:47 usa `<` en lugar de `≤`.
 
-## task drift (.agents/tasks/)
-#2026-0007 HOLD: soft-delete logic present.
-#2026-0008 VIOLATE: missing deleted_at check in query.
+## desvíos de tareas (.agents/tasks/)
+#2026-0007 HOLD: la lógica de borrado lógico está presente.
+#2026-0008 VIOLATE: falta el chequeo de deleted_at en la consulta.
 
-## summary
-1 violate. 1 stale.
-next: cavekit-spec `bug: <task ID>` (BACKPROP mode).
+## resumen
+1 violación. 1 obsoleta.
+siguiente: cavekit-spec `bug: <ID de tarea>` (modo BACKPROP).
 ```
 
-## NON-GOALS
+## Fuera de alcance
 
-- Zero writes. No SPEC.md or task edits.
-- No auto-generating IDs.
+- Cero escrituras. No se editan `SPEC.md` ni las tareas.
+- No se generan IDs automáticamente.
