@@ -133,6 +133,10 @@ La lógica es pura (`src/cv/lib/importarPortfolio.ts`, con tests en `src/cv/lib/
 `src/services/dataService.ts`: la RPC `"cv-formatter".portfolio_publico()` con el cliente anónimo; si falla
 o ⊥ hay configuración (`supabaseConfigurado`), usa `src/data/content.yml`. ⊥ se mezclan: o una o la otra.
 
+## Mails transaccionales (Resend)
+
+Si la app manda mails (de Auth o propios), seguir las guÃ­as copiadas de la plantilla del hub: `docs/guides/secretos-y-configuracion.md` (dos claves: #1 para el SMTP de Supabase, #2 para el servidor propio), `docs/guides/dns-email-dominio.md` (dominio y DNS) y `docs/guides/transactional-emails.md` (Edge Function o Netlify).
+
 ## Learnings
 
 - Una CSP con `img-src https:` a secas es un canal de exfiltración: los orígenes de imagen se listan a mano
