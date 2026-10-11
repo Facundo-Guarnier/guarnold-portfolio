@@ -3,7 +3,7 @@
   "screenName": "Guarnold Portfolio",
   "description": "Sitio personal de Guarnold: portfolio (/), CV público (/cv) y editor del CV (/admin).",
   "private": true,
-  "version": "2026.10.11-b31",
+  "version": "2026.10.11-b32",
   "engines": {
     "node": ">=22"
   },
