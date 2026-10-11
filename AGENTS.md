@@ -11,8 +11,9 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
 
 ## Hard rules (non-negotiable)
 
-- **🚫 ⊥ `git push`. EVER.** Agent commits; the user pushes.
+- El agente commitea en `dev` con pathspec y puede pushear `dev`; `main` está protegido: entra por PR desde `dev` y el merge lo autoriza el owner. Detalle: docs/reglas-de-trabajo.md.
 - Branches: `main` = stable/prod · `dev` = daily work (default). ⊥ commit straight to `main`.
+- Trabajo con varios agentes (subagentes, verificación): `docs/principles/trabajo-con-varios-agentes.md`.
 - **Done = all 3, actually run (⊥ assumed):** build clean · lint clean (where configured) · tests green (where they exist).
   Fails → report the real output. ⊥ `--no-verify` to dodge a hook.
 - **Supabase project is SHARED** ("Guarnold Main": guarnote, pivot, este repo, ONE `auth.users`).
