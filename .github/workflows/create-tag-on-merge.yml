@@ -1,37 +1,21 @@
 name: Create Tag on Main
 
+# Caller del reutilizable del hub. Solo corre si cambió package.json (lo filtra este caller:
+# el reutilizable es workflow_call y no admite `paths`).
+
 on:
   push:
     branches:
       - main
     paths:
-      - "package.json" # Solo corre si el package.json cambió (lo cual pasó en el PR)
+      - 'package.json'
 
-# Privilegio mínimo por defecto; el job que crea el tag pide su escritura explícitamente.
 permissions:
   contents: read
 
-# Actions pineadas por SHA (un tag lo puede mover el dueño; un SHA, no). El comentario dice la versión.
 jobs:
   tag-version:
-    runs-on: ubuntu-latest
+    uses: Facundo-Guarnier/guarnold-hub/.github/workflows/create-tag-on-merge.yml@76327aabfd4119adc933211a7fe8c1f80a2f0546  # dev 2026-10-11
+    secrets: inherit
     permissions:
-      contents: write # Permiso vital para crear tags
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Read Version from package.json
-        id: get_version
-        run: |
-          # Leemos la versión usando node
-          VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "Detectada versión: $VERSION"
-
-      - name: Create Git Tag
-        uses: mathieudutour/github-tag-action@fcfbdceb3093f6d85a3b194740f8c6cec632f4e2 # v6.1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ env.VERSION }}
-          tag_prefix: "" # Dejamos vacío para que use exactamente lo del package.json
+      contents: write # crear el tag
