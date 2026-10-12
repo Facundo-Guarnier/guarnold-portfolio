@@ -1,12 +1,13 @@
 ---
 name: cavekit-backprop
-description: "Registra un bug con su causa: encuentra el error, rastrea la causa raíz, lo anota en §B de la tarea y agrega un invariante §V a SPEC.md si la regla es general. Usala ante un fallo de test en verificación, un reporte de bug o un incidente en producción. NO usarla para implementar una tarea nueva (cavekit-build) ni para un desvío sin bug (cavekit-check)."
+description: "Registra un bug con su causa: encuentra el error, rastrea la causa raíz, lo anota en los errores de la tarea en GuarNote (vía MCP) y agrega un invariante §V a SPEC.md si la regla es general. Usala ante un fallo de test en verificación, un reporte de bug o un incidente en producción. NO usarla para implementar una tarea nueva (cavekit-build) ni para un desvío sin bug (cavekit-check)."
 ---
 
-# backprop: del bug a la tarea (§B) y a la spec (§V)
+# backprop: del bug a la tarea (`errors`) y a la spec (§V)
 
 El desarrollo dirigido por spec corrige el código y, a la vez, actualiza la spec y la tarea para que el
-mismo error no pueda volver a ocurrir.
+mismo error no pueda volver a ocurrir. La tarea vive en GuarNote; su §B de bugs es `details.errors`
+(🔗 `docs/guides/tareas-en-guarnote.md`).
 
 ## Cuándo se usa
 
@@ -26,17 +27,19 @@ comportamiento es incorrecto. Escribí la causa raíz en una sola oración.
 
 - ¿Un nuevo invariante en la §V de `SPEC.md` atraparía esta clase de error? Es la opción preferida.
 - ¿El requerimiento de la §R de la tarea está mal?
-- ¿La sección §B de la tarea activa es el lugar correcto para registrar esto?
+- ¿Los errores de la tarea activa son el lugar correcto para registrar esto?
 
 ### 3. Proponer
 
-1. El ID de la tarea tiene que venir explícito en el pedido, con el formato `#YYYY-XXXX`.
+1. El ID de la tarea tiene que venir explícito en el pedido, con el formato `#AAAA-XXXX`.
 2. No inventes, infieras ni mapees IDs desde ninguna fuente.
 3. Si falta el ID, preguntá: "¿Cuál es el ID de la tarea activa?". Esperá la respuesta antes de seguir.
+   Si el bug no pertenece a ninguna tarea, proponé crear una con `cavekit-spec` (NEW_TASK).
 
 Después redactá el cambio:
 
-- Una entrada en la §B de `.agents/tasks/YYYY-XXXX.md`.
+- Una fila nueva en `details.errors` de la tarea (`get_task` para leer la tabla actual; `update_task`
+  con la tabla completa, porque la sección se reemplaza entera).
 - Una entrada en la §V de `SPEC.md`, solo si la regla es general.
 
 ### 4. Escribir el test
@@ -49,8 +52,9 @@ Corregí el código y corré el test. Tiene que pasar.
 
 ### 6. Registrar
 
-Commiteá juntos la edición de la tarea, la edición de la spec, el test y la corrección.
-El mensaje de commit es `#YYYY-XXXX — backprop §B: <causa>`.
+Commiteá juntos la edición de la spec, el test y la corrección. El mensaje de commit es
+`#AAAA-XXXX — backprop: <causa>`. En la tarea: la fila en `errors` (paso 3), el commit en
+`references` y un comentario `bug — <causa>; fix <commit>`.
 
 ## Depuración sistemática
 
@@ -75,9 +79,9 @@ Adaptado de obra/superpowers (MIT), commit bb92a77741419a4ab5f06e711a283343f1ada
 
 Cada ejecución de backprop produce:
 
-1. Una entrada en la §B de `.agents/tasks/YYYY-XXXX.md`.
+1. Una fila en `details.errors` de la tarea en GuarNote, y un comentario con la causa y el fix.
 2. Una entrada en la §V de `SPEC.md`, si la regla es nueva.
 3. El archivo del test.
 4. La corrección del código.
 
-No se escribe nada en la §B de `SPEC.md`.
+No se escribe nada en una §B de `SPEC.md` ni en archivos de `.agents/tasks/`.

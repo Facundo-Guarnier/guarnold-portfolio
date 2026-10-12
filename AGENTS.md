@@ -74,7 +74,7 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
 - Owner's generic rules: `D:/Repositorios_GitHub/guarnold-hub/.claude/memory/` → start at `MEMORY.md`.
   Path ⊥ exists (other machine / external dev) → skip it, this file stands alone.
 - What this project does → `README.md` here.
-- Tasks, pendings, day-to-day state → **GuarNote** (the owner's own app). ⊥ invent TODOs in markdown.
+- Tasks, pendings, day-to-day state → **GuarNote**, via its MCP `guarnote` (configured at user level). ⊥ `TODO.md` of pendings, ⊥ files in `.agents/tasks/`. GuarNote project: `list_projects` by this repo's name; not found → ask the owner, ⊥ create it. MCP unavailable → tell the owner, ⊥ write the task to a file. Format, states & flow: `docs/guides/tareas-en-guarnote.md`.
 
 ## Desarrollo local
 

@@ -1,6 +1,6 @@
 ---
 name: cavekit-plan
-description: "Convierte una conversación de discovery (preguntas, respuestas y decisiones) en un plan de alto nivel en plans/NOMBRE-YYYY-MM.md. Va antes de cavekit-spec: el plan fija el qué y el porqué; las tareas, el cómo. Usala cuando el usuario cierre una ronda de discovery o pida documentar decisiones. NO usarla para escribir SPEC.md ni tareas (cavekit-spec) ni para escribir código."
+description: "Convierte una conversación de discovery (preguntas, respuestas y decisiones) en un plan de alto nivel en plans/NOMBRE-YYYY-MM.md. Va antes de cavekit-spec: el plan fija el qué y el porqué; las tareas (en GuarNote), el cómo. Usala cuando el usuario cierre una ronda de discovery o pida documentar decisiones. NO usarla para escribir SPEC.md ni tareas (cavekit-spec) ni para escribir código."
 ---
 
 # plan — discovery → actionable plan
@@ -12,7 +12,7 @@ El plan que se escribe es **prosa en español para personas y clientes**. La gra
 
 - After discovery round (questions answered, decisions taken in chat).
 - Need to fix WHAT + WHY before dropping to tasks.
-- ⊥ for SPEC.md | `.agents/tasks/` → that's `cavekit-spec`.
+- ⊥ for SPEC.md | tasks (GuarNote) → that's `cavekit-spec`.
 
 ## INPUT
 
@@ -111,7 +111,7 @@ Sections (skip N/A, keep order):
 
 ## NON-GOALS
 
-- ⊥ write SPEC.md | `.agents/tasks/` (that's `cavekit-spec`).
+- ⊥ write SPEC.md | tasks in GuarNote (that's `cavekit-spec`).
 - ⊥ write code | migrations.
 - ⊥ invent decisions client didn't confirm → §8 open.
 - ⊥ apply caveman to the plan.

@@ -1,6 +1,6 @@
 ---
 name: testing
-description: "Escribe, modifica, revisa o planifica tests en proyectos React + Supabase (unit, integración, RLS y E2E), y genera tests desde una tarea de .agents/tasks/ (criterios §A e invariantes §V) o desde un archivo de código. Usala antes de implementar algo testeable, al corregir un bug que necesita test de regresión, o cuando el usuario mencione test, vitest, playwright, mock, cobertura o RLS. NO usarla para diagnosticar fallos de CI o de pre-commit (eso es pr-fix o precommit-fix) ni para auditorías de seguridad (eso es cavekit-audit)."
+description: "Escribe, modifica, revisa o planifica tests en proyectos React + Supabase (unit, integración, RLS y E2E), y genera tests desde una tarea de GuarNote (criterios de aceptación e invariantes §V) o desde un archivo de código. Usala antes de implementar algo testeable, al corregir un bug que necesita test de regresión, o cuando el usuario mencione test, vitest, playwright, mock, cobertura o RLS. NO usarla para diagnosticar fallos de CI o de pre-commit (eso es pr-fix o precommit-fix) ni para auditorías de seguridad (eso es cavekit-audit)."
 ---
 
 # testing
@@ -67,16 +67,16 @@ Obligatorio:
 
 ## Procedimiento
 
-1. Identificar la fuente: un task `#YYYY-XXXX` (genera desde §A y §V), o un archivo `src/...` (genera
-   desde la lógica propia). Si no hay ninguna, preguntar al usuario antes de escribir.
-2. Para tareas: mapear cada criterio §A a un archivo real. Lo que no sea testeable en unit (por ejemplo
+1. Identificar la fuente: una tarea `#AAAA-XXXX` de GuarNote (`get_task`; genera desde sus criterios
+   de aceptación y su §V), o un archivo `src/...` (genera desde la lógica propia). Si no hay ninguna, preguntar al usuario antes de escribir.
+2. Para tareas: mapear cada criterio de aceptación a un archivo real. Lo que no sea testeable en unit (por ejemplo
    "RLS impide X") va a integración o SQL y se anota como fuera de alcance; no se fuerza en unit.
 3. Para código: testear solo lógica propia con ramas. Ignorar JSX de presentación, re-exports y wrappers
    triviales. Si una lógica privada con ramas no se puede probar, extraerla a un módulo puro, avisando
    antes al usuario.
 4. Correr `npx vitest run <archivo>`. Si falla por un test mal escrito, corregir el test. Si falla
-   porque hay un bug real, **no maquillar el test**: reportarlo como candidato a §B y pasar a
-   `cavekit-backprop`.
+   porque hay un bug real, **no maquillar el test**: reportarlo como candidato a los errores de la
+   tarea y pasar a `cavekit-backprop`.
 5. Mutación opcional: romper una rama a mano y confirmar que el test falla.
 
 ## Verificación antes de cerrar

@@ -63,25 +63,31 @@ Goal: close gaps BEFORE creating tasks.
 
 Goal: one task per §N section. NEVER a single giant umbrella task.
 
-1. Ask user for ID range `#YYYY-XXXX → #YYYY-YYYY` (⊥ infer IDs).
-2. Create coordination task `#YYYY-XXXX` that:
+Tasks live in GuarNote, created with its MCP (`create_task`); the base assigns the IDs (⊥ ask for or
+invent a range). Section mapping: `docs/guides/tareas-en-guarnote.md`. MCP unavailable → tell the
+owner and stop.
+
+1. Confirm with the user the list of N sections that become tasks.
+2. Create the coordination task first (`create_task`) that:
    - Lists the N sub-tasks in a table.
    - Defines coordination rules: user OK per section, finding format, mini summary at close.
    - ⊥ contains work of its own.
-3. Create N atomic tasks `#YYYY-(XXXX+1)…#YYYY-(XXXX+N)`, one per §N. Each task has:
-   - §R: requirement = "analyze §N, document findings, ⊥ fix".
-   - §V: cite parent plan's §N + relevant global invariants.
-   - §P: concrete process (area-specific tools).
-   - §B: bugs (empty).
-   - §S: `todo`.
+3. Create N atomic tasks, one per §N. Each task has:
+   - `content` §R: requirement = "analyze §N, document findings, ⊥ fix".
+   - `content` §V: cite parent plan's §N + relevant global invariants.
+   - `content` §P: concrete process (area-specific tools).
+   - `details.acceptance_criteria`: the section of the report is written, each finding in the format below.
+   - `details.references`: the plan and the coordination task (`#AAAA-XXXX`).
+   - `status: "todo"` + comment `todo — creada`.
    - **⊥ fix** policy: forbidden to touch app code during the task. Only write to the report.
+   Then update the coordination task's table with the N task numbers the base returned.
 4. Single deliverable: `docs/<topic>-YYYY-MM.md`. Each task writes ITS section into that file, does not create new files.
 
 ## PHASE 4 — EXECUTION
 
 One task at a time, in the order agreed with the user.
 
-1. Flip §S: `todo → in_progress`.
+1. `update_task` → `status: "doing"` + comment `in_progress — <section>`.
 2. Execute §P with listed tools.
 3. Write findings in the corresponding section of the single report. Per-finding format:
    - **Severity**: critical / high / medium / low / info.
@@ -92,7 +98,7 @@ One task at a time, in the order agreed with the user.
    - **References**: `file:line`, table, policy, etc.
 4. Section close: mini summary (count per severity, top 3 risks).
 5. Ask user OK before moving to next task.
-6. Flip §S: `in_progress → done` only after OK.
+6. `status: "done"` + comment `done — <mini summary>` only after OK.
 
 ---
 
@@ -100,7 +106,7 @@ One task at a time, in the order agreed with the user.
 
 - ⊥ fix during the audit. No `sed`. No migration. Nothing.
 - ⊥ umbrella tasks. One task = one section = one bounded scope.
-- ⊥ auto-generating IDs. Ask for explicit range.
+- ⊥ inventing IDs: the base assigns them (`create_task`).
 - ⊥ multiple deliverables. ONE report, N sections.
 - ⊥ skipping Phase 2. Plan review is mandatory.
 
@@ -108,8 +114,8 @@ One task at a time, in the order agreed with the user.
 
 ```
 plans/<topic>-YYYY-MM.md             # plan with §1..§N
-.agents/tasks/YYYY-XXXX.md           # coordinator
-.agents/tasks/YYYY-(XXXX+1..N).md    # one per §N
+GuarNote: 1 coordination task         # table of the N tasks
+GuarNote: N tasks                     # one per §N
 docs/<topic>-YYYY-MM.md              # single report, filled during Phase 4
 ```
 

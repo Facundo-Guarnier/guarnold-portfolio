@@ -3,9 +3,10 @@
 Este archivo amplía el procedimiento de `testing/SKILL.md`. Las reglas de fondo (anti-trivialidad,
 origen de cada `it()`, nombres) están allí.
 
-## Desde una tarea (`#YYYY-XXXX`)
+## Desde una tarea (`#AAAA-XXXX`)
 
-Entradas: `.agents/tasks/YYYY-XXXX.md` (§A criterios, §V invariantes citados) y `SPEC.md` (§V global).
+Entradas: la tarea de GuarNote leída con `get_task` (`details.acceptance_criteria` y el `## §V` del
+`content`) y `SPEC.md` (§V global).
 
 Ejemplo de mapeo:
 

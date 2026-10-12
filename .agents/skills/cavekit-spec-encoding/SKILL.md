@@ -1,6 +1,6 @@
 ---
 name: cavekit-spec-encoding
-description: "Gramática comprimida (símbolos, formas de invariantes, bugs y estados de tarea) para escribir SPEC.md y las tareas de .agents/tasks/. Usala solo al escribir la spec, una tarea o un bug en esos archivos. NO usarla para chat, código, mensajes de commit, descripciones de PR ni documentos que lean personas externas: ahí va prosa normal."
+description: "Gramática comprimida (símbolos, formas de invariantes, bugs y estados de tarea) para escribir SPEC.md y el contenido de las tareas de GuarNote (content, errores, comentarios de estado). Usala solo al escribir la spec, una tarea o un bug. NO usarla para chat, código, mensajes de commit, descripciones de PR ni documentos que lean personas externas: ahí va prosa normal."
 ---
 
 # cavekit-spec-encoding
@@ -68,13 +68,17 @@ id|date|cause|fix
 B1|2026-04-20|token `<` not `≤`|V2
 ```
 
-**Línea de estado de tarea** (§S, append-only, una por transición):
+**Estado de tarea** (un comentario de GuarNote por transición, con `add_task_comment`; la fecha la
+pone la base):
 ```
-- [YYYY-MM-DD] todo — creada
-- [YYYY-MM-DD] in_progress — empieza <qué>
-- [YYYY-MM-DD] done — cerró <qué>
+todo — creada
+in_progress — empieza <qué>
+partial — hecho: <X>; falta: <Y>
+done — cerró <qué>
 ```
-Estados: `todo`, `in_progress`, `partial`, `done`. Nunca se reescribe una línea anterior.
+Estados: `todo`, `in_progress`, `partial`, `blocked`, `done`. Los comentarios solo se agregan: nunca
+se reescribe uno anterior. Correspondencia con el `status` de GuarNote:
+`docs/guides/tareas-en-guarnote.md`.
 
 **Interface**:
 ```
