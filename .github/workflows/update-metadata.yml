@@ -52,4 +52,11 @@ jobs:
           git add package.json
 
           # Hacemos commit del cambio en TU rama (usa la variable desde GITHUB_ENV)
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update metadata to ${{ env.NEW_VERSION }} [skip ci]" && git push)
+          # 🔴 SIN `[skip ci]` en el mensaje (medido 2026-10-11 en kuiter, PR #12 y #15). Este commit
+          # queda SIEMPRE como el último de `dev` ∴ es la cabeza del PR dev → main, y GitHub saltea
+          # TODOS los workflows de un PR cuya cabeza dice `[skip ci]` — también los de
+          # `pull_request`. El PR a producción se abría sin CI ni gitleaks. Netlify también respeta
+          # `[skip ci]` y saltea el deploy preview.
+          # ⊥ hace falta para evitar un bucle: un push hecho con el GITHUB_TOKEN ⊥ dispara workflows
+          # (regla de GitHub), y `paths-ignore: package.json` ya cubre el resto.
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update metadata to ${{ env.NEW_VERSION }}" && git push)
