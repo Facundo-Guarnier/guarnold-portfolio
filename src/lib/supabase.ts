@@ -34,6 +34,9 @@ const RUTAS_DEL_EDITOR = ["/admin", "/editor", "/login"];
 export const enRutaDelEditor = (ruta: string = window.location.pathname): boolean =>
   RUTAS_DEL_EDITOR.some((base) => ruta === base || ruta.startsWith(`${base}/`));
 
+// Copia local: el narrowing de `sesionCentral` (import) ⊥ sobrevive al closure bajo strictNullChecks.
+const sc = sesionCentral;
+
 export const supabase = createClient(
   supabaseConfigurado ? url! : "https://sin-configurar.invalid",
   supabaseConfigurado ? anonKey! : "sin-configurar",
@@ -43,10 +46,9 @@ export const supabase = createClient(
     // `accessToken`, supabase-js ⊥ maneja sesión propia: por eso `supabase.auth` ⊥ se usa afuera de
     // `cv/lib/auth.ts`. Fuera del editor ⊥ se pide nada a Guarnold ID: el visitante anónimo ⊥ tiene
     // cuenta y cada pedido a `id.guarnold.com.ar` sería un error de CORS para el portfolio.
-    ...(sesionCentral
+    ...(sc
       ? {
-          accessToken: () =>
-            enRutaDelEditor() ? sesionCentral.obtenerToken() : Promise.resolve(null),
+          accessToken: () => (enRutaDelEditor() ? sc.obtenerToken() : Promise.resolve(null)),
         }
       : {}),
   },

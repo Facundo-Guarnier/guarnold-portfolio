@@ -35,8 +35,9 @@ npm install
 ## Desarrollo
 
 ```bash
-npm run dev          # http://localhost:3001 (portfolio, CV y editor con la base de la nube)
-npm run dev:docker   # http://localhost:5177 (contra el stack local de Supabase)
+npm run dev          # http://localhost:3001 (base compartida de guarnold-id, `.env.development`: NUNCA prod)
+npm run dev:cuenta   # igual, con Guarnold ID local (localhost:5170): ver AGENTS.md
+npm run dev:docker   # http://localhost:5177 (stack local propio de este repo, `.env.docker.local`)
 ```
 
 Para trabajar contra una base local hace falta levantar el stack primero:

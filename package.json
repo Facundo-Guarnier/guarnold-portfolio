@@ -3,11 +3,16 @@
   "screenName": "Guarnold Portfolio",
   "description": "Sitio personal de Guarnold: portfolio (/), CV público (/cv) y editor del CV (/admin).",
   "private": true,
-  "version": "2026.10.09-b28",
+  "version": "2026.10.11-b36",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "npm@11.4.2",
   "type": "module",
   "gitURL": "https://github.com/Facundo-Guarnier/guarnold-portfolio",
   "scripts": {
     "dev": "vite",
+    "dev:cuenta": "vite --mode cuentalocal",
     "dev:docker": "vite --mode docker",
     "build": "vite build",
     "preview": "vite preview",
@@ -20,7 +25,8 @@
     "db:local:reset": "node tools/local/preparar-stack.mjs --reset",
     "db:local:parar": "supabase stop",
     "deploy:plan": "node tools/deploy/desplegar-supabase.mjs --plan",
-    "verificar:headers": "node tools/headers/verificar-headers.mjs"
+    "verificar:headers": "node tools/headers/verificar-headers.mjs",
+    "prepare": "husky"
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.3.0",
@@ -35,6 +41,8 @@
     "yaml": "^2.9.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@playwright/test": "^1.64.0",
     "@rollup/plugin-yaml": "^4.1.2",
     "@types/node": "^22.14.0",
@@ -42,6 +50,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.19",
+    "husky": "^9.1.7",
     "jsdom": "^27.4.0",
     "lovable-tagger": "^1.1.13",
     "postcss": "^8.5.28",

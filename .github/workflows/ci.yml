@@ -1,0 +1,46 @@
+name: CI
+
+# Tipos, tests y build en cada PR y push a dev/main. El deploy lo hace Netlify.
+# Sin lint: el repo no tiene script `lint`. Los tests de integracion (Supabase local) y E2E se corren a mano.
+
+on:
+  pull_request:
+    branches: [main, dev]
+  push:
+    branches: [main, dev]
+
+# Solo lectura: el CI ⊥ escribe nada del repo.
+permissions:
+  contents: read
+
+# Un PR/push nuevo cancela la corrida previa del mismo ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Typecheck, tests y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests unitarios
+        run: npm test
+
+      - name: Build
+        run: npm run build

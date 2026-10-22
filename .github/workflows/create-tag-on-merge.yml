@@ -7,6 +7,11 @@ on:
     paths:
       - "package.json" # Solo corre si el package.json cambió (lo cual pasó en el PR)
 
+# Privilegio mínimo por defecto; el job que crea el tag pide su escritura explícitamente.
+permissions:
+  contents: read
+
+# Actions pineadas por SHA (un tag lo puede mover el dueño; un SHA, no). El comentario dice la versión.
 jobs:
   tag-version:
     runs-on: ubuntu-latest
@@ -14,7 +19,7 @@ jobs:
       contents: write # Permiso vital para crear tags
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Read Version from package.json
         id: get_version
@@ -25,7 +30,7 @@ jobs:
           echo "Detectada versión: $VERSION"
 
       - name: Create Git Tag
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@fcfbdceb3093f6d85a3b194740f8c6cec632f4e2 # v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ env.VERSION }}
