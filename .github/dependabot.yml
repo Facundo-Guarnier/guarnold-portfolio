@@ -1,34 +1,42 @@
-# Dependabot — SOLO parches de seguridad, ⊥ actualizaciones de rutina.
+# Dependabot — actualizaciones MENSUALES, agrupadas, con cooldown.
 #
-# Por que asi: con 22 repos, activar las actualizaciones de rutina genera una
-# lluvia de PRs que se termina ignorando -- y un Dependabot ignorado es peor que
-# no tenerlo, porque tapa las alertas que si importan.
+# Por que cambio: con `open-pull-requests-limit: 0` las actions quedaban congeladas (checkout@v3 durante
+# meses) y los parches de seguridad de rutina no llegaban. Ahora: un PR por ecosistema y mes, no uno
+# por paquete. `cooldown` espera 7 dias antes de proponer una version nueva: si la version sale
+# comprometida, la ventana la descubre el registro antes de que llegue un PR.
 #
-# `open-pull-requests-limit: 0` desactiva los PRs de version programados.
-# Los PRs de SEGURIDAD (Dependabot security updates) NO dependen de este archivo
-# y se siguen creando igual: se activan en
-#   Settings -> Code security -> Dependabot security updates
-#
-# Ver guarnold-hub/TODO.md, Fase 1.
+# Los PRs se abren contra `dev` (la rama de trabajo). El merge a `main` sigue siendo por PR del owner.
+# Los PRs de SEGURIDAD se crean aparte (grupo `seguridad`) y no cuentan para el limite.
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
+    target-branch: 'dev'
     schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 0
-    # Seguridad: todas las alertas juntas en UN PR, ⊥ uno por paquete.
-    # Cada merge a main = un deploy en Netlify; 20 PRs sueltos = 20 builds.
+      interval: 'monthly'
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
     groups:
+      rutina:
+        applies-to: 'version-updates'
+        patterns: ['*']
       seguridad:
-        applies-to: "security-updates"
-        patterns: ["*"]
+        applies-to: 'security-updates'
+        patterns: ['*']
 
-  # GitHub Actions: SOLO seguridad, igual que npm (limit 0).
-  # Los bumps de rutina (checkout v3 -> v7, etc.) ⊥ son de seguridad, y cada
-  # merge a main es un build pago. Las alertas de seguridad llegan igual.
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    target-branch: 'dev'
     schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 0
+      interval: 'monthly'
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      rutina:
+        applies-to: 'version-updates'
+        patterns: ['*']
+      seguridad:
+        applies-to: 'security-updates'
+        patterns: ['*']

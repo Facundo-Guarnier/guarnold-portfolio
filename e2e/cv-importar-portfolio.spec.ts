@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { leerStack, URL_APP, USUARIO_CON_ACCESO } from '../tools/local/entorno.mjs';
+import { totp } from '../tools/local/codigo-totp.mjs';
 
 /**
  * Lo que el owner hace de verdad, en un navegador, contra el stack local:
@@ -24,6 +25,9 @@ async function entrar(page: Page) {
   await page.getByPlaceholder('admin@example.com').fill(USUARIO_CON_ACCESO.email);
   await page.locator('input[type="password"]').fill(USUARIO_CON_ACCESO.clave);
   await page.getByRole('button', { name: 'Iniciar Sesión' }).click();
+  // Escribir el CV exige aal2: la cuenta de prueba tiene TOTP y el login pide el código.
+  await page.getByLabel('Código de verificación').fill(totp());
+  await page.getByRole('button', { name: 'Verificar' }).click();
   await page.waitForURL('**/admin');
   await expect(page.getByRole('heading', { name: 'VitaeFlow Editor' })).toBeVisible();
 }

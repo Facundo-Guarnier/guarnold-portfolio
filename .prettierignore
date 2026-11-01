@@ -6,3 +6,6 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+# las skills se sincronizan byte a byte desde la plantilla del hub; prettier las desincroniza
+.claude/skills/
+.agents/skills/

@@ -8,6 +8,7 @@
 --
 -- Qué tiene que salir (todas las aserciones pasan, o `psql` aborta con la que falló):
 --   conAcceso: tengo_acceso() = true · puede escribir el CV
+--   (las dos sesiones con 2FA, aal2: lo que se prueba es el acceso a la app; aal1 → escritura_con_2fa.sql)
 --   sinAcceso: tengo_acceso() = false · INSERT → RLS (42501) · UPDATE/DELETE → 0 filas
 --   anon: tengo_acceso() → permission denied (42501) · lee el CV público
 INSERT INTO auth.users (id, email) VALUES
@@ -23,7 +24,7 @@ GRANT EXECUTE ON FUNCTION public.afirmar_tmp(boolean, text) TO authenticated, an
 
 -- CON acceso
 SET LOCAL ROLE authenticated;
-SELECT set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated"}', true) \g /dev/null
+SELECT set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000000c1","role":"authenticated","aal":"aal2"}', true) \g /dev/null
 SELECT public.afirmar_tmp("cv-formatter".tengo_acceso() IS TRUE, 'conAcceso: tengo_acceso() debía ser true');
 UPDATE "cv-formatter".profiles SET nombre = 'editado' WHERE id = '10000000-0000-0000-0000-000000000001';
 SELECT public.afirmar_tmp((SELECT nombre FROM "cv-formatter".profiles) = 'editado', 'conAcceso: debía poder escribir');
@@ -31,7 +32,7 @@ RESET ROLE;
 
 -- SIN acceso (tiene cuenta, ⊥ tiene cv-formatter)
 SET LOCAL ROLE authenticated;
-SELECT set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000000d2","role":"authenticated"}', true) \g /dev/null
+SELECT set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-0000000000d2","role":"authenticated","aal":"aal2"}', true) \g /dev/null
 SELECT public.afirmar_tmp("cv-formatter".tengo_acceso() IS FALSE, 'sinAcceso: tengo_acceso() debía ser false');
 DO $$ BEGIN
   BEGIN

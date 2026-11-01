@@ -31,6 +31,7 @@ import {
   URL_APP,
   USUARIO_CON_ACCESO,
   USUARIO_SIN_ACCESO,
+  SECRETO_TOTP_LOCAL,
   leerStack,
 } from './entorno.mjs';
 
@@ -185,6 +186,11 @@ function prepararDatos(idConAcceso, idSinAcceso) {
        VALUES ('${idConAcceso}', 'cv-formatter', 'local: cuenta de prueba con acceso')
      ON CONFLICT (user_id, app) DO UPDATE SET revoked_at = NULL;
      DELETE FROM plataforma.app_access WHERE user_id = '${idSinAcceso}' AND app = 'cv-formatter';
+     -- Escribir el CV exige aal2: la cuenta con acceso tiene TOTP (secreto fijo de entorno.mjs).
+     INSERT INTO auth.mfa_factors (id, user_id, friendly_name, factor_type, status, secret, created_at, updated_at)
+       SELECT gen_random_uuid(), '${idConAcceso}', 'Local (db:local)', 'totp', 'verified', '${SECRETO_TOTP_LOCAL}', now(), now()
+       WHERE NOT EXISTS (SELECT 1 FROM auth.mfa_factors
+                         WHERE user_id = '${idConAcceso}' AND factor_type = 'totp' AND status = 'verified');
      INSERT INTO "cv-formatter".profiles (nombre, titulo, email, ubicacion, resumen)
        SELECT 'Persona de prueba', 'Ingeniero (datos locales)', 'local@ejemplo.com', 'Mendoza', ''
        WHERE NOT EXISTS (SELECT 1 FROM "cv-formatter".profiles);`,
@@ -213,6 +219,9 @@ async function main() {
   asegurarDocker();
   levantar();
   aplicarMigraciones();
+  // La migración de `plataforma` fija `pgrst.db_schemas` (public, graphql_public, plataforma): sin
+  // esto PostgREST responde PGRST106 «Invalid schema: cv-formatter». Solo el stack local.
+  sql(`SELECT plataforma.exponer_esquema('cv-formatter');`);
 
   const stack = leerStack();
   const conAcceso = await asegurarCuenta(stack, USUARIO_CON_ACCESO);

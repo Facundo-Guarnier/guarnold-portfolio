@@ -24,7 +24,9 @@
       ]
     },
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    // strict: 0 errores al activarlo (medido 2026-10-11, tsc --noEmit). Al tocar esto, correr typecheck.
+    "strict": true
   },
   "include": [
     "src",

@@ -11,12 +11,15 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
 
 ## Hard rules (non-negotiable)
 
-- **🚫 ⊥ `git push`. EVER.** Agent commits; the user pushes.
+- El agente commitea en `dev` con pathspec y puede pushear `dev`; `main` está protegido: entra por PR desde `dev` y el merge lo autoriza el owner. Detalle: docs/reglas-de-trabajo.md.
 - Branches: `main` = stable/prod · `dev` = daily work (default). ⊥ commit straight to `main`.
+- Trabajo con varios agentes (subagentes, verificación): `docs/principles/trabajo-con-varios-agentes.md`.
 - **Done = all 3, actually run (⊥ assumed):** build clean · lint clean (where configured) · tests green (where they exist).
   Fails → report the real output. ⊥ `--no-verify` to dodge a hook.
 - **Supabase project is SHARED** ("Guarnold Main": guarnote, pivot, este repo, ONE `auth.users`).
-  Account ≠ app access. Write policies = `plataforma.has_app_access('cv-formatter')`.
+  Account ≠ app access. Write policies = `plataforma.has_app_access('cv-formatter')` **+ sesión aal2**
+  (2FA; migración `cv_formatter_escritura_con_2fa`). anon = solo SELECT. Local: la cuenta con acceso de `db:local` tiene
+  TOTP (`npm run totp:local`); en la base compartida de guarnold-id, solo el superadmin de demo lo tiene.
   🔴 ⊥ `auth.role() = 'authenticated'` as a write gate: it means "any account of ANY app" — that bug
   let every account edit the public CV. Model + playbook: `guarnold-hub/docs/acceso-por-app.md`.
 - **El esquema y el id de app se llaman `cv-formatter`** (`src/lib/supabase.ts`, `tengo_acceso()`, las
@@ -26,7 +29,8 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
   Config: `supabase/despliegue.json`. Plan locally: `SUPABASE_DEPLOY_DB=docker:supabase_db_guarnote node tools/deploy/desplegar-supabase.mjs --plan`.
   Migrations = `<14 digits>_<name>.sql`. The first one is `20260115000436_…` (renamed from `20260114_…`: that is
   the version prod has it registered under; ⊥ compared against prod's SQL — no access).
-- Access per app: `"cv-formatter".tengo_acceso()` + `SinAcceso` screen (UX only; policies are the rule).
+- Access per app: `"cv-formatter".estado_editor()` (`si` | `sin_acceso` | `sin_2fa`) + `SinAcceso` / `Sin2FA`
+  screens (UX only; policies are the rule). `tengo_acceso()` sigue existiendo (solo acceso, sin 2FA).
   SQL test: `npm run test:sql` (corre cada `supabase/tests/*.sql` en su transacción con ROLLBACK).
 - **Sesión:** Guarnold ID mode turns on by DOMAIN: `guarnold.com.ar` (apex) **y** `*.guarnold.com.ar`
   (`src/lib/sesionCentral.ts`, `esDominioGuarnold`). Elsewhere, login propio en `/login`.
@@ -73,13 +77,15 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
 - Owner's generic rules: `D:/Repositorios_GitHub/guarnold-hub/.claude/memory/` → start at `MEMORY.md`.
   Path ⊥ exists (other machine / external dev) → skip it, this file stands alone.
 - What this project does → `README.md` here.
-- Tasks, pendings, day-to-day state → **GuarNote** (the owner's own app). ⊥ invent TODOs in markdown.
+- Tasks, pendings, day-to-day state → **GuarNote**, via its MCP `guarnote` (configured at user level). ⊥ `TODO.md` of pendings, ⊥ files in `.agents/tasks/`. GuarNote project: `list_projects` by this repo's name; not found → ask the owner, ⊥ create it. MCP unavailable → tell the owner, ⊥ write the task to a file. Format, states & flow: `docs/guides/tareas-en-guarnote.md`.
 
 ## Desarrollo local
 
 | Qué | Dónde / cómo |
 |---|---|
 | Puertos del portfolio (dev) | **3001** (`npm run dev`) — el default vive en `vite.config.ts` |
+| Base compartida (dev, lo local ⊥ apunta a prod) | `npm run dev` (3001) lee `.env.development`: base de guarnold-id (`127.0.0.1:54391`, esquema `cv-formatter`). Previo: `npm run db:compartido` en `../guarnold-id` |
+| Cuenta local (Guarnold ID en `localhost:5170`) | `npm run dev:cuenta` (modo `cuentalocal`, `.env.cuentalocal`) + `npm run dev` en `../guarnold-id` |
 | Puerto de la app con stack local | **5177** (`npm run dev:docker` → `vite --mode docker`) |
 | E2E del portfolio | **3001**, con Supabase falso por variables de entorno (sin Docker) |
 | E2E del CV | **5177**, `vite --mode docker` contra el stack local (necesita `db:local`) |
@@ -129,6 +135,10 @@ La lógica es pura (`src/cv/lib/importarPortfolio.ts`, con tests en `src/cv/lib/
 
 `src/services/dataService.ts`: la RPC `"cv-formatter".portfolio_publico()` con el cliente anónimo; si falla
 o ⊥ hay configuración (`supabaseConfigurado`), usa `src/data/content.yml`. ⊥ se mezclan: o una o la otra.
+
+## Mails transaccionales (Resend)
+
+Si la app manda mails (de Auth o propios), seguir las guÃ­as copiadas de la plantilla del hub: `docs/guides/secretos-y-configuracion.md` (dos claves: #1 para el SMTP de Supabase, #2 para el servidor propio), `docs/guides/dns-email-dominio.md` (dominio y DNS) y `docs/guides/transactional-emails.md` (Edge Function o Netlify).
 
 ## Learnings
 

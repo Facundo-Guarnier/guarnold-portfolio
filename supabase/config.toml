@@ -60,6 +60,7 @@ enable_signup = true
 enable_anonymous_sign_ins = false
 minimum_password_length = 6
 
+# Como prod (la Auth es de guarnold-id): escribir el CV exige aal2 (migración cv_formatter_escritura_con_2fa).
 [auth.mfa.totp]
-enroll_enabled = false
-verify_enabled = false
+enroll_enabled = true
+verify_enabled = true

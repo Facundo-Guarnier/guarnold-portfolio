@@ -5,6 +5,7 @@ import { useCVData } from '@/cv/hooks/useCVData';
 import { useAuth } from '@/cv/hooks/useAuth';
 import { useAccesoApp } from '@/cv/hooks/useAccesoApp';
 import { SinAcceso } from '@/cv/components/ui/SinAcceso';
+import { Sin2FA } from '@/cv/components/ui/Sin2FA';
 import { useScreenScale } from '@/cv/hooks/useScreenScale';
 import { CVPreview } from '@/cv/components/cv/CVPreview';
 import { ProfileEditor } from '@/cv/components/editor/ProfileEditor';
@@ -143,6 +144,9 @@ const Admin: React.FC = () => {
   }
   if (acceso === 'no') {
     return <SinAcceso email={user.email} onSalir={signOut} />;
+  }
+  if (acceso === 'sin2fa') {
+    return <Sin2FA email={user.email} onSalir={signOut} />;
   }
 
   // Mostrar loading mientras se cargan los datos

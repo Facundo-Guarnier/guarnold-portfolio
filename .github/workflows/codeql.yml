@@ -1,0 +1,109 @@
+# Copiar a `.github/workflows/codeql.yml`.
+#
+# ⊥ se pisa con lo que ya hay: `splinter` lee la BASE (RLS, policies), Sonar es fuerte en SMELLS y
+# metricas, CodeQL hace ANALISIS DE FLUJO ENTRE ARCHIVOS — taint tracking, de una fuente de input
+# hasta un sink peligroso, cruzando modulos. Es lo unico de la cadena que sigue un dato.
+# 🔗 docs/guides/code-review-automatizado.md §2 · tools/codeql/README.md
+#
+# 🔴 ANTES DE DARLO POR INSTALADO: correr el mutante del README §3. Un SAST que nunca se vio
+# encontrar nada es un semaforo en verde conectado a nada. Verde aca ⊥ es evidencia de nada
+# hasta que se lo vio ponerse rojo. 🔗 docs/principles/chequeos-que-mienten.md §4
+#
+# ⚠️ COSTO: gratis SOLO en repos publicos. En privado consume minutos de Actions de la cuenta.
+# De estos 22 repos, 7 son de cliente y privados ∴ ahi la instalacion es una decision de plata,
+# ⊥ una de tildar una casilla. El README lo dice con numeros.
+
+name: CodeQL
+
+on:
+  pull_request:
+    branches: [main, dev]
+  # Mismo criterio que `ci.yml`: se trabaja en `dev` y a `main` se entra por PR. Pero aca ⊥ va
+  # `push: [main]` — el merge a `main` ya paso por el PR y volver a escanear el mismo arbol es
+  # pagar dos veces el mismo minuto sin hallazgo nuevo posible.
+  push:
+    branches: [dev]
+  # 🔴 El `schedule` ⊥ es adorno, es la mitad del valor de la pieza. Las queries de CodeQL se
+  # actualizan del lado de GitHub: codigo que hoy pasa limpio manana ⊥, SIN que nadie lo toque.
+  # Sin corrida periodica, un repo que ⊥ recibe commits queda congelado en el veredicto del dia
+  # que se mergeo lo ultimo — y se lee como "no tiene hallazgos".
+  # Ademas es lo que mantiene la pieza VIVA en un repo quieto: 🔗 code-review-automatizado.md
+  # documenta un gate que ⊥ corrio en 3 meses porque su trigger ⊥ coincidia con como se trabaja.
+  # Lunes 6:17 UTC. Minuto raro a proposito: en punto es cuando se amontona media GitHub y la
+  # corrida se encola.
+  schedule:
+    - cron: '17 6 * * 1'
+
+# Sin bloque a nivel workflow: los permisos se declaran en el job, que es el unico que los usa.
+# El default del repo (Settings → Actions) sigue aplicando al resto.
+
+jobs:
+  analyze:
+    name: Analisis CodeQL (javascript-typescript)
+    runs-on: ubuntu-latest
+    # ⏱️ Un analisis de una SPA tipica corre en 3-6 min. El timeout ⊥ es paranoia: sin el, una
+    # corrida colgada quema los 360 min de default — en repo privado, eso es factura.
+    timeout-minutes: 20
+
+    # Permisos minimos, a nivel job. `security-events: write` es el unico ancho y es
+    # OBLIGATORIO: es lo que deja subir el SARIF a la pestana Security. Sin el, el analisis
+    # corre entero y muere al publicar.
+    permissions:
+      security-events: write   # ! para subir los resultados
+      contents: read           # leer el codigo del repo
+      actions: read            # requerido para leer metadatos de la corrida en repos privados
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          # Un solo lenguaje ∴ ⊥ hace falta `strategy.matrix`. Una matriz de un elemento agrega
+          # una capa de indireccion y ⊥ compra nada. Si algun dia entra otro lenguaje (SQL,
+          # Python de un script), AHI se convierte en matriz.
+          languages: javascript-typescript
+          # `security-extended` = las queries de seguridad por defecto MAS un set adicional de
+          # menor precision. ⊥ incluye las de calidad/mantenibilidad — eso lo cubre Sonar y
+          # duplicarlo solo genera ruido.
+          # ⚠️ La otra suite publicada es `security-and-quality` (agrega las de mantenibilidad).
+          # Los nombres exactos de las QUERIES individuales ! confirmarse en la doc de GitHub
+          # antes de citarlos en ningun lado: aca solo se nombra la CATEGORIA.
+          queries: security-extended
+
+      # ⚠️ ⊥ HAY PASO DE BUILD, Y ES A PROPOSITO.
+      # Para JS/TS CodeQL ⊥ compila: extrae directo del arbol de fuentes. Un `npm ci && npm run
+      # build` aca ⊥ agregaria cobertura — analizaria los MISMOS archivos — y si costaria 2-3 min
+      # por corrida, mas la superficie de un `npm install` con los secretos del runner en el
+      # entorno (🔗 code-review-automatizado.md §2b, el argumento del `--ignore-scripts`).
+      # ∴ el paso ⊥ esta porque ⊥ compra nada y cuesta.
+      # 💡 Consecuencia real, ⊥ evadirla: se analiza el codigo FUENTE, ⊥ el bundle. Lo que
+      # inyecte una dependencia en build time ⊥ lo ve nadie aca — eso es SCA, otra herramienta.
+
+      - name: Analizar
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          category: '/language:javascript-typescript'
+
+          # ┌────────────────────────────────────────────────────────────────────────────────┐
+          # │ 🔴 MODO REPORTE — ESTA ES LA LINEA QUE SE CAMBIA PARA ENDURECER                │
+          # │                                                                                │
+          # │   hoy:      upload-database / severidad → NO falla el build (linea de abajo)   │
+          # │   endurecer: BORRAR la linea `# ⊥ falla` y poner:                              │
+          # │                                                                                │
+          # │       fail-on-severity: error                                                  │
+          # │                                                                                │
+          # │   (nombre del input ! confirmarse contra la doc de la version pineada antes    │
+          # │    de activarlo — cambio entre majors de la action)                            │
+          # └────────────────────────────────────────────────────────────────────────────────┘
+          #
+          # ⚠️ Arranca en reporte a proposito: un gate que grita el primer dia se desactiva el
+          # segundo. Y el costo ⊥ es solo que lo apaguen — es que el PRIMER PR hereda entero el
+          # backlog historico, con hallazgos que ⊥ son suyos. Es exactamente el caso medido del
+          # `react-doctor` con `--fail-on error` que ⊥ corrio en 3 meses y guardaba 9 errores.
+          # 🔗 code-review-automatizado.md §2b
+          #
+          # El criterio VERIFICABLE para endurecer esta en el README §2. ⊥ es "cuando estemos
+          # listos".
+          upload: always   # ⊥ falla: publica el SARIF y sale 0 pase lo que pase
