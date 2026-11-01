@@ -17,7 +17,9 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
 - **Done = all 3, actually run (⊥ assumed):** build clean · lint clean (where configured) · tests green (where they exist).
   Fails → report the real output. ⊥ `--no-verify` to dodge a hook.
 - **Supabase project is SHARED** ("Guarnold Main": guarnote, pivot, este repo, ONE `auth.users`).
-  Account ≠ app access. Write policies = `plataforma.has_app_access('cv-formatter')`.
+  Account ≠ app access. Write policies = `plataforma.has_app_access('cv-formatter')` **+ sesión aal2**
+  (2FA; migración `cv_formatter_escritura_con_2fa`). anon = solo SELECT. Local: la cuenta con acceso de `db:local` tiene
+  TOTP (`npm run totp:local`); en la base compartida de guarnold-id, solo el superadmin de demo lo tiene.
   🔴 ⊥ `auth.role() = 'authenticated'` as a write gate: it means "any account of ANY app" — that bug
   let every account edit the public CV. Model + playbook: `guarnold-hub/docs/acceso-por-app.md`.
 - **El esquema y el id de app se llaman `cv-formatter`** (`src/lib/supabase.ts`, `tengo_acceso()`, las
@@ -27,7 +29,8 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
   Config: `supabase/despliegue.json`. Plan locally: `SUPABASE_DEPLOY_DB=docker:supabase_db_guarnote node tools/deploy/desplegar-supabase.mjs --plan`.
   Migrations = `<14 digits>_<name>.sql`. The first one is `20260115000436_…` (renamed from `20260114_…`: that is
   the version prod has it registered under; ⊥ compared against prod's SQL — no access).
-- Access per app: `"cv-formatter".tengo_acceso()` + `SinAcceso` screen (UX only; policies are the rule).
+- Access per app: `"cv-formatter".estado_editor()` (`si` | `sin_acceso` | `sin_2fa`) + `SinAcceso` / `Sin2FA`
+  screens (UX only; policies are the rule). `tengo_acceso()` sigue existiendo (solo acceso, sin 2FA).
   SQL test: `npm run test:sql` (corre cada `supabase/tests/*.sql` en su transacción con ROLLBACK).
 - **Sesión:** Guarnold ID mode turns on by DOMAIN: `guarnold.com.ar` (apex) **y** `*.guarnold.com.ar`
   (`src/lib/sesionCentral.ts`, `esDominioGuarnold`). Elsewhere, login propio en `/login`.

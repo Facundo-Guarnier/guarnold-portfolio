@@ -71,3 +71,25 @@ export async function entrarConClave(
   const { error } = await supabase.auth.signInWithPassword({ email, password: clave });
   return error;
 }
+
+/**
+ * Solo modo propio: la cuenta tiene un factor TOTP y la sesión todavía ⊥ pasó el código (aal1).
+ * Escribir el CV exige aal2. En modo central el código lo pide Guarnold ID.
+ */
+export async function necesitaCodigo(): Promise<boolean> {
+  if (sesionCentral) return false;
+  const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (error) throw error;
+  return data.nextLevel === 'aal2' && data.currentLevel !== 'aal2';
+}
+
+/** Solo modo propio: sube la sesión a aal2 con el código de la app autenticadora. */
+export async function verificarCodigo(codigo: string): Promise<{ message: string } | null> {
+  if (sesionCentral) return { message: 'En modo central el código lo pide id.guarnold.com.ar' };
+  const { data, error } = await supabase.auth.mfa.listFactors();
+  if (error) return error;
+  const factor = data.totp.find((f) => f.status === 'verified');
+  if (!factor) return { message: 'Tu cuenta ⊥ tiene verificación en dos pasos.' };
+  const r = await supabase.auth.mfa.challengeAndVerify({ factorId: factor.id, code: codigo });
+  return r.error;
+}

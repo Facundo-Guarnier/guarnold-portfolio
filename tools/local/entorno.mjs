@@ -34,6 +34,12 @@ export const USUARIO_SIN_ACCESO = {
 };
 
 /**
+ * Secreto TOTP (base32) del factor de USUARIO_CON_ACCESO: escribir el CV exige aal2. Fijo y
+ * público a propósito, solo para la base local. Código actual: `npm run totp:local`.
+ */
+export const SECRETO_TOTP_LOCAL = 'JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP';
+
+/**
  * Lee las URLs y claves del stack levantado (`supabase status -o env`). ⊥ se hardcodean: el
  * puerto sale de config.toml y la clave de la instancia local. Tira si el stack ⊥ está corriendo.
  */

@@ -26,7 +26,8 @@
     "db:local:parar": "supabase stop",
     "deploy:plan": "node tools/deploy/desplegar-supabase.mjs --plan",
     "verificar:headers": "node tools/headers/verificar-headers.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "totp:local": "node tools/local/codigo-totp.mjs"
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.3.0",

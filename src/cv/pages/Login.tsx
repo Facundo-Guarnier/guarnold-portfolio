@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/cv/hooks/useAuth';
-import { irAEntrar, modoCentral } from '@/cv/lib/auth';
+import { irAEntrar, modoCentral, necesitaCodigo, verificarCodigo } from '@/cv/lib/auth';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +14,9 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Segundo paso: la cuenta tiene 2FA y escribir el CV exige la sesión con código (aal2).
+  const [pideCodigo, setPideCodigo] = useState(false);
+  const [codigo, setCodigo] = useState('');
 
   // Modo central: el login es de Guarnold ID (id.guarnold.com.ar); se vuelve al editor al terminar.
   useEffect(() => {
@@ -40,9 +43,33 @@ const Login: React.FC = () => {
         ? 'Credenciales inválidas. Verifica tu email y contraseña.' 
         : error.message);
       setIsSubmitting(false);
-    } else {
-      navigate('/admin');
+      return;
     }
+    try {
+      if (await necesitaCodigo()) {
+        setPideCodigo(true);
+        setIsSubmitting(false);
+        return;
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No pudimos verificar la sesión.');
+      setIsSubmitting(false);
+      return;
+    }
+    navigate('/admin');
+  };
+
+  const handleCodigo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsSubmitting(true);
+    const error = await verificarCodigo(codigo.trim());
+    if (error) {
+      setError(error.message === 'Invalid TOTP code entered' ? 'Código incorrecto o vencido.' : error.message);
+      setIsSubmitting(false);
+      return;
+    }
+    navigate('/admin');
   };
 
   return (
@@ -63,6 +90,40 @@ const Login: React.FC = () => {
           </div>
         )}
 
+        {pideCodigo ? (
+        <form className="space-y-6" onSubmit={handleCodigo}>
+          <div>
+            <label htmlFor="codigo" className="block text-sm font-semibold text-neutral-700 dark:text-gray-200 mb-2">
+              Código de verificación
+            </label>
+            <input
+              id="codigo"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              pattern="[0-9]{6}"
+              maxLength={6}
+              value={codigo}
+              onChange={(e) => setCodigo(e.target.value.replace(/\D/g, ''))}
+              required
+              autoFocus
+              disabled={isSubmitting}
+              className="w-full px-4 py-3 rounded-xl border border-neutral-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-neutral-900 dark:text-white tracking-widest text-center focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white focus:border-neutral-900 dark:focus:border-white outline-none transition-all disabled:opacity-50"
+              placeholder="123456"
+            />
+            <p className="mt-2 text-xs text-neutral-500 dark:text-gray-400">
+              El de tu app autenticadora. Editar el CV exige la verificación en dos pasos.
+            </p>
+          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting || codigo.length !== 6}
+            className="w-full flex items-center justify-center gap-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-bold py-4 rounded-xl hover:bg-neutral-800 dark:hover:bg-gray-200 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Verificar'}
+          </button>
+        </form>
+        ) : (
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-semibold text-neutral-700 dark:text-gray-200 mb-2">Email</label>
@@ -118,6 +179,7 @@ const Login: React.FC = () => {
             )}
           </button>
         </form>
+        )}
         
         <div className="mt-8 text-center">
           <Link to="/cv" className="text-sm text-neutral-400 dark:text-gray-500 hover:text-neutral-600 dark:hover:text-gray-300 transition-colors">
