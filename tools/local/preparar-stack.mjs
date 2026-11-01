@@ -219,6 +219,9 @@ async function main() {
   asegurarDocker();
   levantar();
   aplicarMigraciones();
+  // La migración de `plataforma` fija `pgrst.db_schemas` (public, graphql_public, plataforma): sin
+  // esto PostgREST responde PGRST106 «Invalid schema: cv-formatter». Solo el stack local.
+  sql(`SELECT plataforma.exponer_esquema('cv-formatter');`);
 
   const stack = leerStack();
   const conAcceso = await asegurarCuenta(stack, USUARIO_CON_ACCESO);

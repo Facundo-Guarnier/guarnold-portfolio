@@ -63,10 +63,10 @@ describe('anon (visitante del CV público)', () => {
     expect(data.identity.phone).toBeUndefined();
   });
 
-  it('⊥ puede editar el perfil: la policy filtra y el UPDATE toca 0 filas', async () => {
+  it('⊥ puede editar el perfil: anon ⊥ tiene el privilegio UPDATE (42501), ni siquiera llega a RLS', async () => {
     const { data, error } = await anon.from('profiles').update({ nombre: 'anon-intruso' }).eq('id', perfilId).select();
-    expect(error).toBeNull();
-    expect(data).toEqual([]);
+    expect(error?.code).toBe('42501');
+    expect(data).toBeNull();
   });
 
   it('⊥ puede insertar ítems del perfil (RLS lo rechaza)', async () => {
