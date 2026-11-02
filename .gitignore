@@ -34,3 +34,6 @@ service-account*.json
 supabase/.branches/
 test-results/
 playwright-report/
+
+# Cache de la CLI de Supabase (cambia en cada corrida)
+supabase/.temp/
