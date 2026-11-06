@@ -27,8 +27,8 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
   que cambió.
 - **Prod deploy = the CI** (`.github/workflows/desplegar-supabase.yml`, on merge to `main`): ⊥ `supabase db push`, ⊥ by hand.
   Config: `supabase/despliegue.json`. Plan locally: `SUPABASE_DEPLOY_DB=docker:supabase_db_guarnote node tools/deploy/desplegar-supabase.mjs --plan`.
-  Migrations = `<14 digits>_<name>.sql`. The first one is `20260115000436_…` (renamed from `20260114_…`: that is
-  the version prod has it registered under; ⊥ compared against prod's SQL — no access).
+  Migrations = `<14 digits>_<name>.sql`. The first one is `20260115000436_…`: that is the version prod has it
+  registered under (⊥ compared against prod's SQL — no access).
 - Access per app: `"cv-formatter".estado_editor()` (`si` | `sin_acceso` | `sin_2fa`) + `SinAcceso` / `Sin2FA`
   screens (UX only; policies are the rule). `tengo_acceso()` sigue existiendo (solo acceso, sin 2FA).
   SQL test: `npm run test:sql` (corre cada `supabase/tests/*.sql` en su transacción con ROLLBACK).
@@ -138,7 +138,7 @@ o ⊥ hay configuración (`supabaseConfigurado`), usa `src/data/content.yml`. �
 
 ## Mails transaccionales (Resend)
 
-Si la app manda mails (de Auth o propios), seguir las guÃ­as copiadas de la plantilla del hub: `docs/guides/secretos-y-configuracion.md` (dos claves: #1 para el SMTP de Supabase, #2 para el servidor propio), `docs/guides/dns-email-dominio.md` (dominio y DNS) y `docs/guides/transactional-emails.md` (Edge Function o Netlify).
+Si la app manda mails (de Auth o propios), seguir las guías copiadas de la plantilla del hub: `docs/guides/secretos-y-configuracion.md` (dos claves: #1 para el SMTP de Supabase, #2 para el servidor propio), `docs/guides/dns-email-dominio.md` (dominio y DNS) y `docs/guides/transactional-emails.md` (Edge Function o Netlify).
 
 ## Learnings
 
