@@ -62,7 +62,7 @@ El flujo real es este (no hay push directo a `main`):
 8. **No dar por desplegado un merge sin ver que el job de despliegue corrió.** Si Actions no arranca
    jobs (facturación, cupo agotado), el merge a `main` sale sin despliegue de base mientras el front de
    Netlify se publica igual. Por eso el código del servidor o del front no puede depender de una
-   migración nueva sin tolerar que todavía no exista. Detalle en `docs/guides/ci-minutos.md`.
+   migración nueva sin tolerar que todavía no exista. Detalle en la plantilla del hub: `guarnold-hub/base-proyectos/docs/guides/ci-minutos.md`.
 
 Reglas que no cambian:
 
@@ -124,7 +124,7 @@ No mezclar nombres, roles ni prefijos de un proyecto en otro.
 - Ningún secreto en el repo ni en `.env.example` (solo placeholders).
 - Sin `service_role` en servidores ni en el cliente: el acceso administrativo va por funciones SQL
   `SECURITY DEFINER` que exigen el rol del administrador y `aal2`, llamadas con el token del propio
-  usuario. Receta en `docs/guides/auth-y-sesiones.md` §9.
+  usuario. Receta en la plantilla del hub: `guarnold-hub/base-proyectos/docs/guides/auth-y-sesiones.md` §9.
 - Lo configurable (orígenes permitidos, remitentes, parámetros de negocio) se edita **dentro de la
   app**, no en variables de entorno. Las variables de entorno quedan para secretos reales y URLs de
   infraestructura.
