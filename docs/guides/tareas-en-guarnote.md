@@ -131,6 +131,13 @@ Igual que con los archivos, el historial no se reescribe:
 
 El commit que cierra una tarea la cita: `#AAAA-XXXX — <objetivo>`.
 
+## Al cerrar un trabajo
+
+Los pendientes importantes que quedan al terminar (decisiones del owner, pases a `main`, revisiones
+manuales en paneles, arreglos propuestos que no se aprobaron) se cargan con `create_task` en el
+proyecto que corresponde, **sin preguntar**, y se avisan los números. Si solo quedan en el chat, se
+pierden. Las que hace el owner llevan `kind: human`.
+
 ## Límite conocido
 
 Solo un agente con el MCP autenticado ve las tareas. El CI y los agentes en la nube que no tienen

@@ -11,7 +11,8 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
 
 ## Hard rules (non-negotiable)
 
-- El agente commitea en `dev` con pathspec y puede pushear `dev`; `main` está protegido: entra por PR desde `dev` y el merge lo autoriza el owner. Detalle: docs/reglas-de-trabajo.md.
+- El agente commitea en `dev` con pathspec y **no** pushea (ni `main` ni `dev`) salvo que el owner lo pida o el flujo lo necesite; el owner pushea por su cuenta: no se le recuerda, y antes de afirmar `ahead`/`behind` se hace `git fetch`. `main` está protegido: entra por PR desde `dev`.
+- El PR de `dev` a `main` se abre recién cuando el owner pide el merge (un PR abierto dispara Actions en cada push a `dev`); el merge lo autoriza el owner para ese PR puntual, la autorización no se extiende al siguiente. Detalle: docs/reglas-de-trabajo.md.
 - Branches: `main` = stable/prod · `dev` = daily work (default). ⊥ commit straight to `main`.
 - Trabajo con varios agentes (subagentes, verificación): `docs/principles/trabajo-con-varios-agentes.md`.
 - **Done = all 3, actually run (⊥ assumed):** build clean · lint clean (where configured) · tests green (where they exist).
@@ -41,7 +42,8 @@ del CV (`/admin`). Lo que antes era `cv-formatter` vive acá, en `src/cv/`.
   (portfolio, `/cv`) el cliente va como anónimo: si no, cada visita pegaría a `id.guarnold.com.ar`.
 - Tailwind is COMPILED (⊥ CDN): the CSP in `public/_headers` forbids third-party scripts. `npm run verificar:headers`.
 - Non-trivial change → plan first. Touches DB, permissions, several files, or changes behavior → always.
-- Verification agents (gap/contradiction hunting) are token-expensive → **ASK THE USER FIRST**.
+- Verification agents (gap/contradiction hunting): a normal review is launched without asking; **ask the owner only before a big or expensive sweep** (many agents, Ultracode, a large workflow).
+- Autonomía: terminar el trabajo hasta que quede bien; ⊥ "¿sigo?" ni pedir permiso para lo básico (commits en `dev`, archivos locales). Preguntar solo decisiones reales. Delegar: otro agente revisa y mergea a la rama de trabajo, el owner no lee diffs; `model` fijado, `sonnet` por defecto y `haiku` para lo mecánico. Resto de reglas (no descargar herramientas externas, Docker cerrado = avisar, documentar errores, pendientes a GuarNote, prioridad de escritura en seguridad): `docs/reglas-de-trabajo.md` §5, §7 y §8.
 
 ## Estructura
 
